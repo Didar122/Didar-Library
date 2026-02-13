@@ -2,7 +2,7 @@
 <html lang="ku" dir="rtl">
  <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Didar Library">
@@ -1884,6 +1884,34 @@
 
         function launchApp() {
             if (state.selectedApp) {
+                // Request fullscreen to hide browser UI on mobile
+                const docElem = document.documentElement;
+                if (docElem.requestFullscreen) {
+                    docElem.requestFullscreen().catch(err => {
+                        // Fullscreen not supported, just navigate
+                        navigateToApp();
+                    });
+                } else if (docElem.webkitRequestFullscreen) {
+                    docElem.webkitRequestFullscreen();
+                } else if (docElem.mozRequestFullScreen) {
+                    docElem.mozRequestFullScreen();
+                } else if (docElem.msRequestFullscreen) {
+                    docElem.msRequestFullscreen();
+                } else {
+                    // Fallback: scroll to hide address bar
+                    window.scrollTo(0, 1);
+                    navigateToApp();
+                }
+                
+                // Navigate after a brief delay
+                setTimeout(() => {
+                    navigateToApp();
+                }, 200);
+            }
+        }
+
+        function navigateToApp() {
+            if (state.selectedApp) {
                 window.location.href = state.selectedApp.link;
             }
         }
@@ -2042,5 +2070,5 @@
         // Initialize app
         init();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd70affa175f756',t:'MTc3MTAxNDIwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd7878606b2f756',t:'MTc3MTAxOTMwMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
