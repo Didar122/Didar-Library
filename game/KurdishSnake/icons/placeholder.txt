@@ -1,0 +1,15 @@
+To complete the icon setup:
+
+1. Create the following PNG icons for iOS:
+- icon-152.png (152x152 pixels)
+- icon-167.png (167x167 pixels)
+- icon-180.png (180x180 pixels)
+
+Design recommendations:
+- Use a simple, recognizable snake design
+- Make sure the icon looks good on dark and light backgrounds
+- Add a subtle shadow or glow effect to make it stand out
+- Use the same green colors as your game theme
+- Make sure the icon has some padding (about 10-15% from edges)
+
+Place all icon files in this directory.

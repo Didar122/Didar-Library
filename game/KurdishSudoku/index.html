@@ -1,0 +1,2344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Kurdish Sudoku</title>
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Kurdish Sudoku">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        
+        .sudoku-cell {
+            transition: all 0.2s ease;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .sudoku-cell:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+        }
+        
+        .sudoku-cell.prefilled {
+            font-weight: 600;
+        }
+        
+        .sudoku-cell.hint {
+            font-weight: 600;
+            color: #d97706;
+        }
+        
+        .sudoku-cell.error {
+            border-color: #ef4444;
+        }
+        
+        .sudoku-grid {
+            display: grid;
+            gap: 3px;
+            padding: 8px;
+            border-radius: 12px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        .sudoku-grid.grid-6x6 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .sudoku-grid.grid-9x9 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .sudoku-box {
+            display: grid;
+            gap: 1px;
+            border-radius: 6px;
+            padding: 1px;
+        }
+        
+        .sudoku-box.box-6x6 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .sudoku-box.box-9x9 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        /* Galaxy Theme Animation */
+        .galaxy-bg {
+            background: linear-gradient(45deg, #0f0f23, #1a1a2e, #16213e, #0f0f23);
+            background-size: 400% 400%;
+            animation: galaxyMove 8s ease-in-out infinite;
+        }
+        
+        @keyframes galaxyMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .galaxy-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* VIP Theme Animation */
+        .vip-bg {
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #fbbf24, #f59e0b, #ffd700);
+            background-size: 400% 400%;
+            animation: vipMove 3s ease-in-out infinite;
+        }
+        
+        @keyframes vipMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .vip-stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .vip-star {
+            position: absolute;
+            color: #ffd700;
+            font-size: 20px;
+            animation: vipTwinkle 1.5s infinite;
+        }
+        
+        @keyframes vipTwinkle {
+            0%, 100% { opacity: 0.5; transform: scale(1) rotate(0deg); }
+            50% { opacity: 1; transform: scale(1.3) rotate(180deg); }
+        }
+        
+        /* Cheat Animations */
+        @keyframes epicShake {
+            0%, 100% { transform: translateX(0); }
+            10% { transform: translateX(-10px); }
+            20% { transform: translateX(10px); }
+            30% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            50% { transform: translateX(-6px); }
+            60% { transform: translateX(6px); }
+            70% { transform: translateX(-4px); }
+            80% { transform: translateX(4px); }
+            90% { transform: translateX(-2px); }
+        }
+        
+        .epic-shake {
+            animation: epicShake 2s ease-in-out;
+        }
+        
+        .firework {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 3rem;
+            animation: fireworkExplode 3s ease-out forwards;
+        }
+        
+        @keyframes fireworkExplode {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            50% { transform: scale(1.5) rotate(180deg); opacity: 1; }
+            100% { transform: scale(0.5) rotate(360deg); opacity: 0; }
+        }
+        
+        .coin-rain {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1000;
+            font-size: 2rem;
+            animation: coinFall 3s ease-in forwards;
+        }
+        
+        @keyframes coinFall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        .rainbow-text {
+            background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rainbow 2s ease-in-out infinite;
+        }
+        
+        @keyframes rainbow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .pulse-ring {
+            animation: pulseRing 2s infinite;
+        }
+        
+        @keyframes pulseRing {
+            0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+        }
+
+        /* VIP Status Banner */
+        .vip-banner {
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #fbbf24);
+            background-size: 200% 200%;
+            animation: vipGlow 2s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        @keyframes vipGlow {
+            0% { background-position: 0% 50%; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            50% { background-position: 100% 50%; box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
+            100% { background-position: 0% 50%; box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        }
+
+        /* Splash screen animation */
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .splash-animation {
+            animation: fadeInOut 2s ease-in-out;
+        }
+
+        /* Mobile responsive grid */
+        @media (max-width: 640px) {
+            .sudoku-grid {
+                max-width: 320px;
+                gap: 2px;
+                padding: 6px;
+            }
+            
+            .sudoku-cell {
+                font-size: 14px;
+            }
+            
+            .sudoku-cell.cell-6x6 {
+                width: 45px;
+                height: 45px;
+                font-size: 18px;
+            }
+            
+            .sudoku-cell.cell-9x9 {
+                width: 32px;
+                height: 32px;
+                font-size: 16px;
+            }
+        }
+
+        /* Theme-specific styles */
+        .theme-light {
+            background: linear-gradient(135deg, #f0f9ff, #e0e7ff);
+            color: #1f2937;
+        }
+        
+        .theme-dark {
+            background: linear-gradient(135deg, #111827, #1f2937);
+            color: #f9fafb;
+        }
+        
+        .theme-ocean {
+            background: linear-gradient(135deg, #0891b2, #06b6d4);
+            color: #f0f9ff;
+        }
+        
+        .theme-forest {
+            background: linear-gradient(135deg, #059669, #10b981);
+            color: #f0fdf4;
+        }
+        
+        .theme-sunset {
+            background: linear-gradient(135deg, #ea580c, #f97316);
+            color: #fff7ed;
+        }
+        
+        .theme-purple {
+            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+            color: #faf5ff;
+        }
+        
+        .theme-galaxy {
+            background: linear-gradient(45deg, #0f0f23, #1a1a2e, #16213e, #0f0f23);
+            background-size: 400% 400%;
+            animation: galaxyMove 8s ease-in-out infinite;
+            color: #f0f9ff;
+        }
+
+        .theme-vip {
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #fbbf24, #f59e0b, #ffd700);
+            background-size: 400% 400%;
+            animation: vipMove 3s ease-in-out infinite;
+            color: #1f2937;
+        }
+
+        /* Theme-specific card backgrounds */
+        .card-light { background: rgba(255, 255, 255, 0.9); color: #1f2937; }
+        .card-dark { background: rgba(31, 41, 55, 0.9); color: #f9fafb; }
+        .card-ocean { background: rgba(8, 145, 178, 0.2); color: #f0f9ff; backdrop-filter: blur(10px); }
+        .card-forest { background: rgba(5, 150, 105, 0.2); color: #f0fdf4; backdrop-filter: blur(10px); }
+        .card-sunset { background: rgba(234, 88, 12, 0.2); color: #fff7ed; backdrop-filter: blur(10px); }
+        .card-purple { background: rgba(124, 58, 237, 0.2); color: #faf5ff; backdrop-filter: blur(10px); }
+        .card-galaxy { background: rgba(15, 15, 35, 0.3); color: #f0f9ff; backdrop-filter: blur(10px); }
+        .card-vip { background: rgba(255, 215, 0, 0.2); color: #1f2937; backdrop-filter: blur(10px); }
+
+        /* Grid background for themes */
+        .grid-light { background: #1f2937; }
+        .grid-dark { background: #374151; }
+        .grid-ocean { background: rgba(8, 145, 178, 0.8); }
+        .grid-forest { background: rgba(5, 150, 105, 0.8); }
+        .grid-sunset { background: rgba(234, 88, 12, 0.8); }
+        .grid-purple { background: rgba(124, 58, 237, 0.8); }
+        .grid-galaxy { background: rgba(15, 15, 35, 0.8); }
+        .grid-vip { background: rgba(255, 215, 0, 0.8); }
+
+        /* Cell backgrounds for themes */
+        .cell-light { background: #ffffff; color: #1f2937; }
+        .cell-dark { background: #4b5563; color: #f9fafb; }
+        .cell-ocean { background: rgba(240, 249, 255, 0.9); color: #0c4a6e; }
+        .cell-forest { background: rgba(240, 253, 244, 0.9); color: #14532d; }
+        .cell-sunset { background: rgba(255, 247, 237, 0.9); color: #9a3412; }
+        .cell-purple { background: rgba(250, 245, 255, 0.9); color: #581c87; }
+        .cell-galaxy { background: rgba(240, 249, 255, 0.9); color: #1e293b; }
+        .cell-vip { background: rgba(255, 255, 255, 0.9); color: #1f2937; }
+
+        .cell-prefilled-light { background: #f8fafc; color: #1e293b; }
+        .cell-prefilled-dark { background: #6b7280; color: #f9fafb; }
+        .cell-prefilled-ocean { background: rgba(224, 242, 254, 0.9); color: #0c4a6e; }
+        .cell-prefilled-forest { background: rgba(220, 252, 231, 0.9); color: #14532d; }
+        .cell-prefilled-sunset { background: rgba(254, 237, 213, 0.9); color: #9a3412; }
+        .cell-prefilled-purple { background: rgba(243, 232, 255, 0.9); color: #581c87; }
+        .cell-prefilled-galaxy { background: rgba(224, 242, 254, 0.9); color: #1e293b; }
+        .cell-prefilled-vip { background: rgba(254, 243, 199, 0.9); color: #1f2937; }
+
+        .cell-hint { background: #fef3c7 !important; color: #d97706 !important; }
+        .cell-error { background: #fef2f2 !important; border-color: #ef4444 !important; }
+
+        /* Number pad theme fixes */
+        .number-btn-light { background: #f3f4f6; color: #1f2937; border-color: #d1d5db; }
+        .number-btn-light:hover { background: #e5e7eb; }
+        .number-btn-dark { background: #4b5563; color: #f9fafb; border-color: #6b7280; }
+        .number-btn-dark:hover { background: #6b7280; }
+        .number-btn-ocean { background: rgba(240, 249, 255, 0.9); color: #0c4a6e; border-color: #0891b2; }
+        .number-btn-ocean:hover { background: rgba(224, 242, 254, 0.9); }
+        .number-btn-forest { background: rgba(240, 253, 244, 0.9); color: #14532d; border-color: #059669; }
+        .number-btn-forest:hover { background: rgba(220, 252, 231, 0.9); }
+        .number-btn-sunset { background: rgba(255, 247, 237, 0.9); color: #9a3412; border-color: #ea580c; }
+        .number-btn-sunset:hover { background: rgba(254, 237, 213, 0.9); }
+        .number-btn-purple { background: rgba(250, 245, 255, 0.9); color: #581c87; border-color: #7c3aed; }
+        .number-btn-purple:hover { background: rgba(243, 232, 255, 0.9); }
+        .number-btn-galaxy { background: rgba(240, 249, 255, 0.9); color: #1e293b; border-color: #0f0f23; }
+        .number-btn-galaxy:hover { background: rgba(224, 242, 254, 0.9); }
+        .number-btn-vip { background: rgba(255, 255, 255, 0.9); color: #1f2937; border-color: #ffd700; }
+        .number-btn-vip:hover { background: rgba(254, 243, 199, 0.9); }
+    </style>
+</head>
+<body class="theme-light min-h-screen py-4 transition-colors duration-300">
+    <!-- Galaxy Stars Container -->
+    <div id="galaxyStars" class="galaxy-stars hidden"></div>
+    
+    <!-- VIP Stars Container -->
+    <div id="vipStars" class="vip-stars hidden"></div>
+
+    <!-- VIP Status Banner -->
+    <div id="vipBanner" class="vip-banner fixed top-0 left-0 right-0 z-40 text-center py-2 text-black font-bold text-lg hidden">
+        👑 VIP STATUS ACTIVATED 👑
+    </div>
+
+    <!-- Splash Screen -->
+    <div id="splashScreen" class="fixed inset-0 bg-gradient-to-br from-blue-600 to-purple-700 z-50 flex items-center justify-center">
+        <div class="text-center splash-animation">
+            <div class="text-9xl mb-8">🧩</div>
+            <h1 class="text-6xl font-bold text-white mb-4">Kurdish Sudoku</h1>
+            <p class="text-2xl text-blue-100 mb-8">Loading...</p>
+            <div class="w-64 h-2 bg-white bg-opacity-30 rounded-full mx-auto">
+                <div id="loadingBar" class="h-full bg-white rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Page -->
+    <div id="welcomePage" class="container mx-auto px-4 max-w-lg hidden">
+        <div class="text-center mb-12">
+            <div class="text-8xl mb-6">🧩</div>
+            <h1 id="gameTitle" class="text-5xl font-bold mb-4 select-none cursor-pointer">Kurdish Sudoku</h1>
+            <p class="text-xl px-4" data-translate="subtitle">Challenge your mind with the classic puzzle game</p>
+        </div>
+        
+        <div class="space-y-6">
+            <button id="welcomePlayBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 rounded-2xl font-bold text-2xl transition-colors shadow-lg" data-translate="play">
+                Play
+            </button>
+            <button id="welcomeSettingsBtn" class="w-full bg-gray-600 hover:bg-gray-700 text-white px-8 py-6 rounded-2xl font-bold text-2xl transition-colors shadow-lg" data-translate="settings">
+                Settings
+            </button>
+            <button id="welcomeShopBtn" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-8 py-6 rounded-2xl font-bold text-2xl transition-colors shadow-lg">
+                🛒 <span data-translate="shop">Shop</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Page -->
+    <div id="gamePage" class="container mx-auto px-4 max-w-4xl hidden">
+        <!-- Header -->
+        <div class="text-center mb-6 flex items-center justify-between flex-wrap">
+            <div class="flex-1 min-w-0">
+                <h1 class="text-3xl md:text-4xl font-bold mb-2">Kurdish Sudoku</h1>
+                <p class="text-sm md:text-lg" data-translate="gameInstructions">Fill the grid so each row, column, and box contains all numbers</p>
+            </div>
+            <div class="flex gap-3 mt-4 md:mt-0">
+                <button id="shopBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-xl">
+                    🛒
+                </button>
+                <button id="settingsBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-xl">
+                    ⚙️
+                </button>
+            </div>
+        </div>
+        
+        <!-- Game Stats -->
+        <div class="card-light rounded-2xl shadow-lg p-4 md:p-6 mb-6">
+            <div class="grid grid-cols-3 gap-4 mb-4">
+                <button id="newGameBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-2xl" data-translate="newGame">
+                    New Game
+                </button>
+                <button id="difficultyBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-2xl">
+                    <span data-translate="easy">Easy</span>
+                </button>
+                <button id="gridSizeBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-2xl">
+                    <span data-translate="grid9x9">9×9</span>
+                </button>
+            </div>
+            
+            <div class="flex justify-center gap-3 md:gap-6 text-sm md:text-lg flex-wrap">
+                <div><span data-translate="time">Time</span>: <span id="timer" class="font-bold text-green-600">00:00</span></div>
+                <div><span data-translate="hints">Hints</span>: <span id="hintsCount" class="font-bold text-yellow-600">3</span></div>
+                <div><span data-translate="coins">Coins</span>: <span id="coinsCount" class="font-bold text-yellow-600">💰 50</span></div>
+                <div><span data-translate="fails">Fails</span>: <span id="failsCount" class="font-bold text-red-600">0/3</span></div>
+            </div>
+        </div>
+        
+        <!-- Sudoku Grid -->
+        <div class="card-light rounded-2xl shadow-lg p-4 md:p-8 mb-6">
+            <div id="sudokuGrid" class="sudoku-grid grid-light grid-9x9">
+                <!-- Grid will be generated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div class="card-light rounded-2xl shadow-lg p-4 md:p-6">
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <button id="hintBtn" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-xl">
+                    💡 <span data-translate="hintCost">Hint (10 coins)</span>
+                </button>
+                <button id="eraseBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-xl">
+                    ✕ <span data-translate="erase">Erase</span>
+                </button>
+            </div>
+            
+            <!-- Number Pad -->
+            <div id="numberPad" class="grid gap-2 md:gap-3 max-w-lg mx-auto">
+                <!-- Numbers will be generated -->
+            </div>
+        </div>
+        
+        <!-- Status Message -->
+        <div id="statusMessage" class="mt-6 text-center text-lg md:text-xl font-medium hidden"></div>
+    </div>
+
+    <!-- Shop Modal -->
+    <div id="shopModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="card-light rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">🛒 <span data-translate="shop">Shop</span></h2>
+                    <button id="closeShop" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                </div>
+                
+                <!-- Coins Display -->
+                <div class="bg-yellow-100 rounded-lg p-4 mb-6 text-center">
+                    <div class="text-2xl mb-2">💰</div>
+                    <div class="text-lg font-bold text-gray-800">
+                        <span data-translate="coins">Coins</span>: <span id="shopCoinsCount">50</span>
+                    </div>
+                </div>
+                
+                <!-- Hints -->
+                <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div class="flex items-center justify-between mb-3">
+                        <div>
+                            <h3 class="font-bold text-gray-800">💡 <span data-translate="hints">Hints</span></h3>
+                            <p class="text-sm text-gray-600" data-translate="hintsCost">Cost: 10 coins each</p>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm text-gray-600"><span data-translate="available">Available</span>: <span id="shopHintsCount">3</span></div>
+                        </div>
+                    </div>
+                    <button id="buyHintsBtn" class="w-full bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg font-medium" data-translate="buyHints">
+                        Buy Hints
+                    </button>
+                </div>
+                
+                <!-- Themes -->
+                <div class="space-y-3">
+                    <h3 class="font-bold text-center">🎨 <span data-translate="premiumThemes">Premium Themes</span></h3>
+                    
+                    <!-- Ocean Theme -->
+                    <div class="bg-cyan-50 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">🌊</span>
+                                <div>
+                                    <h4 class="font-medium text-gray-800" data-translate="oceanTheme">Ocean Theme</h4>
+                                    <p class="text-xs text-gray-600" data-translate="cost50">Cost: 50 coins</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="buyOceanBtn" class="w-full bg-cyan-600 hover:bg-cyan-700 text-white px-3 py-2 rounded-lg text-sm font-medium" data-translate="buyOcean">
+                            Buy Ocean Theme
+                        </button>
+                    </div>
+                    
+                    <!-- Forest Theme -->
+                    <div class="bg-green-50 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">🌲</span>
+                                <div>
+                                    <h4 class="font-medium text-gray-800" data-translate="forestTheme">Forest Theme</h4>
+                                    <p class="text-xs text-gray-600" data-translate="cost50">Cost: 50 coins</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="buyForestBtn" class="w-full bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium" data-translate="buyForest">
+                            Buy Forest Theme
+                        </button>
+                    </div>
+                    
+                    <!-- Sunset Theme -->
+                    <div class="bg-orange-50 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">🌅</span>
+                                <div>
+                                    <h4 class="font-medium text-gray-800" data-translate="sunsetTheme">Sunset Theme</h4>
+                                    <p class="text-xs text-gray-600" data-translate="cost75">Cost: 75 coins</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="buySunsetBtn" class="w-full bg-orange-600 hover:bg-orange-700 text-white px-3 py-2 rounded-lg text-sm font-medium" data-translate="buySunset">
+                            Buy Sunset Theme
+                        </button>
+                    </div>
+                    
+                    <!-- Purple Theme -->
+                    <div class="bg-purple-50 rounded-lg p-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl">💜</span>
+                                <div>
+                                    <h4 class="font-medium text-gray-800" data-translate="purpleTheme">Purple Theme</h4>
+                                    <p class="text-xs text-gray-600" data-translate="cost100">Cost: 100 coins</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="buyPurpleBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium" data-translate="buyPurple">
+                            Buy Purple Theme
+                        </button>
+                    </div>
+                    
+                    <!-- Galaxy Theme (Premium with Animation) -->
+                    <div class="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-3 border-2 border-yellow-400">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="text-2xl animate-pulse">🌌</span>
+                                <div>
+                                    <h4 class="font-medium text-gray-800 flex items-center gap-1">
+                                        <span data-translate="galaxyTheme">Galaxy Theme</span>
+                                        <span class="text-xs bg-yellow-400 text-black px-1 rounded">PREMIUM</span>
+                                    </h4>
+                                    <p class="text-xs text-gray-600" data-translate="cost200animated">Cost: 200 coins • Animated Background</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button id="buyGalaxyBtn" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-3 py-2 rounded-lg text-sm font-medium transform hover:scale-105 transition-all" data-translate="buyGalaxy">
+                            Buy Galaxy Theme ✨
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="card-light rounded-xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">⚙️ <span data-translate="settings">Settings</span></h2>
+                    <button id="closeSettings" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                </div>
+                
+                <!-- Language -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2" data-translate="language">Language</label>
+                    <select id="languageSelect" class="w-full p-3 border border-gray-300 rounded-lg bg-white text-gray-800">
+                        <option value="en">English</option>
+                        <option value="ku">کوردی (Kurdish)</option>
+                        <option value="ar">العربية (Arabic)</option>
+                    </select>
+                </div>
+                
+                <!-- Grid Size -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2" data-translate="gridSize">Grid Size</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="grid6x6Btn" class="p-3 border border-gray-300 rounded-lg bg-white text-gray-800 hover:bg-gray-50 text-sm">
+                            📐 <span data-translate="grid6x6">6×6 Grid</span>
+                        </button>
+                        <button id="grid9x9Btn" class="p-3 border border-gray-300 rounded-lg bg-white text-gray-800 hover:bg-gray-50 text-sm">
+                            📏 <span data-translate="grid9x9">9×9 Grid</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Sound -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2" data-translate="sound">Sound</label>
+                    <div class="flex items-center justify-between p-3 border border-gray-300 rounded-lg bg-white">
+                        <span class="text-gray-800" data-translate="soundEffects">Sound Effects</span>
+                        <button id="soundToggle" class="w-12 h-6 bg-gray-300 rounded-full relative transition-colors">
+                            <div id="soundToggleSlider" class="w-5 h-5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform"></div>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Theme -->
+                <div class="mb-6">
+                    <label class="block text-sm font-medium mb-2" data-translate="theme">Theme</label>
+                    <div class="grid grid-cols-2 gap-2" id="themeButtons">
+                        <button id="lightTheme" class="p-2 border border-gray-300 rounded-lg bg-white text-gray-800 hover:bg-gray-50 text-sm">
+                            ☀️ <span data-translate="light">Light</span>
+                        </button>
+                        <button id="darkTheme" class="p-2 border border-gray-300 rounded-lg bg-gray-800 text-white hover:bg-gray-700 text-sm">
+                            🌙 <span data-translate="dark">Dark</span>
+                        </button>
+                        <button id="oceanTheme" class="p-2 border border-gray-300 rounded-lg bg-cyan-100 text-cyan-900 hover:bg-cyan-200 text-sm disabled:opacity-50">
+                            🌊 <span data-translate="ocean">Ocean</span>
+                        </button>
+                        <button id="forestTheme" class="p-2 border border-gray-300 rounded-lg bg-green-100 text-green-900 hover:bg-green-200 text-sm disabled:opacity-50">
+                            🌲 <span data-translate="forest">Forest</span>
+                        </button>
+                        <button id="sunsetTheme" class="p-2 border border-gray-300 rounded-lg bg-orange-100 text-orange-900 hover:bg-orange-200 text-sm disabled:opacity-50">
+                            🌅 <span data-translate="sunset">Sunset</span>
+                        </button>
+                        <button id="purpleTheme" class="p-2 border border-gray-300 rounded-lg bg-purple-100 text-purple-900 hover:bg-purple-200 text-sm disabled:opacity-50">
+                            💜 <span data-translate="purple">Purple</span>
+                        </button>
+                        <button id="galaxyTheme" class="p-2 border border-gray-300 rounded-lg bg-gradient-to-r from-indigo-100 to-purple-100 text-indigo-900 hover:from-indigo-200 hover:to-purple-200 text-sm disabled:opacity-50">
+                            🌌 <span data-translate="galaxy">Galaxy</span>
+                        </button>
+                        <button id="vipTheme" class="p-2 border border-gray-300 rounded-lg bg-gradient-to-r from-yellow-100 to-yellow-200 text-yellow-900 hover:from-yellow-200 hover:to-yellow-300 text-sm disabled:opacity-50">
+                            👑 <span data-translate="vip">VIP</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button id="aboutBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium" data-translate="about">
+                        📖 About
+                    </button>
+                    <button id="superResetBtn" class="bg-gradient-to-r from-red-600 to-red-800 hover:from-red-700 hover:to-red-900 text-white px-4 py-3 rounded-lg font-bold shadow-lg transform hover:scale-105 transition-all" data-translate="superReset">
+                        💥 SUPER RESET
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Modal -->
+    <div id="aboutModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="card-light rounded-xl shadow-xl max-w-md w-full">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">📖 <span data-translate="about">About</span></h2>
+                    <button id="closeAbout" class="text-gray-500 hover:text-gray-700 text-2xl">×</button>
+                </div>
+                
+                <div class="text-center mb-6">
+                    <div class="text-6xl mb-4">🧩</div>
+                    <h3 class="text-2xl font-bold mb-2">Kurdish Sudoku</h3>
+                    <p class="text-gray-600 mb-4" data-translate="version">Version 2.0</p>
+                    <p class="text-gray-600 mb-4" data-translate="developer">The game developed by Didar</p>
+                </div>
+                
+                <div class="flex gap-3 mt-6">
+                    <button id="moreGamesBtn" class="flex-1 bg-green-600 hover:bg-green-700 text-white px-4 py-3 rounded-lg font-medium" data-translate="moreGames">
+                        More Games
+                    </button>
+                    <button id="closeAboutBtn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg font-medium" data-translate="close">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Victory Modal -->
+    <div id="victoryModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="card-light rounded-xl shadow-xl max-w-md w-full">
+            <div class="p-8 text-center">
+                <div class="text-6xl mb-4">🎉</div>
+                <h2 class="text-2xl font-bold mb-2" data-translate="congratulations">Congratulations!</h2>
+                <p class="mb-4" data-translate="puzzleSolved">You solved the puzzle!</p>
+                <div class="bg-gray-100 rounded-lg p-4 mb-4">
+                    <div class="text-sm">
+                        <div><span data-translate="time">Time</span>: <span id="finalTime" class="font-medium text-green-600">00:00</span></div>
+                        <div><span data-translate="hintsUsed">Hints Used</span>: <span id="finalHints" class="font-medium text-yellow-600">0</span></div>
+                        <div><span data-translate="coinsEarned">Coins Earned</span>: <span id="coinsEarned" class="font-medium text-yellow-600">+15</span></div>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button id="playAgain" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium" data-translate="playAgain">
+                        Play Again
+                    </button>
+                    <button id="closeVictory" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium" data-translate="close">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cheat Modal -->
+    <div id="cheatModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600 rounded-xl shadow-2xl max-w-lg w-full border-4 border-yellow-300">
+            <div class="p-8 text-center">
+                <div class="text-8xl mb-4" style="animation: spin 2s linear infinite;">🌟</div>
+                <h2 class="text-3xl font-bold text-white mb-2 rainbow-text" data-translate="megaCheat">MEGA CHEAT ACTIVATED!</h2>
+                <p class="text-white mb-4 text-lg" data-translate="ultimateSecret">🎊 You've discovered the ultimate secret! 🎊</p>
+                <div class="bg-white bg-opacity-20 rounded-lg p-6 mb-4">
+                    <div class="text-white font-bold text-lg space-y-2">
+                        <div class="animate-bounce">💰 <span data-translate="plus99999coins">+99999 Coins</span></div>
+                        <div class="animate-bounce" style="animation-delay: 0.2s;">💡 <span data-translate="plus20hints">+20 Hints</span></div>
+                        <div class="animate-bounce" style="animation-delay: 0.4s;">🌈 <span data-translate="allThemesUnlocked">All Themes Unlocked</span></div>
+                        <div class="animate-bounce" style="animation-delay: 0.6s;">✨ <span data-translate="vipStatus">VIP Status Activated</span></div>
+                    </div>
+                </div>
+                <button id="closeCheatModal" class="bg-white text-purple-600 px-8 py-4 rounded-lg font-bold hover:bg-yellow-100 transform hover:scale-105 text-lg" data-translate="legendary">
+                    LEGENDARY! 🏆
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Super Reset Confirmation Modal -->
+    <div id="superResetModal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-gradient-to-br from-red-600 via-orange-600 to-red-800 rounded-xl shadow-2xl max-w-md w-full border-4 border-red-400">
+            <div class="p-8 text-center">
+                <div class="text-8xl mb-4 animate-pulse">⚠️</div>
+                <h2 class="text-3xl font-bold text-white mb-4" data-translate="dangerZone">DANGER ZONE!</h2>
+                <p class="text-white mb-6 text-lg" data-translate="resetWarning">This will permanently delete ALL your progress, coins, themes, and settings!</p>
+                <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-6">
+                    <div class="text-white font-bold space-y-2">
+                        <div>💰 <span data-translate="allCoinsLost">All Coins Will Be Lost</span></div>
+                        <div>🎨 <span data-translate="allThemesLost">All Purchased Themes Lost</span></div>
+                        <div>💡 <span data-translate="allHintsLost">All Hints Will Be Lost</span></div>
+                        <div>👑 <span data-translate="vipStatusLost">VIP Status Will Be Lost</span></div>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <button id="cancelSuperReset" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-6 py-4 rounded-lg font-bold text-lg" data-translate="cancel">
+                        Cancel
+                    </button>
+                    <button id="confirmSuperReset" class="flex-1 bg-red-600 hover:bg-red-700 text-white px-6 py-4 rounded-lg font-bold text-lg transform hover:scale-105" data-translate="confirmReset">
+                        YES, RESET ALL!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Translation data
+        const translations = {
+            en: {
+                subtitle: "Challenge your mind with the classic puzzle game",
+                play: "Play",
+                settings: "Settings",
+                shop: "Shop",
+                gameInstructions: "Fill the grid so each row, column, and box contains all numbers",
+                newGame: "New Game",
+                easy: "Easy",
+                medium: "Medium",
+                hard: "Hard",
+                grid6x6: "6×6",
+                grid9x9: "9×9",
+                time: "Time",
+                hints: "Hints",
+                coins: "Coins",
+                fails: "Fails",
+                hintCost: "Hint",
+                erase: "Erase",
+                hintsCost: "Cost: 10 coins each",
+                available: "Available",
+                buyHints: "Buy Hints",
+                premiumThemes: "Premium Themes",
+                oceanTheme: "Ocean Theme",
+                forestTheme: "Forest Theme",
+                sunsetTheme: "Sunset Theme",
+                purpleTheme: "Purple Theme",
+                galaxyTheme: "Galaxy Theme",
+                cost50: "Cost: 50 coins",
+                cost75: "Cost: 75 coins",
+                cost100: "Cost: 100 coins",
+                cost200animated: "Cost: 200 coins • Animated Background",
+                buyOcean: "Buy Ocean Theme",
+                buyForest: "Buy Forest Theme",
+                buySunset: "Buy Sunset Theme",
+                buyPurple: "Buy Purple Theme",
+                buyGalaxy: "Buy Galaxy Theme ✨",
+                language: "Language",
+                gridSize: "Grid Size",
+                sound: "Sound",
+                soundEffects: "Sound Effects",
+                theme: "Theme",
+                light: "Light",
+                dark: "Dark",
+                ocean: "Ocean",
+                forest: "Forest",
+                sunset: "Sunset",
+                purple: "Purple",
+                galaxy: "Galaxy",
+                vip: "VIP",
+                about: "About",
+                reset: "Reset Game",
+                superReset: "RESET",
+                version: "Version 1.2.6",
+                developer: "The game developed by Didar",
+                congratulations: "Congratulations!",
+                puzzleSolved: "You solved the puzzle!",
+                hintsUsed: "Hints Used",
+                coinsEarned: "Coins Earned",
+                playAgain: "Play Again",
+                close: "Close",
+                megaCheat: "MEGA CHEAT ACTIVATED!",
+                ultimateSecret: "🎊 You've discovered the ultimate secret! 🎊",
+                plus99999coins: "+99999 Coins",
+                plus20hints: "+20 Hints",
+                allThemesUnlocked: "All Themes Unlocked",
+                vipStatus: "VIP Status Activated",
+                legendary: "LEGENDARY! 🏆",
+                dangerZone: "DANGER ZONE!",
+                resetWarning: "This will permanently delete ALL your progress, coins, themes, and settings!",
+                allCoinsLost: "All Coins Will Be Lost",
+                allThemesLost: "All Purchased Themes Lost",
+                allHintsLost: "All Hints Will Be Lost",
+                vipStatusLost: "VIP Status Will Be Lost",
+                cancel: "Cancel",
+                confirmReset: "YES, RESET ALL!",
+                moreGames: "More Games"
+            },
+            ku: {
+                subtitle: "مێشکت بە یاریی کلاسیکی پازڵ تاقی بکەرەوە",
+                play: "یاری کردن",
+                settings: "ڕێکخستنەکان",
+                shop: "فرۆشگا",
+                gameInstructions: "خانەکان پڕ بکە بەجۆرێک هەر ڕیز، ستوون و سندووق هەموو ژمارەکانی تێدا بێت",
+                newGame: "یاریی نوێ",
+                easy: "ئاسان",
+                medium: "مامناوەند",
+                hard: "سەخت",
+                grid6x6: "٦×٦",
+                grid9x9: "٩×٩",
+                time: "کات",
+                hints: "ئامۆژگاری",
+                coins: "دراو",
+                fails: "هەڵە",
+                hintCost: "ئامۆژگاری",
+                erase: "سڕینەوە",
+                hintsCost: "نرخ: ١٠ دراو بۆ هەر یەکێک",
+                available: "بەردەست",
+                buyHints: "ئامۆژگاری بکڕە",
+                premiumThemes: "ڕووکارە تایبەتەکان",
+                oceanTheme: "ڕووکاری زەریا",
+                forestTheme: "ڕووکاری دارستان",
+                sunsetTheme: "ڕووکاری ئاوابوون",
+                purpleTheme: "ڕووکاری مۆر",
+                galaxyTheme: "ڕووکاری کەهکەشان",
+                cost50: "نرخ: ٥٠ دراو",
+                cost75: "نرخ: ٧٥ دراو",
+                cost100: "نرخ: ١٠٠ دراو",
+                cost200animated: "نرخ: ٢٠٠ دراو • پاشبنەمای جوڵاو",
+                buyOcean: "ڕووکاری زەریا بکڕە",
+                buyForest: "ڕووکاری دارستان بکڕە",
+                buySunset: "ڕووکاری ئاوابوون بکڕە",
+                buyPurple: "ڕووکاری مۆر بکڕە",
+                buyGalaxy: "ڕووکاری کەهکەشان بکڕە ✨",
+                language: "زمان",
+                gridSize: "قەبارەی تۆڕ",
+                sound: "دەنگ",
+                soundEffects: "کاریگەری دەنگ",
+                theme: "ڕووکار",
+                light: "ڕووناک",
+                dark: "تاریک",
+                ocean: "زەریا",
+                forest: "دارستان",
+                sunset: "ئاوابوون",
+                purple: "مۆر",
+                galaxy: "کەهکەشان",
+                vip: "VIP",
+                about: "دەربارە",
+                reset: "ڕیسێتی یاری",
+                superReset: "ڕیسێتی بەهێز",
+                version: "وەشانی ٢.٠",
+                developer: "یارییەکە لەلایەن دیدارەوە دروست کراوە",
+                congratulations: "پیرۆزبایی!",
+                puzzleSolved: "پازڵەکەت چارەسەر کرد!",
+                hintsUsed: "ئامۆژگاری بەکارهێنراو",
+                coinsEarned: "دراوی بەدەستهێنراو",
+                playAgain: "دووبارە یاری بکە",
+                close: "داخستن",
+                megaCheat: "فێڵی گەورە چالاک کرا!",
+                ultimateSecret: "🎊 نهێنی سەرەکیت دۆزییەوە! 🎊",
+                plus99999coins: "+٩٩٩٩٩ دراو",
+                plus20hints: "+٢٠ ئامۆژگاری",
+                allThemesUnlocked: "هەموو ڕووکارەکان کرانەوە",
+                vipStatus: "پلەی VIP چالاک کرا",
+                legendary: "ئەفسانەیی! 🏆",
+                dangerZone: "ناوچەی مەترسی!",
+                resetWarning: "ئەمە بە تەواوی هەموو پێشکەوتن، دراو، ڕووکار و ڕێکخستنەکانت دەسڕێتەوە!",
+                allCoinsLost: "هەموو دراوەکان لە دەست دەدرێن",
+                allThemesLost: "هەموو ڕووکارە کڕاوەکان لە دەست دەدرێن",
+                allHintsLost: "هەموو ئامۆژگاریەکان لە دەست دەدرێن",
+                vipStatusLost: "پلەی VIP لە دەست دەدرێت",
+                cancel: "هەڵوەشاندنەوە",
+                confirmReset: "بەڵێ، هەموو شت بسڕەوە!",
+                moreGames: "یاریی زیاتر"
+            },
+            ar: {
+                subtitle: "تحدى عقلك مع لعبة الألغاز الكلاسيكية",
+                play: "العب",
+                settings: "الإعدادات",
+                shop: "المتجر",
+                gameInstructions: "املأ الشبكة بحيث يحتوي كل صف وعمود ومربع على جميع الأرقام",
+                newGame: "لعبة جديدة",
+                easy: "سهل",
+                medium: "متوسط",
+                hard: "صعب",
+                grid6x6: "٦×٦",
+                grid9x9: "٩×٩",
+                time: "الوقت",
+                hints: "التلميحات",
+                coins: "العملات",
+                fails: "الأخطاء",
+                hintCost: "تلميح",
+                erase: "مسح",
+                hintsCost: "التكلفة: 10 عملات لكل واحد",
+                available: "متاح",
+                buyHints: "شراء التلميحات",
+                premiumThemes: "الثيمات المميزة",
+                oceanTheme: "ثيم المحيط",
+                forestTheme: "ثيم الغابة",
+                sunsetTheme: "ثيم الغروب",
+                purpleTheme: "الثيم البنفسجي",
+                galaxyTheme: "ثيم المجرة",
+                cost50: "التكلفة: 50 عملة",
+                cost75: "التكلفة: 75 عملة",
+                cost100: "التكلفة: 100 عملة",
+                cost200animated: "التكلفة: 200 عملة • خلفية متحركة",
+                buyOcean: "شراء ثيم المحيط",
+                buyForest: "شراء ثيم الغابة",
+                buySunset: "شراء ثيم الغروب",
+                buyPurple: "شراء الثيم البنفسجي",
+                buyGalaxy: "شراء ثيم المجرة ✨",
+                language: "اللغة",
+                gridSize: "حجم الشبكة",
+                sound: "الصوت",
+                soundEffects: "المؤثرات الصوتية",
+                theme: "الثيم",
+                light: "فاتح",
+                dark: "داكن",
+                ocean: "المحيط",
+                forest: "الغابة",
+                sunset: "الغروب",
+                purple: "بنفسجي",
+                galaxy: "المجرة",
+                vip: "VIP",
+                about: "حول",
+                reset: "إعادة تعيين اللعبة",
+                superReset: "إعادة تعيين قوية",
+                version: "الإصدار 2.0",
+                developer: "تم تطوير اللعبة من قبل ديدار",
+                congratulations: "تهانينا!",
+                puzzleSolved: "لقد حللت اللغز!",
+                hintsUsed: "التلميحات المستخدمة",
+                coinsEarned: "العملات المكتسبة",
+                playAgain: "العب مرة أخرى",
+                close: "إغلاق",
+                megaCheat: "تم تفعيل الغش الضخم!",
+                ultimateSecret: "🎊 لقد اكتشفت السر النهائي! 🎊",
+                plus99999coins: "+99999 عملة",
+                plus20hints: "+20 تلميح",
+                allThemesUnlocked: "تم فتح جميع الثيمات",
+                vipStatus: "تم تفعيل حالة VIP",
+                legendary: "أسطوري! 🏆",
+                dangerZone: "منطقة خطر!",
+                resetWarning: "سيؤدي هذا إلى حذف جميع تقدمك والعملات والثيمات والإعدادات نهائياً!",
+                allCoinsLost: "ستفقد جميع العملات",
+                allThemesLost: "ستفقد جميع الثيمات المشتراة",
+                allHintsLost: "ستفقد جميع التلميحات",
+                vipStatusLost: "ستفقد حالة VIP",
+                cancel: "إلغاء",
+                confirmReset: "نعم، احذف كل شيء!",
+                moreGames: "المزيد من الألعاب"
+            }
+        };
+
+        class KurdishSudoku {
+            constructor() {
+                this.gridSize = 9;
+                this.boxSize = 3;
+                this.grid = [];
+                this.solution = [];
+                this.prefilled = [];
+                this.selectedCell = null;
+                this.startTime = null;
+                this.timerInterval = null;
+                this.hintsUsed = 0;
+                this.failsCount = 0;
+                this.coins = parseInt(localStorage.getItem('kurdish-sudoku-coins')) || 50;
+                this.hintsAvailable = parseInt(localStorage.getItem('kurdish-sudoku-hints')) || 3;
+                this.currentDifficulty = 'easy';
+                this.currentTheme = localStorage.getItem('kurdish-sudoku-theme') || 'light';
+                this.ownedThemes = JSON.parse(localStorage.getItem('kurdish-sudoku-owned-themes')) || ['light', 'dark'];
+                this.currentLanguage = localStorage.getItem('kurdish-sudoku-language') || 'en';
+                this.soundEnabled = localStorage.getItem('kurdish-sudoku-sound') !== 'false';
+                this.vipStatus = localStorage.getItem('kurdish-sudoku-vip') === 'true';
+                this.titleTapCount = 0;
+                this.titleTapTimer = null;
+                this.cheatBuffer = '';
+                this.backgroundMusic = null;
+                this.musicInterval = null;
+                
+                this.difficulties = {
+                    easy: { cellsToRemove: 35, coinReward: 15 },
+                    medium: { cellsToRemove: 46, coinReward: 25 },
+                    hard: { cellsToRemove: 55, coinReward: 40 }
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.showSplashScreen();
+                this.bindEvents();
+                this.updateDisplays();
+                this.applyTheme();
+                this.applyTranslations();
+                this.updateSoundToggle();
+                this.updateVipStatus();
+            }
+            
+            showSplashScreen() {
+                const splash = document.getElementById('splashScreen');
+                const loadingBar = document.getElementById('loadingBar');
+                let progress = 0;
+                
+                const loadingInterval = setInterval(() => {
+                    progress += Math.random() * 20;
+                    if (progress > 100) progress = 100;
+                    loadingBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(loadingInterval);
+                        setTimeout(() => {
+                            splash.classList.add('hidden');
+                            document.getElementById('welcomePage').classList.remove('hidden');
+                            this.createGrid();
+                            this.createNumberPad();
+                            this.generateNewGame();
+                        }, 2000);
+                    }
+                }, 100);
+            }
+            
+            createGrid() {
+                const gridElement = document.getElementById('sudokuGrid');
+                gridElement.innerHTML = '';
+                
+                // Reset grid arrays
+                this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
+                this.solution = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
+                this.prefilled = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
+                
+                // Update grid classes
+                gridElement.className = `sudoku-grid grid-light grid-${this.gridSize}x${this.gridSize}`;
+                
+                if (this.gridSize === 6) {
+                    // Create 6 boxes (2x3 grid of boxes)
+                    for (let boxRow = 0; boxRow < 2; boxRow++) {
+                        for (let boxCol = 0; boxCol < 3; boxCol++) {
+                            const box = document.createElement('div');
+                            box.className = 'sudoku-box box-6x6';
+                            
+                            // Create 6 cells in each box (2x3)
+                            for (let cellRow = 0; cellRow < 2; cellRow++) {
+                                for (let cellCol = 0; cellCol < 3; cellCol++) {
+                                    const row = boxRow * 2 + cellRow;
+                                    const col = boxCol * 3 + cellCol;
+                                    
+                                    const cell = this.createCell(row, col, 'cell-6x6');
+                                    box.appendChild(cell);
+                                }
+                            }
+                            
+                            gridElement.appendChild(box);
+                        }
+                    }
+                } else {
+                    // Create 9 boxes (3x3 grid of boxes)
+                    for (let boxRow = 0; boxRow < 3; boxRow++) {
+                        for (let boxCol = 0; boxCol < 3; boxCol++) {
+                            const box = document.createElement('div');
+                            box.className = 'sudoku-box box-9x9';
+                            
+                            // Create 9 cells in each box
+                            for (let cellRow = 0; cellRow < 3; cellRow++) {
+                                for (let cellCol = 0; cellCol < 3; cellCol++) {
+                                    const row = boxRow * 3 + cellRow;
+                                    const col = boxCol * 3 + cellCol;
+                                    
+                                    const cell = this.createCell(row, col, 'cell-9x9');
+                                    box.appendChild(cell);
+                                }
+                            }
+                            
+                            gridElement.appendChild(box);
+                        }
+                    }
+                }
+            }
+            
+            createCell(row, col, sizeClass) {
+                const cell = document.createElement('div');
+                cell.className = `sudoku-cell ${sizeClass} text-center font-bold border border-gray-300 focus:border-blue-500 rounded-md cursor-pointer flex items-center justify-center cell-light`;
+                
+                if (sizeClass === 'cell-6x6') {
+                    cell.classList.add('w-12', 'h-12', 'text-xl');
+                } else {
+                    cell.classList.add('w-8', 'h-8', 'md:w-12', 'md:h-12', 'text-lg', 'md:text-2xl');
+                }
+                
+                cell.dataset.row = row;
+                cell.dataset.col = col;
+                cell.tabIndex = 0;
+                
+                cell.addEventListener('click', (e) => this.selectCell(e.target));
+                cell.addEventListener('keydown', (e) => this.handleKeydown(e));
+                
+                return cell;
+            }
+            
+            createNumberPad() {
+                const numberPad = document.getElementById('numberPad');
+                numberPad.innerHTML = '';
+                
+                const maxNumber = this.gridSize;
+                const cols = this.gridSize === 6 ? 3 : 5;
+                numberPad.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+                
+                // Create number buttons
+                for (let i = 1; i <= maxNumber; i++) {
+                    const btn = document.createElement('button');
+                    btn.className = `number-btn-${this.currentTheme} border-2 rounded-xl h-12 md:h-16 font-bold text-lg md:text-2xl transition-colors`;
+                    btn.textContent = i;
+                    btn.addEventListener('click', () => this.inputNumber(i));
+                    numberPad.appendChild(btn);
+                }
+            }
+            
+            bindEvents() {
+                // Title tap for cheat (7 taps within 2 seconds)
+                document.getElementById('gameTitle').addEventListener('click', () => this.handleTitleTap());
+                
+                // Keyboard cheat detection
+                document.addEventListener('keydown', (e) => this.handleCheatInput(e));
+                
+                // Welcome page
+                document.getElementById('welcomePlayBtn').addEventListener('click', () => this.showGamePage());
+                document.getElementById('welcomeSettingsBtn').addEventListener('click', () => this.openSettings());
+                document.getElementById('welcomeShopBtn').addEventListener('click', () => this.openShop());
+                
+                // Game controls
+                document.getElementById('newGameBtn').addEventListener('click', () => this.generateNewGame());
+                document.getElementById('difficultyBtn').addEventListener('click', () => this.cycleDifficulty());
+                document.getElementById('gridSizeBtn').addEventListener('click', () => this.cycleGridSize());
+                document.getElementById('hintBtn').addEventListener('click', () => this.giveHint());
+                document.getElementById('eraseBtn').addEventListener('click', () => this.eraseCell());
+                
+                // Modals
+                document.getElementById('shopBtn').addEventListener('click', () => this.openShop());
+                document.getElementById('settingsBtn').addEventListener('click', () => this.openSettings());
+                document.getElementById('closeShop').addEventListener('click', () => this.closeShop());
+                document.getElementById('closeSettings').addEventListener('click', () => this.closeSettings());
+                document.getElementById('closeVictory').addEventListener('click', () => this.closeVictory());
+                document.getElementById('closeCheatModal').addEventListener('click', () => this.closeCheatModal());
+                document.getElementById('closeAbout').addEventListener('click', () => this.closeAbout());
+                document.getElementById('closeAboutBtn').addEventListener('click', () => this.closeAbout());
+                document.getElementById('moreGamesBtn').addEventListener('click', () => this.openMoreGames());
+                document.getElementById('cancelSuperReset').addEventListener('click', () => this.closeSuperResetModal());
+                document.getElementById('confirmSuperReset').addEventListener('click', () => this.executeSuperReset());
+                
+                // Shop purchases
+                document.getElementById('buyHintsBtn').addEventListener('click', () => this.buyHints());
+                document.getElementById('buyOceanBtn').addEventListener('click', () => this.buyTheme('ocean', 50));
+                document.getElementById('buyForestBtn').addEventListener('click', () => this.buyTheme('forest', 50));
+                document.getElementById('buySunsetBtn').addEventListener('click', () => this.buyTheme('sunset', 75));
+                document.getElementById('buyPurpleBtn').addEventListener('click', () => this.buyTheme('purple', 100));
+                document.getElementById('buyGalaxyBtn').addEventListener('click', () => this.buyTheme('galaxy', 200));
+                
+                // Theme selection
+                document.getElementById('lightTheme').addEventListener('click', () => this.setTheme('light'));
+                document.getElementById('darkTheme').addEventListener('click', () => this.setTheme('dark'));
+                document.getElementById('oceanTheme').addEventListener('click', () => this.setTheme('ocean'));
+                document.getElementById('forestTheme').addEventListener('click', () => this.setTheme('forest'));
+                document.getElementById('sunsetTheme').addEventListener('click', () => this.setTheme('sunset'));
+                document.getElementById('purpleTheme').addEventListener('click', () => this.setTheme('purple'));
+                document.getElementById('galaxyTheme').addEventListener('click', () => this.setTheme('galaxy'));
+                document.getElementById('vipTheme').addEventListener('click', () => this.setTheme('vip'));
+                
+                // Settings
+                document.getElementById('languageSelect').addEventListener('change', (e) => this.setLanguage(e.target.value));
+                document.getElementById('grid6x6Btn').addEventListener('click', () => this.setGridSize(6));
+                document.getElementById('grid9x9Btn').addEventListener('click', () => this.setGridSize(9));
+                document.getElementById('soundToggle').addEventListener('click', () => this.toggleSound());
+                document.getElementById('aboutBtn').addEventListener('click', () => this.openAbout());
+                document.getElementById('superResetBtn').addEventListener('click', () => this.superReset());
+                
+                // Victory modal
+                document.getElementById('playAgain').addEventListener('click', () => {
+                    this.closeVictory();
+                    this.generateNewGame();
+                });
+            }
+            
+            handleTitleTap() {
+                this.titleTapCount++;
+                
+                if (this.titleTapTimer) {
+                    clearTimeout(this.titleTapTimer);
+                }
+                
+                this.titleTapTimer = setTimeout(() => {
+                    this.titleTapCount = 0;
+                }, 2000);
+                
+                if (this.titleTapCount >= 7) {
+                    this.activateCheat();
+                    this.titleTapCount = 0;
+                }
+            }
+            
+            handleCheatInput(e) {
+                this.cheatBuffer += e.key.toUpperCase();
+                
+                // Keep only last 10 characters
+                if (this.cheatBuffer.length > 10) {
+                    this.cheatBuffer = this.cheatBuffer.slice(-10);
+                }
+                
+                // Check for cheat codes
+                if (this.cheatBuffer.includes('COINS')) {
+                    this.coins += 100;
+                    this.saveData();
+                    this.updateDisplays();
+                    this.playSound('coin');
+                    this.showMessage('💰 Cheat: +100 Coins!', 'text-yellow-600');
+                    this.cheatBuffer = '';
+                } else if (this.cheatBuffer.includes('HINTS')) {
+                    this.hintsAvailable += 5;
+                    this.saveData();
+                    this.updateDisplays();
+                    this.playSound('hint');
+                    this.showMessage('💡 Cheat: +5 Hints!', 'text-blue-600');
+                    this.cheatBuffer = '';
+                } else if (this.cheatBuffer.includes('THEMES')) {
+                    this.ownedThemes = ['light', 'dark', 'ocean', 'forest', 'sunset', 'purple', 'galaxy', 'vip'];
+                    this.saveData();
+                    this.updateThemeButtons();
+                    this.playSound('unlock');
+                    this.showMessage('🌈 Cheat: All Themes Unlocked!', 'text-purple-600');
+                    this.cheatBuffer = '';
+                }
+            }
+            
+            activateCheat() {
+                // Add massive rewards
+                this.coins += 99999;
+                this.hintsAvailable += 20;
+                this.ownedThemes = ['light', 'dark', 'ocean', 'forest', 'sunset', 'purple', 'galaxy', 'vip'];
+                this.vipStatus = true;
+                
+                // Save data
+                this.saveData();
+                this.updateDisplays();
+                this.updateThemeButtons();
+                this.updateVipStatus();
+                
+                // Epic visual effects
+                this.createScreenShake();
+                this.createFireworks();
+                this.createCoinRain();
+                this.playSound('mega-cheat');
+                
+                // Show cheat modal
+                document.getElementById('cheatModal').classList.remove('hidden');
+                
+                // Show status message
+                this.showMessage('🎉 MEGA CHEAT ACTIVATED! +2000 Coins, +20 Hints, All Themes Unlocked! 🎉', 'rainbow-text');
+            }
+            
+            updateVipStatus() {
+                const vipBanner = document.getElementById('vipBanner');
+                if (this.vipStatus) {
+                    vipBanner.classList.remove('hidden');
+                    // Adjust body padding to account for banner
+                    document.body.style.paddingTop = '60px';
+                } else {
+                    vipBanner.classList.add('hidden');
+                    document.body.style.paddingTop = '16px';
+                }
+            }
+            
+            createScreenShake() {
+                document.body.classList.add('epic-shake');
+                setTimeout(() => document.body.classList.remove('epic-shake'), 2000);
+            }
+            
+            createFireworks() {
+                for (let i = 0; i < 30; i++) {
+                    setTimeout(() => {
+                        const firework = document.createElement('div');
+                        firework.className = 'firework';
+                        firework.style.left = Math.random() * window.innerWidth + 'px';
+                        firework.style.top = Math.random() * window.innerHeight + 'px';
+                        firework.textContent = ['✨', '🎆', '🎇', '💥', '⭐', '🌟', '💫'][Math.floor(Math.random() * 7)];
+                        firework.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
+                        document.body.appendChild(firework);
+                        
+                        setTimeout(() => firework.remove(), 3000);
+                    }, i * 100);
+                }
+            }
+            
+            createCoinRain() {
+                for (let i = 0; i < 50; i++) {
+                    setTimeout(() => {
+                        const coin = document.createElement('div');
+                        coin.className = 'coin-rain';
+                        coin.style.left = Math.random() * window.innerWidth + 'px';
+                        coin.style.top = '-50px';
+                        coin.textContent = ['💰', '🪙', '💎', '👑'][Math.floor(Math.random() * 4)];
+                        coin.style.animationDelay = Math.random() * 1 + 's';
+                        coin.style.filter = 'drop-shadow(0 0 10px gold)';
+                        document.body.appendChild(coin);
+                        
+                        setTimeout(() => coin.remove(), 4000);
+                    }, i * 50);
+                }
+            }
+            
+            playSound(type) {
+                if (!this.soundEnabled) return;
+                
+                // Create audio context for sound generation
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Different sounds for different actions
+                switch (type) {
+                    case 'success':
+                        oscillator.frequency.setValueAtTime(523, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(659, audioContext.currentTime + 0.1);
+                        oscillator.frequency.setValueAtTime(784, audioContext.currentTime + 0.2);
+                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                        break;
+                    case 'error':
+                        oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                        break;
+                    case 'coin':
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(1200, audioContext.currentTime + 0.05);
+                        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
+                        break;
+                    case 'hint':
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                        break;
+                    case 'unlock':
+                        oscillator.frequency.setValueAtTime(400, audioContext.currentTime);
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime + 0.1);
+                        oscillator.frequency.setValueAtTime(800, audioContext.currentTime + 0.2);
+                        oscillator.frequency.setValueAtTime(1000, audioContext.currentTime + 0.3);
+                        gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
+                        break;
+                    case 'mega-cheat':
+                        // Epic sound sequence
+                        for (let i = 0; i < 5; i++) {
+                            setTimeout(() => {
+                                const osc = audioContext.createOscillator();
+                                const gain = audioContext.createGain();
+                                osc.connect(gain);
+                                gain.connect(audioContext.destination);
+                                osc.frequency.setValueAtTime(800 + i * 200, audioContext.currentTime);
+                                gain.gain.setValueAtTime(0.2, audioContext.currentTime);
+                                gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                                osc.start();
+                                osc.stop(audioContext.currentTime + 0.3);
+                            }, i * 100);
+                        }
+                        return; // Don't start the main oscillator
+                }
+                
+                oscillator.start();
+                oscillator.stop(audioContext.currentTime + 0.5);
+            }
+            
+            generateNewGame() {
+                // Reset game state
+                this.grid = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
+                this.solution = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(0));
+                this.prefilled = Array(this.gridSize).fill().map(() => Array(this.gridSize).fill(false));
+                this.hintsUsed = 0;
+                this.failsCount = 0;
+                this.selectedCell = null;
+                
+                // Generate complete solution
+                this.generateCompleteSolution();
+                
+                // Remove cells based on difficulty
+                this.removeCells();
+                
+                // Update display
+                this.updateGrid();
+                this.startTimer();
+                this.updateDisplays();
+                
+                this.showMessage('New game started! Good luck! 🎮', 'text-green-600');
+            }
+            
+            generateCompleteSolution() {
+                if (this.gridSize === 6) {
+                    // 6x6 Sudoku solution
+                    const solution6x6 = [
+                        [1,2,3,4,5,6],
+                        [4,5,6,1,2,3],
+                        [2,3,1,6,4,5],
+                        [5,6,4,2,3,1],
+                        [3,1,2,5,6,4],
+                        [6,4,5,3,1,2]
+                    ];
+                    
+                    for (let i = 0; i < 6; i++) {
+                        for (let j = 0; j < 6; j++) {
+                            this.solution[i][j] = solution6x6[i][j];
+                            this.grid[i][j] = solution6x6[i][j];
+                        }
+                    }
+                } else {
+                    // 9x9 Sudoku solution
+                    const solution9x9 = [
+                        [5,3,4,6,7,8,9,1,2],
+                        [6,7,2,1,9,5,3,4,8],
+                        [1,9,8,3,4,2,5,6,7],
+                        [8,5,9,7,6,1,4,2,3],
+                        [4,2,6,8,5,3,7,9,1],
+                        [7,1,3,9,2,4,8,5,6],
+                        [9,6,1,5,3,7,2,8,4],
+                        [2,8,7,4,1,9,6,3,5],
+                        [3,4,5,2,8,6,1,7,9]
+                    ];
+                    
+                    for (let i = 0; i < 9; i++) {
+                        for (let j = 0; j < 9; j++) {
+                            this.solution[i][j] = solution9x9[i][j];
+                            this.grid[i][j] = solution9x9[i][j];
+                        }
+                    }
+                }
+            }
+            
+            removeCells() {
+                const totalCells = this.gridSize * this.gridSize;
+                const baseRemoval = this.gridSize === 6 ? 12 : 35;
+                const difficultyMultiplier = this.gridSize === 6 ? 
+                    { easy: 1, medium: 1.2, hard: 1.4 } : 
+                    { easy: 1, medium: 1.3, hard: 1.6 };
+                const cellsToRemove = Math.floor(baseRemoval * difficultyMultiplier[this.currentDifficulty]);
+                
+                const positions = [];
+                
+                // Create array of all positions
+                for (let i = 0; i < this.gridSize; i++) {
+                    for (let j = 0; j < this.gridSize; j++) {
+                        positions.push([i, j]);
+                    }
+                }
+                
+                // Shuffle positions
+                for (let i = positions.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [positions[i], positions[j]] = [positions[j], positions[i]];
+                }
+                
+                // Remove cells and mark prefilled
+                for (let i = 0; i < cellsToRemove && i < positions.length; i++) {
+                    const [row, col] = positions[i];
+                    this.grid[row][col] = 0;
+                }
+                
+                // Mark remaining cells as prefilled
+                for (let i = 0; i < this.gridSize; i++) {
+                    for (let j = 0; j < this.gridSize; j++) {
+                        this.prefilled[i][j] = this.grid[i][j] !== 0;
+                    }
+                }
+            }
+            
+            updateGrid() {
+                document.querySelectorAll('.sudoku-cell').forEach(cell => {
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    const value = this.grid[row][col];
+                    
+                    cell.textContent = value === 0 ? '' : value;
+                    cell.classList.remove('cell-hint', 'cell-error');
+                    
+                    // Remove all theme-specific classes
+                    cell.className = cell.className.replace(/cell-(light|dark|ocean|forest|sunset|purple|galaxy|vip)/g, '');
+                    cell.className = cell.className.replace(/cell-prefilled-(light|dark|ocean|forest|sunset|purple|galaxy|vip)/g, '');
+                    
+                    if (this.prefilled[row][col]) {
+                        cell.classList.add(`cell-prefilled-${this.currentTheme}`);
+                    } else {
+                        cell.classList.add(`cell-${this.currentTheme}`);
+                    }
+                });
+            }
+            
+            selectCell(cell) {
+                // Remove previous selection
+                document.querySelectorAll('.sudoku-cell').forEach(c => c.classList.remove('pulse-ring'));
+                
+                // Select new cell
+                this.selectedCell = cell;
+                cell.classList.add('pulse-ring');
+            }
+            
+            handleKeydown(e) {
+                if (e.key >= '1' && e.key <= this.gridSize.toString()) {
+                    this.inputNumber(parseInt(e.key));
+                } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                    this.eraseCell();
+                }
+            }
+            
+            inputNumber(number) {
+                if (!this.selectedCell) return;
+                
+                const row = parseInt(this.selectedCell.dataset.row);
+                const col = parseInt(this.selectedCell.dataset.col);
+                
+                if (this.prefilled[row][col]) return;
+                
+                this.selectedCell.textContent = number;
+                this.grid[row][col] = number;
+                
+                if (!this.isValidMove(row, col, number)) {
+                    this.selectedCell.classList.add('cell-error');
+                    this.failsCount++;
+                    this.updateDisplays();
+                    this.playSound('error');
+                    
+                    if (this.failsCount >= 3) {
+                        this.gameOver();
+                    }
+                } else {
+                    this.selectedCell.classList.remove('cell-error');
+                    this.checkWin();
+                }
+            }
+            
+            isValidMove(row, col, num) {
+                // Check row
+                for (let j = 0; j < this.gridSize; j++) {
+                    if (j !== col && this.grid[row][j] === num) return false;
+                }
+                
+                // Check column
+                for (let i = 0; i < this.gridSize; i++) {
+                    if (i !== row && this.grid[i][col] === num) return false;
+                }
+                
+                // Check box
+                const boxRowSize = this.gridSize === 6 ? 2 : 3;
+                const boxColSize = this.gridSize === 6 ? 3 : 3;
+                const boxRow = Math.floor(row / boxRowSize) * boxRowSize;
+                const boxCol = Math.floor(col / boxColSize) * boxColSize;
+                
+                for (let i = boxRow; i < boxRow + boxRowSize; i++) {
+                    for (let j = boxCol; j < boxCol + boxColSize; j++) {
+                        if ((i !== row || j !== col) && this.grid[i][j] === num) return false;
+                    }
+                }
+                
+                return true;
+            }
+            
+            giveHint() {
+                if (this.hintsAvailable <= 0) {
+                    this.showMessage('No hints available! Buy more in the shop.', 'text-red-600');
+                    return;
+                }
+                
+                // Find empty cells
+                const emptyCells = [];
+                for (let i = 0; i < this.gridSize; i++) {
+                    for (let j = 0; j < this.gridSize; j++) {
+                        if (this.grid[i][j] === 0) {
+                            emptyCells.push([i, j]);
+                        }
+                    }
+                }
+                
+                if (emptyCells.length === 0) return;
+                
+                // Pick random empty cell
+                const [row, col] = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                const correctValue = this.solution[row][col];
+                
+                // Fill the cell
+                this.grid[row][col] = correctValue;
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                cell.textContent = correctValue;
+                cell.classList.add('cell-hint');
+                
+                this.hintsUsed++;
+                this.hintsAvailable--;
+                this.updateDisplays();
+                this.saveData();
+                this.playSound('hint');
+                
+                this.showMessage(`Hint: Added ${correctValue} to row ${row + 1}, column ${col + 1}`, 'text-yellow-600');
+                this.checkWin();
+            }
+            
+            eraseCell() {
+                if (!this.selectedCell) return;
+                
+                const row = parseInt(this.selectedCell.dataset.row);
+                const col = parseInt(this.selectedCell.dataset.col);
+                
+                if (this.prefilled[row][col]) return;
+                
+                this.selectedCell.textContent = '';
+                this.selectedCell.classList.remove('cell-error', 'cell-hint');
+                this.grid[row][col] = 0;
+            }
+            
+            checkWin() {
+                // Check if grid is complete
+                for (let i = 0; i < this.gridSize; i++) {
+                    for (let j = 0; j < this.gridSize; j++) {
+                        if (this.grid[i][j] === 0) return;
+                    }
+                }
+                
+                // Check if solution is correct
+                for (let i = 0; i < this.gridSize; i++) {
+                    for (let j = 0; j < this.gridSize; j++) {
+                        if (this.grid[i][j] !== this.solution[i][j]) return;
+                    }
+                }
+                
+                // Victory!
+                this.stopTimer();
+                const coinReward = this.difficulties[this.currentDifficulty].coinReward;
+                this.coins += coinReward;
+                this.saveData();
+                this.updateDisplays();
+                this.playSound('success');
+                
+                // Show victory modal
+                const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                document.getElementById('finalTime').textContent = timeString;
+                document.getElementById('finalHints').textContent = this.hintsUsed;
+                document.getElementById('coinsEarned').textContent = `+${coinReward}`;
+                document.getElementById('victoryModal').classList.remove('hidden');
+            }
+            
+            gameOver() {
+                this.stopTimer();
+                this.playSound('error');
+                this.showMessage('Game Over! Too many mistakes. Try again!', 'text-red-600');
+                setTimeout(() => this.generateNewGame(), 2000);
+            }
+            
+            cycleDifficulty() {
+                const difficulties = ['easy', 'medium', 'hard'];
+                const currentIndex = difficulties.indexOf(this.currentDifficulty);
+                const nextIndex = (currentIndex + 1) % difficulties.length;
+                this.currentDifficulty = difficulties[nextIndex];
+                
+                const btn = document.getElementById('difficultyBtn');
+                const difficultySpan = btn.querySelector('span');
+                difficultySpan.setAttribute('data-translate', this.currentDifficulty);
+                difficultySpan.textContent = translations[this.currentLanguage][this.currentDifficulty];
+                
+                const colors = {
+                    easy: 'bg-green-600 hover:bg-green-700',
+                    medium: 'bg-yellow-600 hover:bg-yellow-700',
+                    hard: 'bg-red-600 hover:bg-red-700'
+                };
+                
+                btn.className = `${colors[this.currentDifficulty]} text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-2xl`;
+            }
+            
+            cycleGridSize() {
+                this.gridSize = this.gridSize === 6 ? 9 : 6;
+                this.boxSize = this.gridSize === 6 ? 2 : 3;
+                
+                const btn = document.getElementById('gridSizeBtn');
+                const sizeSpan = btn.querySelector('span');
+                const key = this.gridSize === 6 ? 'grid6x6' : 'grid9x9';
+                sizeSpan.setAttribute('data-translate', key);
+                sizeSpan.textContent = translations[this.currentLanguage][key];
+                
+                this.createGrid();
+                this.createNumberPad();
+                this.generateNewGame();
+            }
+            
+            setGridSize(size) {
+                this.gridSize = size;
+                this.boxSize = size === 6 ? 2 : 3;
+                
+                const btn = document.getElementById('gridSizeBtn');
+                const sizeSpan = btn.querySelector('span');
+                const key = size === 6 ? 'grid6x6' : 'grid9x9';
+                sizeSpan.setAttribute('data-translate', key);
+                sizeSpan.textContent = translations[this.currentLanguage][key];
+                
+                this.createGrid();
+                this.createNumberPad();
+                this.generateNewGame();
+                this.closeSettings();
+            }
+            
+            toggleSound() {
+                this.soundEnabled = !this.soundEnabled;
+                localStorage.setItem('kurdish-sudoku-sound', this.soundEnabled.toString());
+                this.updateSoundToggle();
+            }
+            
+            updateSoundToggle() {
+                const toggle = document.getElementById('soundToggle');
+                const slider = document.getElementById('soundToggleSlider');
+                
+                if (this.soundEnabled) {
+                    toggle.classList.remove('bg-gray-300');
+                    toggle.classList.add('bg-green-500');
+                    slider.style.transform = 'translateX(24px)';
+                } else {
+                    toggle.classList.remove('bg-green-500');
+                    toggle.classList.add('bg-gray-300');
+                    slider.style.transform = 'translateX(0)';
+                }
+            }
+            
+            superReset() {
+                // Show custom confirmation modal instead of browser confirm
+                document.getElementById('superResetModal').classList.remove('hidden');
+            }
+            
+            closeSuperResetModal() {
+                document.getElementById('superResetModal').classList.add('hidden');
+            }
+            
+            executeSuperReset() {
+                // Close the confirmation modal
+                this.closeSuperResetModal();
+                
+                // Show epic reset animation overlay
+                const resetOverlay = document.createElement('div');
+                resetOverlay.id = 'resetOverlay';
+                resetOverlay.className = 'fixed inset-0 bg-gradient-to-br from-red-600 via-purple-600 to-black flex items-center justify-center z-50';
+                resetOverlay.innerHTML = `
+                    <div class="text-center text-white">
+                        <div class="text-9xl mb-6 animate-spin">💥</div>
+                        <h2 class="text-4xl font-bold mb-4 rainbow-text">SUPER RESET ACTIVATED!</h2>
+                        <p class="text-xl mb-6">Destroying all data...</p>
+                        <div class="w-80 h-4 bg-white bg-opacity-30 rounded-full mx-auto mb-4">
+                            <div id="resetProgress" class="h-full bg-gradient-to-r from-red-500 to-yellow-500 rounded-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                        <p class="text-lg opacity-75">Please wait...</p>
+                    </div>
+                `;
+                document.body.appendChild(resetOverlay);
+                
+                // Animated progress bar
+                let progress = 0;
+                const progressBar = document.getElementById('resetProgress');
+                const progressInterval = setInterval(() => {
+                    progress += Math.random() * 15 + 5;
+                    if (progress > 100) progress = 100;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        
+                        // Nuclear reset - clear everything possible
+                        try {
+                            // Clear all storage
+                            localStorage.clear();
+                            sessionStorage.clear();
+                            
+                            // Clear cookies
+                            document.cookie.split(";").forEach(function(c) { 
+                                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+                            });
+                            
+                            // Clear cache if possible
+                            if ('caches' in window) {
+                                caches.keys().then(names => {
+                                    names.forEach(name => {
+                                        caches.delete(name);
+                                    });
+                                });
+                            }
+                            
+                            // Clear IndexedDB if exists
+                            if ('indexedDB' in window) {
+                                indexedDB.databases().then(databases => {
+                                    databases.forEach(db => {
+                                        indexedDB.deleteDatabase(db.name);
+                                    });
+                                }).catch(() => {});
+                            }
+                            
+                        } catch (e) {
+                            console.log('Some cleanup failed, but continuing...');
+                        }
+                        
+                        // Show completion message
+                        setTimeout(() => {
+                            resetOverlay.innerHTML = `
+                                <div class="text-center text-white">
+                                    <div class="text-9xl mb-6">✅</div>
+                                    <h2 class="text-4xl font-bold mb-4">RESET COMPLETE!</h2>
+                                    <p class="text-xl mb-6">All data has been destroyed</p>
+                                    <p class="text-lg">Restarting fresh game...</p>
+                                </div>
+                            `;
+                            
+                            // Restart the game instead of reloading
+                            setTimeout(() => {
+                                // Remove the overlay
+                                resetOverlay.remove();
+                                
+                                // Reset all game properties to defaults
+                                this.coins = 50;
+                                this.hintsAvailable = 3;
+                                this.currentTheme = 'light';
+                                this.ownedThemes = ['light', 'dark'];
+                                this.currentLanguage = 'en';
+                                this.soundEnabled = true;
+                                this.vipStatus = false;
+                                this.gridSize = 9;
+                                this.boxSize = 3;
+                                this.currentDifficulty = 'easy';
+                                
+                                // Reset UI elements
+                                this.updateDisplays();
+                                this.applyTheme();
+                                this.applyTranslations();
+                                this.updateSoundToggle();
+                                this.updateVipStatus();
+                                this.updateThemeButtons();
+                                
+                                // Reset language select
+                                document.getElementById('languageSelect').value = 'en';
+                                
+                                // Reset difficulty button
+                                const difficultyBtn = document.getElementById('difficultyBtn');
+                                const difficultySpan = difficultyBtn.querySelector('span');
+                                difficultySpan.setAttribute('data-translate', 'easy');
+                                difficultySpan.textContent = 'Easy';
+                                difficultyBtn.className = 'bg-green-600 hover:bg-green-700 text-white px-4 py-3 md:px-6 md:py-4 rounded-xl font-bold text-lg md:text-2xl';
+                                
+                                // Reset grid size button
+                                const gridBtn = document.getElementById('gridSizeBtn');
+                                const gridSpan = gridBtn.querySelector('span');
+                                gridSpan.setAttribute('data-translate', 'grid9x9');
+                                gridSpan.textContent = '9×9';
+                                
+                                // Recreate grid and start new game
+                                this.createGrid();
+                                this.createNumberPad();
+                                this.generateNewGame();
+                                
+                                // Show success message
+                                this.showMessage('🎉 Super Reset Complete! Everything is fresh and new!', 'text-green-600');
+                                
+                                // Close any open modals
+                                this.closeSettings();
+                                
+                            }, 1500);
+                            
+                        }, 1000);
+                    }
+                }, 100);
+            }
+            
+            openAbout() {
+                document.getElementById('aboutModal').classList.remove('hidden');
+            }
+            
+            closeAbout() {
+                document.getElementById('aboutModal').classList.add('hidden');
+            }
+            
+            openMoreGames() {
+                window.open('https://github.com/Didar122', '_blank');
+            }
+            
+            startBackgroundMusic(type) {
+                if (!this.soundEnabled) return;
+                
+                this.stopBackgroundMusic();
+                
+                if (type === 'vip' || type === 'galaxy') {
+                    this.playBackgroundMusic(type);
+                }
+            }
+            
+            stopBackgroundMusic() {
+                if (this.musicInterval) {
+                    clearInterval(this.musicInterval);
+                    this.musicInterval = null;
+                }
+                if (this.backgroundMusic) {
+                    this.backgroundMusic = null;
+                }
+            }
+            
+            playBackgroundMusic(type) {
+                const playNote = (frequency, duration, delay = 0) => {
+                    setTimeout(() => {
+                        if (!this.soundEnabled) return;
+                        
+                        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+                        oscillator.type = 'sine';
+                        gainNode.gain.setValueAtTime(0.02, audioContext.currentTime); // Very quiet
+                        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + duration);
+                        
+                        oscillator.start();
+                        oscillator.stop(audioContext.currentTime + duration);
+                    }, delay);
+                };
+                
+                if (type === 'vip') {
+                    // Calm, royal melody
+                    const vipMelody = [523, 659, 784, 659, 523, 392, 523]; // C, E, G, E, C, G, C
+                    let noteIndex = 0;
+                    
+                    this.musicInterval = setInterval(() => {
+                        if (this.currentTheme === 'vip' && this.soundEnabled) {
+                            playNote(vipMelody[noteIndex], 1.5);
+                            noteIndex = (noteIndex + 1) % vipMelody.length;
+                        }
+                    }, 2000);
+                    
+                } else if (type === 'galaxy') {
+                    // Ambient space-like tones
+                    const galaxyTones = [220, 246, 277, 311, 330]; // Low, ambient frequencies
+                    
+                    this.musicInterval = setInterval(() => {
+                        if (this.currentTheme === 'galaxy' && this.soundEnabled) {
+                            const randomTone = galaxyTones[Math.floor(Math.random() * galaxyTones.length)];
+                            playNote(randomTone, 3);
+                            
+                            // Add a second harmonic tone
+                            setTimeout(() => {
+                                const harmonic = galaxyTones[Math.floor(Math.random() * galaxyTones.length)];
+                                playNote(harmonic * 1.5, 2);
+                            }, 1000);
+                        }
+                    }, 4000);
+                }
+            }
+            
+            startTimer() {
+                this.startTime = Date.now();
+                this.timerInterval = setInterval(() => {
+                    const elapsed = Math.floor((Date.now() - this.startTime) / 1000);
+                    const minutes = Math.floor(elapsed / 60);
+                    const seconds = elapsed % 60;
+                    document.getElementById('timer').textContent = 
+                        `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+            
+            stopTimer() {
+                if (this.timerInterval) {
+                    clearInterval(this.timerInterval);
+                    this.timerInterval = null;
+                }
+            }
+            
+            showGamePage() {
+                document.getElementById('welcomePage').classList.add('hidden');
+                document.getElementById('gamePage').classList.remove('hidden');
+            }
+            
+            openShop() {
+                document.getElementById('shopModal').classList.remove('hidden');
+                this.updateShopButtons();
+            }
+            
+            closeShop() {
+                document.getElementById('shopModal').classList.add('hidden');
+            }
+            
+            openSettings() {
+                document.getElementById('settingsModal').classList.remove('hidden');
+                this.updateThemeButtons();
+                document.getElementById('languageSelect').value = this.currentLanguage;
+                
+                // Update grid size buttons
+                document.getElementById('grid6x6Btn').classList.toggle('pulse-ring', this.gridSize === 6);
+                document.getElementById('grid9x9Btn').classList.toggle('pulse-ring', this.gridSize === 9);
+            }
+            
+            closeSettings() {
+                document.getElementById('settingsModal').classList.add('hidden');
+            }
+            
+            closeVictory() {
+                document.getElementById('victoryModal').classList.add('hidden');
+            }
+            
+            closeCheatModal() {
+                document.getElementById('cheatModal').classList.add('hidden');
+            }
+            
+            buyHints() {
+                if (this.coins >= 10) {
+                    this.coins -= 10;
+                    this.hintsAvailable++;
+                    this.saveData();
+                    this.updateDisplays();
+                    this.playSound('coin');
+                    this.showMessage('Hints purchased! +1 hint', 'text-green-600');
+                } else {
+                    this.showMessage('Not enough coins!', 'text-red-600');
+                }
+            }
+            
+            buyTheme(themeName, cost) {
+                if (this.ownedThemes.includes(themeName)) {
+                    this.showMessage('Theme already owned!', 'text-blue-600');
+                    return;
+                }
+                
+                if (this.coins >= cost) {
+                    this.coins -= cost;
+                    this.ownedThemes.push(themeName);
+                    this.saveData();
+                    this.updateDisplays();
+                    this.updateShopButtons();
+                    this.updateThemeButtons();
+                    this.playSound('unlock');
+                    this.showMessage(`${themeName.charAt(0).toUpperCase() + themeName.slice(1)} theme purchased!`, 'text-green-600');
+                } else {
+                    this.showMessage('Not enough coins!', 'text-red-600');
+                }
+            }
+            
+            setTheme(themeName) {
+                if (themeName === 'vip' && !this.vipStatus) {
+                    this.showMessage('VIP theme requires VIP status! Activate cheats to unlock.', 'text-red-600');
+                    return;
+                }
+                
+                if (!this.ownedThemes.includes(themeName) && themeName !== 'vip') {
+                    this.showMessage('Theme not owned! Purchase in shop.', 'text-red-600');
+                    return;
+                }
+                
+                this.currentTheme = themeName;
+                localStorage.setItem('kurdish-sudoku-theme', themeName);
+                this.applyTheme();
+                this.updateGrid();
+                this.updateNumberPadTheme();
+                this.showMessage(`${themeName.charAt(0).toUpperCase() + themeName.slice(1)} theme applied!`, 'text-green-600');
+            }
+            
+            updateNumberPadTheme() {
+                document.querySelectorAll('#numberPad button').forEach(btn => {
+                    btn.className = btn.className.replace(/number-btn-(light|dark|ocean|forest|sunset|purple|galaxy|vip)/g, '');
+                    btn.classList.add(`number-btn-${this.currentTheme}`);
+                });
+            }
+            
+            setLanguage(language) {
+                this.currentLanguage = language;
+                localStorage.setItem('kurdish-sudoku-language', language);
+                this.applyTranslations();
+                
+                // Update difficulty button text
+                const difficultySpan = document.getElementById('difficultyBtn').querySelector('span');
+                difficultySpan.textContent = translations[language][this.currentDifficulty];
+                
+                // Update grid size button text
+                const sizeSpan = document.getElementById('gridSizeBtn').querySelector('span');
+                const sizeKey = this.gridSize === 6 ? 'grid6x6' : 'grid9x9';
+                sizeSpan.textContent = translations[language][sizeKey];
+                
+                this.showMessage('Language changed!', 'text-green-600');
+            }
+            
+            applyTheme() {
+                // Remove all theme classes
+                document.body.className = document.body.className.replace(/theme-\w+/g, '');
+                document.getElementById('galaxyStars').classList.add('hidden');
+                document.getElementById('vipStars').classList.add('hidden');
+                
+                // Apply new theme
+                document.body.classList.add(`theme-${this.currentTheme}`);
+                
+                // Start background music for special themes
+                this.startBackgroundMusic(this.currentTheme);
+                
+                // Update card backgrounds
+                document.querySelectorAll('.card-light, .card-dark, .card-ocean, .card-forest, .card-sunset, .card-purple, .card-galaxy, .card-vip').forEach(card => {
+                    card.className = card.className.replace(/card-(light|dark|ocean|forest|sunset|purple|galaxy|vip)/g, '');
+                    card.classList.add(`card-${this.currentTheme}`);
+                });
+                
+                // Update grid background
+                const grid = document.getElementById('sudokuGrid');
+                grid.className = grid.className.replace(/grid-(light|dark|ocean|forest|sunset|purple|galaxy|vip)/g, '');
+                grid.classList.add(`grid-${this.currentTheme}`);
+                
+                // Update number pad theme
+                this.updateNumberPadTheme();
+                
+                // Special handling for galaxy theme
+                if (this.currentTheme === 'galaxy') {
+                    this.createGalaxyStars();
+                    document.getElementById('galaxyStars').classList.remove('hidden');
+                }
+                
+                // Special handling for VIP theme
+                if (this.currentTheme === 'vip') {
+                    this.createVipStars();
+                    document.getElementById('vipStars').classList.remove('hidden');
+                }
+            }
+            
+            createGalaxyStars() {
+                const starsContainer = document.getElementById('galaxyStars');
+                starsContainer.innerHTML = '';
+                
+                for (let i = 0; i < 100; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.style.width = Math.random() * 3 + 1 + 'px';
+                    star.style.height = star.style.width;
+                    star.style.animationDelay = Math.random() * 2 + 's';
+                    star.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                    starsContainer.appendChild(star);
+                }
+            }
+            
+            createVipStars() {
+                const starsContainer = document.getElementById('vipStars');
+                starsContainer.innerHTML = '';
+                
+                for (let i = 0; i < 50; i++) {
+                    const star = document.createElement('div');
+                    star.className = 'vip-star';
+                    star.style.left = Math.random() * 100 + '%';
+                    star.style.top = Math.random() * 100 + '%';
+                    star.textContent = ['👑', '💎', '⭐', '✨'][Math.floor(Math.random() * 4)];
+                    star.style.animationDelay = Math.random() * 2 + 's';
+                    star.style.animationDuration = (Math.random() * 2 + 1.5) + 's';
+                    starsContainer.appendChild(star);
+                }
+            }
+            
+            applyTranslations() {
+                const elements = document.querySelectorAll('[data-translate]');
+                elements.forEach(element => {
+                    const key = element.getAttribute('data-translate');
+                    if (translations[this.currentLanguage] && translations[this.currentLanguage][key]) {
+                        element.textContent = translations[this.currentLanguage][key];
+                    }
+                });
+                
+                // Set RTL for Arabic and Kurdish
+                if (this.currentLanguage === 'ar' || this.currentLanguage === 'ku') {
+                    document.body.setAttribute('dir', 'rtl');
+                } else {
+                    document.body.setAttribute('dir', 'ltr');
+                }
+            }
+            
+            updateDisplays() {
+                document.getElementById('coinsCount').textContent = `💰 ${this.coins}`;
+                document.getElementById('shopCoinsCount').textContent = this.coins;
+                document.getElementById('hintsCount').textContent = this.hintsAvailable;
+                document.getElementById('shopHintsCount').textContent = this.hintsAvailable;
+                document.getElementById('failsCount').textContent = `${this.failsCount}/3`;
+            }
+            
+            updateShopButtons() {
+                const themeButtons = [
+                    { id: 'buyOceanBtn', theme: 'ocean' },
+                    { id: 'buyForestBtn', theme: 'forest' },
+                    { id: 'buySunsetBtn', theme: 'sunset' },
+                    { id: 'buyPurpleBtn', theme: 'purple' },
+                    { id: 'buyGalaxyBtn', theme: 'galaxy' }
+                ];
+                
+                themeButtons.forEach(({ id, theme }) => {
+                    const btn = document.getElementById(id);
+                    if (this.ownedThemes.includes(theme)) {
+                        const span = btn.querySelector('span');
+                        if (span) {
+                            span.textContent = theme === 'galaxy' ? 'Owned ✨' : 'Owned ✓';
+                        } else {
+                            btn.textContent = theme === 'galaxy' ? 'Owned ✨' : 'Owned ✓';
+                        }
+                        btn.disabled = true;
+                        btn.classList.add('opacity-50');
+                    } else {
+                        btn.disabled = false;
+                        btn.classList.remove('opacity-50');
+                    }
+                });
+            }
+            
+            updateThemeButtons() {
+                const themes = ['light', 'dark', 'ocean', 'forest', 'sunset', 'purple', 'galaxy', 'vip'];
+                themes.forEach(theme => {
+                    const btn = document.getElementById(`${theme}Theme`);
+                    if (btn) {
+                        if (theme === 'vip') {
+                            btn.disabled = !this.vipStatus;
+                        } else {
+                            btn.disabled = !this.ownedThemes.includes(theme);
+                        }
+                        btn.classList.toggle('pulse-ring', theme === this.currentTheme);
+                    }
+                });
+            }
+            
+            saveData() {
+                localStorage.setItem('kurdish-sudoku-coins', this.coins.toString());
+                localStorage.setItem('kurdish-sudoku-hints', this.hintsAvailable.toString());
+                localStorage.setItem('kurdish-sudoku-owned-themes', JSON.stringify(this.ownedThemes));
+                localStorage.setItem('kurdish-sudoku-vip', this.vipStatus.toString());
+            }
+            
+            showMessage(message, className) {
+                const messageEl = document.getElementById('statusMessage');
+                messageEl.textContent = message;
+                messageEl.className = `mt-6 text-center text-lg md:text-xl font-medium ${className}`;
+                messageEl.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    messageEl.classList.add('hidden');
+                }, 3000);
+            }
+        }
+        
+        // Initialize game when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new KurdishSudoku();
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96bffc8706bcf76e',t:'MTc1NDY2NjMwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

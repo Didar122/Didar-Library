@@ -1,0 +1,235 @@
+/* Void Theme Animations */
+
+/* Background Animation */
+.theme-void {
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: scroll !important;
+    animation: voidBackgroundPulse 8s infinite ease-in-out;
+    height: 100%;
+    min-height: 100vh;
+    scrollbar-width: thin !important; /* For Firefox */
+    scrollbar-color: #8a2be2 rgba(0, 0, 0, 0.2) !important; /* For Firefox */
+    -ms-overflow-style: scrollbar !important; /* For IE/Edge */
+}
+
+/* Force enable scrollbars */
+.theme-void::-webkit-scrollbar {
+    width: 12px !important;
+    display: block !important;
+}
+
+.theme-void::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #4b0082, #8a2be2) !important;
+    border-radius: 6px !important;
+    border: 2px solid rgba(0, 0, 0, 0.2) !important;
+}
+
+.theme-void::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 6px !important;
+}
+
+.theme-void #gameContainer,
+.theme-void .glass-morphism,
+.theme-void .modal-content {
+    overflow-y: auto !important;
+    max-height: 90vh !important;
+}
+
+@keyframes voidBackgroundPulse {
+    0%, 100% {
+        background: linear-gradient(135deg, #000000 0%, #1a1a1a 25%, #2a2a2a 50%, #4b0082 75%, #8a2be2 100%);
+    }
+    50% {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 25%, #4b0082 50%, #8a2be2 75%, #000000 100%);
+    }
+}
+
+/* Void Energy Effects for Buttons */
+.theme-void .control-btn {
+    position: relative;
+    overflow: hidden;
+    border: 2px solid rgba(138, 43, 226, 0.5);
+    background: linear-gradient(135deg, #000000 0%, #4b0082 100%);
+    transition: all 0.3s ease;
+}
+
+.theme-void .control-btn::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #4b0082, #8a2be2, #4b0082);
+    z-index: -1;
+    animation: voidButtonGlow 3s infinite ease-in-out;
+    opacity: 0.5;
+    border-radius: inherit;
+}
+
+.theme-void .control-btn::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: linear-gradient(45deg, transparent, rgba(138, 43, 226, 0.3), transparent);
+    animation: voidButtonShine 6s infinite linear;
+    z-index: 1;
+    opacity: 0;
+}
+
+.theme-void .control-btn:hover::after {
+    opacity: 1;
+}
+
+@keyframes voidButtonGlow {
+    0%, 100% {
+        filter: blur(8px);
+        transform: scale(1);
+    }
+    50% {
+        filter: blur(12px);
+        transform: scale(1.05);
+    }
+}
+
+@keyframes voidButtonShine {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Void Portal Effects */
+.theme-void::before {
+    content: '';
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, transparent 30%, #4b0082 70%, transparent 100%);
+    transform: translate(-50%, -50%);
+    opacity: 0.1;
+    animation: voidPortalPulse 10s infinite ease-in-out;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes voidPortalPulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1) rotate(0deg);
+        opacity: 0.1;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.5) rotate(180deg);
+        opacity: 0.2;
+    }
+}
+
+/* Dark Energy Particles */
+.void-energy-particle {
+    position: fixed;
+    width: 3px;
+    height: 3px;
+    background: #8a2be2;
+    border-radius: 50%;
+    pointer-events: none;
+    opacity: 0;
+    animation: voidParticleFloat 4s ease-out forwards;
+    transition: opacity 0.5s ease-out;
+    will-change: transform, opacity;
+}
+
+@keyframes voidParticleFloat {
+    0% {
+        opacity: 0;
+        transform: translateY(0) translateX(0) scale(1);
+    }
+    20% {
+        opacity: 0.8;
+    }
+    80% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(var(--float-y, -100px)) 
+                   translateX(var(--float-x, 50px)) 
+                   scale(0);
+    }
+}
+
+/* Glass morphism adjustments for void theme */
+.theme-void .glass-morphism {
+    background: rgba(75, 0, 130, 0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    animation: voidGlassPulse 4s infinite ease-in-out;
+    overflow-y: auto !important;
+}
+
+/* Custom scrollbar for void theme */
+.theme-void::-webkit-scrollbar,
+.theme-void *::-webkit-scrollbar {
+    width: 12px !important;
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    display: block !important;
+}
+
+.theme-void::-webkit-scrollbar-thumb,
+.theme-void *::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #4b0082, #8a2be2) !important;
+    border-radius: 6px !important;
+    border: 2px solid rgba(0, 0, 0, 0.2) !important;
+    min-height: 40px !important;
+}
+
+.theme-void::-webkit-scrollbar-track,
+.theme-void *::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border-radius: 6px !important;
+}
+
+.theme-void::-webkit-scrollbar-thumb:hover,
+.theme-void *::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(to bottom, #8a2be2, #4b0082) !important;
+}
+
+/* Firefox scrollbar styles */
+.theme-void {
+    scrollbar-width: thin !important;
+    scrollbar-color: #8a2be2 rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Enable scrolling for glass-morphism elements in void theme */
+.theme-void .glass-morphism {
+    overflow-y: auto !important;
+    max-height: 90vh !important;
+}
+
+@keyframes voidGlassPulse {
+    0%, 100% {
+        background: rgba(75, 0, 130, 0.15);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+        background: rgba(138, 43, 226, 0.15);
+        box-shadow: 0 8px 32px rgba(75, 0, 130, 0.5);
+    }
+}
+
+/* Add void energy trail to buttons on hover */
+.theme-void .control-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+}
+
+.theme-void .control-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.2);
+}

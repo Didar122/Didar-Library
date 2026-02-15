@@ -2,7 +2,7 @@
 <html lang="ku" dir="rtl">
  <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, minimal-ui">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Didar Library">
@@ -910,8 +910,6 @@
             gap: 10px;
             transition: all 0.3s ease;
             box-shadow: 0 8px 25px var(--accent-glow);
-            z-index: 2001;
-            position: relative;
         }
 
         .launch-btn:active {
@@ -1208,7 +1206,6 @@
             padding: calc(var(--safe-top) + 40px) 20px 40px;
             text-align: center;
             background: linear-gradient(180deg, var(--accent-glow), transparent);
-            position: relative;
         }
 
         .about-back {
@@ -1297,7 +1294,7 @@
             color: var(--text-secondary);
         }
 
-        /* Stats Display */
+        /* Stats Display - Dynamic Single Counter */
         .stats-display {
             background: var(--bg-card);
             border-radius: 20px;
@@ -1360,73 +1357,6 @@
         .developer-info p {
             font-size: 14px;
             color: var(--text-secondary);
-        }
-
-        /* GAME OVERLAY STYLES */
-        .game-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-primary);
-            z-index: 5000;
-            display: none;
-            flex-direction: column;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .game-overlay.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .game-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            padding: var(--safe-top) 0 var(--safe-bottom) 0;
-        }
-
-        .game-close {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 44px;
-            height: 44px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 5001;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .game-close:active {
-            transform: scale(0.9);
-            background: rgba(0, 0, 0, 0.95);
-        }
-
-        .game-close svg {
-            width: 24px;
-            height: 24px;
-            fill: white;
-        }
-
-        .game-frame {
-            flex: 1;
-            width: 100%;
-            border: none;
-            border-radius: 0;
-            background: var(--bg-primary);
         }
 
         /* Empty State */
@@ -1606,7 +1536,7 @@
     <div class="about-card">
      <h3>
       <svg viewbox="0 0 24 24">
-       <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" />
+       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
       </svg> دەربارەی ئەپ</h3>
      <p>Didar Library کۆکراوەی سێکی سەرسوڕهێنەرە بۆ هەموو یاری و ئەپەکانی دیدار. ئەم ئەپە بە شێوازێکی ئاسان و خێرا دەتوانی دەستگەیشتن بە هەموو بەرهەمەکانی دیدار بکەیت.</p>
     </div>
@@ -1637,19 +1567,12 @@
       • کاری بێ ڕاست‌کردنەوە</p>
     </div>
    </div>
-  </div><!-- Game Overlay Container -->
-  <div class="game-overlay" id="gameOverlay">
-   <div class="game-container"><button class="game-close" id="gameCloseBtn">
-     <svg viewbox="0 0 24 24">
-      <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-     </svg></button> <iframe id="gameFrame" class="game-frame" allow="fullscreen; accelerometer; gyroscope; magnetometer" sandbox="allow-same-origin allow-scripts allow-forms allow-popups"></iframe>
-   </div>
   </div><!-- Audio Element -->
   <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg">
   </audio>
   <script>
         // ============================================
-        // APPS DATA
+        // APPS DATA - EASY TO ADD NEW APPS HERE
         // ============================================
         const APPS_DATA = [
             {
@@ -1658,7 +1581,7 @@
                 icon: 'games/Game1.png',
                 description: 'یاری "ئیمپۆستەری کوردی" یارییەکی کۆمەڵایەتی و پێشبینیکردنی کوردییە بۆ ٣ تا ٢٠ یاریزان کە تێیدا ئیمپۆستەرەکان دەبێت خۆیان بشارنەوە و وشە نهێنییەکە بخەمڵێنن و یاریزانە ئاساییەکانیش بە گفتوگۆ ئیمپۆستەرەکە بدۆزنەوە.',
                 shortDescription: 'یاری کۆمەڵایەتی',
-                link: 'https://didar122.github.io/Kurdish-Imposter/',
+                link: 'game/KurdishImposter/index.html',
                 version: '2.0.4',
                 category: 'یاری',
                 developer: 'دیدار بختیار',
@@ -1706,6 +1629,9 @@
             }
         ];
 
+        // ============================================
+        // APP STATE
+        // ============================================
         let state = {
             currentView: 'grid',
             musicEnabled: true,
@@ -1713,8 +1639,12 @@
             selectedApp: null
         };
 
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
         const elements = {
             splashScreen: document.getElementById('splashScreen'),
+            appContainer: document.getElementById('appContainer'),
             contentArea: document.getElementById('contentArea'),
             searchContainer: document.getElementById('searchContainer'),
             searchInput: document.getElementById('searchInput'),
@@ -1722,26 +1652,30 @@
             appModal: document.getElementById('appModal'),
             settingsPanel: document.getElementById('settingsPanel'),
             aboutPanel: document.getElementById('aboutPanel'),
-            gameOverlay: document.getElementById('gameOverlay'),
-            gameFrame: document.getElementById('gameFrame'),
             bgMusic: document.getElementById('bgMusic'),
             musicToggle: document.getElementById('musicToggle'),
             gridViewBtn: document.getElementById('gridViewBtn'),
             listViewBtn: document.getElementById('listViewBtn'),
             particles: document.getElementById('particles'),
-            statCounter: document.getElementById('statCounter')
+            statCounter: document.getElementById('statCounter'),
+            statLabel: document.getElementById('statLabel')
         };
 
-        // Initialize
+        // ============================================
+        // INITIALIZE APP
+        // ============================================
         function init() {
             loadState();
             createParticles();
+            
+            // Hide splash after 3 seconds
             setTimeout(() => {
                 elements.splashScreen.classList.add('hidden');
                 if (state.musicEnabled) {
                     playMusic();
                 }
             }, 3000);
+
             applyTheme(state.theme);
             renderApps();
             updateStats();
@@ -1750,6 +1684,9 @@
             updateViewButtons();
         }
 
+        // ============================================
+        // LOCAL STORAGE
+        // ============================================
         function loadState() {
             const saved = localStorage.getItem('didarLibraryState');
             if (saved) {
@@ -1761,6 +1698,9 @@
             localStorage.setItem('didarLibraryState', JSON.stringify(state));
         }
 
+        // ============================================
+        // SPLASH PARTICLES
+        // ============================================
         function createParticles() {
             for (let i = 0; i < 20; i++) {
                 const particle = document.createElement('div');
@@ -1772,8 +1712,13 @@
             }
         }
 
+        // ============================================
+        // MUSIC CONTROL
+        // ============================================
         function playMusic() {
-            elements.bgMusic.play().catch(() => {});
+            elements.bgMusic.play().catch(() => {
+                // Auto-play blocked
+            });
         }
 
         function toggleMusic() {
@@ -1791,6 +1736,9 @@
             elements.musicToggle.classList.toggle('active', state.musicEnabled);
         }
 
+        // ============================================
+        // THEME MANAGEMENT
+        // ============================================
         function applyTheme(theme) {
             document.body.classList.remove('theme-neon', 'theme-aurora', 'theme-light');
             if (theme === 'neon') {
@@ -1800,13 +1748,18 @@
             } else if (theme === 'light') {
                 document.body.classList.add('theme-light');
             }
+            
             document.querySelectorAll('.theme-option').forEach(el => {
                 el.classList.toggle('active', el.dataset.theme === theme);
             });
+            
             state.theme = theme;
             saveState();
         }
 
+        // ============================================
+        // VIEW MANAGEMENT
+        // ============================================
         function setView(view) {
             state.currentView = view;
             updateViewButtons();
@@ -1819,6 +1772,9 @@
             elements.listViewBtn.classList.toggle('active', state.currentView === 'list');
         }
 
+        // ============================================
+        // RENDER APPS
+        // ============================================
         function renderApps(filter = '') {
             const apps = filter 
                 ? APPS_DATA.filter(app => app.name.toLowerCase().includes(filter.toLowerCase()))
@@ -1848,7 +1804,7 @@
                     ${apps.map((app, index) => `
                         <div class="app-item-grid" data-id="${app.id}" style="animation-delay: ${index * 0.05}s">
                             <div class="app-icon-wrapper">
-                                <img class="app-icon" src="${app.icon}" alt="${app.name}" loading="lazy">
+                                <img class="app-icon" src="${app.icon}" alt="${app.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23667eea%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2240%22>📱</text></svg>'">
                                 <div class="app-icon-glow"></div>
                             </div>
                             <span class="app-name">${app.name}</span>
@@ -1865,7 +1821,7 @@
                 <div class="apps-list">
                     ${apps.map((app, index) => `
                         <div class="app-item-list" data-id="${app.id}" style="animation-delay: ${index * 0.05}s">
-                            <img class="app-icon" src="${app.icon}" alt="${app.name}" loading="lazy">
+                            <img class="app-icon" src="${app.icon}" alt="${app.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23667eea%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2240%22>📱</text></svg>'">
                             <div class="app-info">
                                 <h3>${app.name}</h3>
                             </div>
@@ -1884,6 +1840,9 @@
             });
         }
 
+        // ============================================
+        // APP MODAL
+        // ============================================
         function openAppModal(appId) {
             const app = APPS_DATA.find(a => a.id === appId);
             if (!app) return;
@@ -1925,19 +1884,13 @@
 
         function launchApp() {
             if (state.selectedApp) {
-                closeAppModal(); // Close the app modal
-                elements.gameFrame.src = state.selectedApp.link; // Load the game link into the iframe
-                elements.gameOverlay.classList.add('active'); // Show the game overlay
-                elements.gameOverlay.scrollTo(0, 0); // Ensure the overlay starts at the top
+                window.location.href = state.selectedApp.link;
             }
         }
 
-        function closeGameOverlay() {
-            elements.gameOverlay.classList.remove('active'); // Hide the game overlay
-            elements.gameFrame.src = ''; // Clear the iframe source to stop the game
-            state.selectedApp = null;
-        }
-
+        // ============================================
+        // SEARCH
+        // ============================================
         function openSearch() {
             elements.searchContainer.classList.add('active');
             elements.searchInput.focus();
@@ -1971,7 +1924,7 @@
 
             elements.searchResults.innerHTML = apps.map(app => `
                 <div class="search-result-item" data-id="${app.id}">
-                    <img class="search-result-icon" src="${app.icon}" alt="${app.name}" loading="lazy">
+                    <img class="search-result-icon" src="${app.icon}" alt="${app.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23667eea%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2240%22>📱</text></svg>'">
                     <div class="search-result-info">
                         <h4>${app.name}</h4>
                         <p>${app.shortDescription}</p>
@@ -1987,6 +1940,9 @@
             });
         }
 
+        // ============================================
+        // PANELS
+        // ============================================
         function openSettings() {
             elements.settingsPanel.classList.add('active');
         }
@@ -2003,43 +1959,51 @@
             elements.aboutPanel.classList.remove('active');
         }
 
+        // ============================================
+        // STATS - DYNAMIC SINGLE COUNTER
+        // ============================================
         function updateStats() {
             const totalApps = APPS_DATA.length;
             elements.statCounter.textContent = totalApps;
+            elements.statLabel.textContent = 'ئەپ و یاری';
         }
 
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
         function setupEventListeners() {
+            // Header buttons
             document.getElementById('searchBtn').addEventListener('click', openSearch);
             document.getElementById('settingsBtn').addEventListener('click', openSettings);
             document.getElementById('aboutBtn').addEventListener('click', openAbout);
             
+            // View buttons
             elements.gridViewBtn.addEventListener('click', () => setView('grid'));
             elements.listViewBtn.addEventListener('click', () => setView('list'));
             
+            // Search
             document.getElementById('searchClose').addEventListener('click', closeSearch);
             elements.searchInput.addEventListener('input', handleSearch);
             
+            // Modal
             elements.appModal.addEventListener('click', (e) => {
                 if (e.target === elements.appModal) closeAppModal();
             });
+            document.getElementById('launchBtn').addEventListener('click', launchApp);
             
-            document.getElementById('launchBtn').addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                launchApp();
-            });
-            
-            document.getElementById('gameCloseBtn').addEventListener('click', closeGameOverlay);
-            
+            // Settings
             document.getElementById('settingsBack').addEventListener('click', closeSettings);
             elements.musicToggle.addEventListener('click', toggleMusic);
             
+            // Theme options
             document.querySelectorAll('.theme-option').forEach(el => {
                 el.addEventListener('click', () => applyTheme(el.dataset.theme));
             });
             
+            // About
             document.getElementById('aboutBack').addEventListener('click', closeAbout);
             
+            // Enable music on first user interaction
             document.addEventListener('click', () => {
                 if (state.musicEnabled && elements.bgMusic.paused) {
                     playMusic();
@@ -2047,7 +2011,36 @@
             }, { once: true });
         }
 
+        // ============================================
+        // ELEMENT SDK INIT
+        // ============================================
+        const defaultConfig = {
+            app_title: 'Didar Library'
+        };
+
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange: async (config) => {
+                    const title = config.app_title || defaultConfig.app_title;
+                    document.querySelector('.header-title').textContent = title;
+                    document.querySelector('.splash-title').textContent = title;
+                    document.querySelector('.about-hero h1').textContent = title;
+                },
+                mapToCapabilities: (config) => ({
+                    recolorables: [],
+                    borderables: [],
+                    fontEditable: undefined,
+                    fontSizeable: undefined
+                }),
+                mapToEditPanelValues: (config) => new Map([
+                    ['app_title', config.app_title || defaultConfig.app_title]
+                ])
+            });
+        }
+
+        // Initialize app
         init();
     </script>
- <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9ce77b953618f756',t:'MTc3MTE4NjU4NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cd70affa175f756',t:'MTc3MTAxNDIwMC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>

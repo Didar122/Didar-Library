@@ -1,0 +1,38 @@
+/* Game layout specific styles */
+#gamePage .flex.justify-between {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 40;
+    padding: 1rem;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* VIP Banner */
+#vipBanner {
+    z-index: 39;
+    text-align: center;
+    padding: 0.75rem;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    font-weight: bold;
+    font-size: 1.125rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 2px solid rgba(255, 215, 0, 0.5);
+}
+
+/* Game Container Layout */
+#gamePage {
+    padding-top: 80px;
+    padding-bottom: 120px;
+    width: 100%;
+    height: auto;
+}
