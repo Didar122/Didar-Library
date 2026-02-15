@@ -1,0 +1,78 @@
+{
+  "name": "Didar Library",
+  "short_name": "Didar",
+  "description": "کۆکراوەیەکی سەرسوڕهێنەرە بۆ هەموو یاری و ئەپەکانی دیدار",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#000000",
+  "theme_color": "#0a84ff",
+  "dir": "rtl",
+  "lang": "ku",
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "گەڕان",
+      "short_name": "گەڕان",
+      "description": "گەڕانی بۆ یاری و ئەپ",
+      "url": "./index.html?view=search",
+      "icons": [
+        {
+          "src": "icon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "ڕێکخستنەکان",
+      "short_name": "ڕێکخستنەکان",
+      "description": "بۆچوونەکانی ئەپ",
+      "url": "./index.html?view=settings",
+      "icons": [
+        {
+          "src": "icon.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
+  "categories": ["games", "productivity"],
+  "screenshots_for_notch": true
+}
