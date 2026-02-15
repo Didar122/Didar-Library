@@ -1294,6 +1294,32 @@
             color: var(--text-secondary);
         }
 
+        /* Video Player */
+        .video-player-container {
+            width: 100%;
+            margin-top: 15px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 16 / 9;
+        }
+
+        .tutorial-video {
+            width: 100%;
+            height: 100%;
+            background: #000;
+            border-radius: 12px;
+            display: block;
+        }
+
+        .video-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-secondary);
+        }
+
         /* Stats Display - Dynamic Single Counter */
         .stats-display {
             background: var(--bg-card);
@@ -1469,6 +1495,9 @@
     <div class="modal-details" id="modalDetails"></div><button class="launch-btn" id="launchBtn"> <span>کردنەوەی ئەپ</span>
      <svg viewbox="0 0 24 24">
       <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41L10.83 12z" />
+     </svg></button><button class="launch-btn" id="onlinePlayBtn" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-top: 12px;"> <span>پلەیی ئۆنلاین</span>
+     <svg viewbox="0 0 24 24">
+      <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/>
      </svg></button>
    </div>
   </div><!-- Settings Panel -->
@@ -1566,11 +1595,32 @@
       • دیزاینی ئایفۆن<br>
       • کاری بێ ڕاست‌کردنەوە</p>
     </div>
+    <div class="about-card">
+     <h3>
+      <svg viewbox="0 0 24 24">
+       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z" />
+      </svg> ڤیدیۆی یاریکاری</h3>
+     <div class="video-player-container">
+      <video id="tutorialVideo" class="tutorial-video" controls>
+       <source id="videoSource" src="" type="video/mp4">
+       Your browser does not support the video tag.
+      </video>
+      <p class="video-placeholder" id="videoPlaceholder" style="text-align: center; color: var(--text-secondary); padding: 40px 20px;">لە ئێستا هیچ ڤیدیۆ پۆسێخ نیە</p>
+     </div>
+    </div>
    </div>
   </div><!-- Audio Element -->
   <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg">
   </audio>
   <script>
+        // ============================================
+        // TUTORIAL VIDEO CONFIGURATION
+        // ============================================
+        const TUTORIAL_VIDEO = {
+            enabled: true,  // Set to true to enable the video
+            url: 'videos/tutorial.mp4'  // Add your video URL here: 'path/to/video.mp4' or 'https://example.com/video.mp4'
+        };
+
         // ============================================
         // APPS DATA - EASY TO ADD NEW APPS HERE
         // ============================================
@@ -1582,6 +1632,7 @@
                 description: 'یاری "ئیمپۆستەری کوردی" یارییەکی کۆمەڵایەتی و پێشبینیکردنی کوردییە بۆ ٣ تا ٢٠ یاریزان کە تێیدا ئیمپۆستەرەکان دەبێت خۆیان بشارنەوە و وشە نهێنییەکە بخەمڵێنن و یاریزانە ئاساییەکانیش بە گفتوگۆ ئیمپۆستەرەکە بدۆزنەوە.',
                 shortDescription: 'یاری کۆمەڵایەتی',
                 link: 'game/KurdishImposter/index.html',
+                onlineLink: 'https://didar122.github.io/Kurdish-Imposter/',
                 version: '2.0.4',
                 category: 'چۆنی',
                 developer: 'دیدار بختیار',
@@ -1595,6 +1646,7 @@
                 description: 'یاری "سودوکوی کوردی" ئەزموونێکی فیکریی مۆدێرن و ڕەنگاوڕەنگە کە مەتەڵی سودۆکوی کلاسیکی لەسەر تۆری ٦×٦ و ٩×٩ بە زمانی شیرینی کوردی پێشکەش دەکات و سیستمی کۆکردنەوەی کۆین و دوکانێکی تایبەتی تێدایە بۆ کڕینی هاوکاری و گۆڕینی شێوازەکان .',
                 shortDescription: 'یاری مێشک',
                 link: 'game/KurdishSudoku/index.html',
+                onlineLink: 'https://didar122.github.io/Kurdish-Sudoku-V2/',
                 version: '1.2.6',
                 category: 'یاری',
                 developer: 'دیدار بختیار جلال',
@@ -1608,6 +1660,7 @@
                 description: 'یاری "ماری کوردی" وەشانی مۆدێرنی یاری مارەکەیە بە زمانی شیرینی کوردی کە مۆدی کلاسیک و ٣٦٠ پلە و سیستمی کۆین و دوکان و چەندین شێوازی ناوازە لەخۆ دەگرێت.',
                 shortDescription: 'یاری ئامانج',
                 link: 'game/KurdishSnake/index.html',
+                onlineLink: 'https://didar122.github.io/Kurdish-Snake/',
                 version: '1.0.147',
                 category: 'یاری',
                 developer: 'دیدار بختیار',
@@ -1621,6 +1674,7 @@
                 description: 'یاری "مامە ڤاندام" یاریاکی کۆمیدیە کەتێیدا کاتێکی خۆش لەگەڵ کەسایەتی مامە ڤاندام ناسراو بە پیاوە ئاڵتونیەکە بەسەر ئەبەیت ، تێبینی : ئەگەر یاریەکە لە سەرەتادا وەستا دەست لەسەر شاشەکە ڕاگرە تا بۆکسێکت بۆ ئەکرێتەوە و پاشان دەست بنێ بە پلەیدا.',
                 shortDescription: 'یاری کاتبەسەربردن',
                 link: 'game/MamaVana/index.html',
+                onlineLink: '',
                 version: '1.0.0',
                 category: 'یاری',
                 developer: 'دیدار بختیار',
@@ -1680,6 +1734,7 @@
             renderApps();
             updateStats();
             setupEventListeners();
+            loadTutorialVideo();
             updateMusicToggle();
             updateViewButtons();
         }
@@ -1870,9 +1925,17 @@
                 </div>
                 <div class="detail-item">
                     <label>جۆر</label>
-                    <span>${app.category}</span>
+                    <span>${app.shortDescription}</span>
                 </div>
             `;
+            
+            // Show/hide online play button based on onlineLink availability
+            const onlinePlayBtn = document.getElementById('onlinePlayBtn');
+            if (app.onlineLink && app.onlineLink.trim()) {
+                onlinePlayBtn.style.display = 'flex';
+            } else {
+                onlinePlayBtn.style.display = 'none';
+            }
             
             elements.appModal.classList.add('active');
         }
@@ -1885,6 +1948,14 @@
         function launchApp() {
             if (state.selectedApp) {
                 window.location.href = state.selectedApp.link;
+            }
+        }
+
+        function playOnline() {
+            if (state.selectedApp && state.selectedApp.onlineLink) {
+                window.open(state.selectedApp.onlineLink, '_blank');
+            } else if (state.selectedApp) {
+                alert('هیچ لینکی تێنەتی بۆم ئەم یارییە نیە');
             }
         }
 
@@ -1953,10 +2024,36 @@
 
         function openAbout() {
             elements.aboutPanel.classList.add('active');
+            loadTutorialVideo();
         }
 
         function closeAbout() {
             elements.aboutPanel.classList.remove('active');
+            pauseTutorialVideo();
+        }
+
+        function loadTutorialVideo() {
+            const videoSource = document.getElementById('videoSource');
+            const tutorialVideo = document.getElementById('tutorialVideo');
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            
+            if (TUTORIAL_VIDEO.enabled && TUTORIAL_VIDEO.url) {
+                videoSource.src = TUTORIAL_VIDEO.url;
+                tutorialVideo.style.display = 'block';
+                videoPlaceholder.style.display = 'none';
+                tutorialVideo.load();
+            } else {
+                videoSource.src = '';
+                tutorialVideo.style.display = 'none';
+                videoPlaceholder.style.display = 'flex';
+            }
+        }
+
+        function pauseTutorialVideo() {
+            const tutorialVideo = document.getElementById('tutorialVideo');
+            if (tutorialVideo) {
+                tutorialVideo.pause();
+            }
         }
 
         // ============================================
@@ -1990,6 +2087,7 @@
                 if (e.target === elements.appModal) closeAppModal();
             });
             document.getElementById('launchBtn').addEventListener('click', launchApp);
+            document.getElementById('onlinePlayBtn').addEventListener('click', playOnline);
             
             // Settings
             document.getElementById('settingsBack').addEventListener('click', closeSettings);
