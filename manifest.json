@@ -1,7 +1,7 @@
 {
   "name": "Didar Library",
   "short_name": "Didar",
-  "description": "کۆکراوەیەکی سەرسوڕهێنەرە بۆ هەموو یاری و ئەپەکانی دیدار",
+  "description": "کۆکراوەیەک بۆ هەموو یاری و ئەپەکانی دیدار",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",

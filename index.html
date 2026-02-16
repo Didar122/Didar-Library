@@ -536,6 +536,12 @@
             color: var(--text-secondary);
         }
 
+        .search-result-item.is-favorite {
+            background: linear-gradient(135deg, var(--accent-glow), rgba(255, 59, 48, 0.1));
+            border-color: rgba(255, 59, 48, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.15);
+        }
+
         .no-results {
             text-align: center;
             padding: 60px 20px;
@@ -620,6 +626,7 @@
             cursor: pointer;
             animation: fadeInUp 0.5s ease forwards;
             opacity: 0;
+            position: relative;
         }
 
         @keyframes fadeInUp {
@@ -714,6 +721,7 @@
             opacity: 0;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            position: relative;
         }
 
         @keyframes slideInRight {
@@ -816,9 +824,10 @@
 
         .modal-header {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 20px;
             margin-bottom: 25px;
+            position: relative;
         }
 
         .modal-icon {
@@ -1410,6 +1419,170 @@
             color: var(--text-secondary);
         }
 
+        /* Favorite Heart System */
+        .favorite-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex-shrink: 0;
+        }
+
+        .favorite-btn:active {
+            transform: scale(0.92);
+        }
+
+        .heart-icon {
+            width: 28px;
+            height: 28px;
+            fill: currentColor;
+            color: var(--text-secondary);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .favorite-btn.favorited .heart-icon {
+            color: #ff3b30;
+            filter: drop-shadow(0 0 8px rgba(255, 59, 48, 0.6));
+            animation: heartBeat 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.3);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            75% {
+                transform: scale(1.25);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Favorite Item Styling */
+        .app-item-grid.is-favorite .app-icon-wrapper::after {
+            content: '❤️';
+            position: absolute;
+            top: -8px;
+            right: 0px;
+            font-size: 24px;
+            animation: favoritePulse 1.0s ease-out;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .app-item-list.is-favorite {
+            background: linear-gradient(135deg, var(--accent-glow), rgba(255, 59, 48, 0.1));
+            border-color: rgba(255, 59, 48, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.15);
+        }
+
+        .app-item-list.is-favorite::before {
+            content: '⭐';
+            position: absolute;
+            left: 15px;
+            top: 12px;
+            font-size: 16px;
+            opacity: 1;
+        }
+
+        @keyframes favoritePulse {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        .favorite-indicator {
+            display: none;
+        }
+
+        /* New Badge System */
+        .new-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffaa00, #ff9500);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), orangeGlow 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5), 0 0 20px rgba(255, 153, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        @keyframes orangeGlow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(255, 170, 0, 0.5), 0 0 20px rgba(255, 153, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 170, 0, 0.8), 0 0 40px rgba(255, 153, 0, 0.6);
+            }
+        }
+
+        @keyframes badgePop {
+            0% {
+                transform: scale(0) rotate(-180deg);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+        }
+
+        /* New Badge on App Items */
+        .app-item-grid.has-new-badge .app-icon-wrapper::before {
+            content: 'نوێ';
+            position: absolute;
+            bottom: -4px;
+            left: -2px;
+            background: linear-gradient(135deg, #ffaa00, #ff9500);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 9px;
+            font-weight: 900;
+            animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), orangeGlow 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5), 0 0 15px rgba(255, 153, 0, 0.3);
+            letter-spacing: 0.5px;
+        }
+
+        .app-item-list.has-new-badge::after {
+            content: 'نوێ';
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #ffaa00, #ff9500);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 900;
+            animation: badgePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), orangeGlow 2s ease-in-out infinite;
+            box-shadow: 0 0 10px rgba(255, 170, 0, 0.5), 0 0 15px rgba(255, 153, 0, 0.3);
+            letter-spacing: 0.5px;
+        }
+
         /* Hidden */
         .hidden {
             display: none !important;
@@ -1486,7 +1659,10 @@
      <div class="modal-title-section">
       <h2 id="modalTitle"></h2>
       <p class="version" id="modalVersion"></p><span class="category" id="modalCategory"></span>
-     </div>
+     </div><button class="favorite-btn" id="favoriteBtn" aria-label="زیادکردن بۆ بەدڵبوویی">
+      <svg class="heart-icon" viewbox="0 0 24 24">
+       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+      </svg></button>
     </div>
     <div class="modal-description">
      <h4>دەربارەی ئەپ</h4>
@@ -1495,7 +1671,7 @@
     <div class="modal-details" id="modalDetails"></div><button class="launch-btn" id="launchBtn"> <span>کردنەوەی ئەپ</span>
      <svg viewbox="0 0 24 24">
       <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41L10.83 12z" />
-     </svg></button><button class="launch-btn" id="onlinePlayBtn" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-top: 12px;"> <span>پلەیی ئۆنلاین</span>
+     </svg></button><button class="launch-btn" id="onlinePlayBtn" style="display: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); margin-top: 12px;"> <span>ئۆنلاین</span>
      <svg viewbox="0 0 24 24">
       <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/>
      </svg></button>
@@ -1551,7 +1727,7 @@
     <div class="about-logo"><img src="icon.png" alt="Didar Library" loading="lazy">
     </div>
     <h1>Didar Library</h1>
-    <p>وەشانی ١.٠.٠</p>
+    <p>وەشانی 1.0.3</p>
    </div>
    <div class="about-content">
     <div class="stats-display" id="statsDisplay">
@@ -1567,7 +1743,7 @@
       <svg viewbox="0 0 24 24">
        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
       </svg> دەربارەی ئەپ</h3>
-     <p>Didar Library کۆکراوەی سێکی سەرسوڕهێنەرە بۆ هەموو یاری و ئەپەکانی دیدار. ئەم ئەپە بە شێوازێکی ئاسان و خێرا دەتوانی دەستگەیشتن بە هەموو بەرهەمەکانی دیدار بکەیت.</p>
+     <p>کۆکراوەی هەموو یاری و ئەپەکانە بە مەبەستی دەستگەیشتن بە هەموو بەرهەمەکانی پڕۆگرامەر دیدار بختیار بە شێوازێکی ئاسان و خێرا.</p>
     </div>
     <div class="about-card">
      <h3>
@@ -1576,10 +1752,10 @@
       </svg> گەشەپێدەر</h3>
      <div class="developer-card">
       <div class="developer-avatar">
-       د
+       D
       </div>
       <div class="developer-info">
-       <h4>دیدار</h4>
+       <h4>دیدار بختیار جلال</h4>
        <p>گەشەپێدەری ئەپ و یاری</p>
       </div>
      </div>
@@ -1589,11 +1765,11 @@
       <svg viewbox="0 0 24 24">
        <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z" />
       </svg> تایبەتمەندیەکان</h3>
-     <p>• کاری ئۆفلاین<br>
-      • چوار ڕووکاری جوان<br>
-      • گەڕانی خێرا<br>
-      • دیزاینی ئایفۆن<br>
-      • کاری بێ ڕاست‌کردنەوە</p>
+     <p>• ئاسان لە بەکارهێنان<br>
+      • چوار ڕووکاری زۆر جوان<br>
+      • گەڕانی خێرا و دەستگەیشتن بە ئەپی دڵخوازت<br>
+      • دیزاینێکی ساکار و نەرم<br>
+      • ئاگاداربون لە دوایین بەرهەمەکان</p>
     </div>
     <div class="about-card">
      <h3>
@@ -1634,7 +1810,7 @@
                 link: 'game/KurdishImposter/index.html',
                 onlineLink: 'https://didar122.github.io/Kurdish-Imposter/',
                 version: '2.0.4',
-                category: 'چۆنی',
+                category: 'یاری',
                 developer: 'دیدار بختیار',
                 size: '6.5 MB',
                 lastUpdate: '2026/2'
@@ -1660,7 +1836,7 @@
                 description: 'یاری "ماری کوردی" وەشانی مۆدێرنی یاری مارەکەیە بە زمانی شیرینی کوردی کە مۆدی کلاسیک و ٣٦٠ پلە و سیستمی کۆین و دوکان و چەندین شێوازی ناوازە لەخۆ دەگرێت.',
                 shortDescription: 'یاری ئامانج',
                 link: 'game/KurdishSnake/index.html',
-                onlineLink: 'https://didar122.github.io/Kurdish-Snake/',
+                onlineLink: 'https://didar122.github.io/Kurdish-Snake-Game/',
                 version: '1.0.147',
                 category: 'یاری',
                 developer: 'دیدار بختیار',
@@ -1674,7 +1850,7 @@
                 description: 'یاری "مامە ڤاندام" یاریاکی کۆمیدیە کەتێیدا کاتێکی خۆش لەگەڵ کەسایەتی مامە ڤاندام ناسراو بە پیاوە ئاڵتونیەکە بەسەر ئەبەیت ، تێبینی : ئەگەر یاریەکە لە سەرەتادا وەستا دەست لەسەر شاشەکە ڕاگرە تا بۆکسێکت بۆ ئەکرێتەوە و پاشان دەست بنێ بە پلەیدا.',
                 shortDescription: 'یاری کاتبەسەربردن',
                 link: 'game/MamaVana/index.html',
-                onlineLink: '',
+                onlineLink: 'https://didar122.github.io/Mama-Vana/',
                 version: '1.0.0',
                 category: 'یاری',
                 developer: 'دیدار بختیار',
@@ -1690,7 +1866,9 @@
             currentView: 'grid',
             musicEnabled: true,
             theme: 'crystal',
-            selectedApp: null
+            selectedApp: null,
+            favorites: [],
+            viewCounts: {}
         };
 
         // ============================================
@@ -1828,12 +2006,96 @@
         }
 
         // ============================================
+        // ============================================
+        // FAVORITE SYSTEM
+        // ============================================
+        function isFavorite(appId) {
+            return state.favorites.includes(appId);
+        }
+
+        function toggleFavorite(appId) {
+            const favorites = state.favorites;
+            const index = favorites.indexOf(appId);
+            
+            if (index > -1) {
+                // Remove from favorites
+                favorites.splice(index, 1);
+            } else {
+                // Check if already at limit
+                if (favorites.length >= 3) {
+                    alert('بیری ئەپ تەنها بە ٣ یاری سنووردارە!');
+                    return false;
+                }
+                // Add to favorites
+                favorites.push(appId);
+            }
+            
+            saveState();
+            return true;
+        }
+
+        function getSortedApps(apps) {
+            return apps.sort((a, b) => {
+                const aIsFav = isFavorite(a.id);
+                const bIsFav = isFavorite(b.id);
+                
+                if (aIsFav && !bIsFav) return -1;
+                if (!aIsFav && bIsFav) return 1;
+                return 0;
+            });
+        }
+
+        function updateFavoriteButton() {
+            const btn = document.getElementById('favoriteBtn');
+            if (!btn || !state.selectedApp) return;
+            
+            btn.classList.toggle('favorited', isFavorite(state.selectedApp.id));
+        }
+
+        // ============================================
+        // NEW BADGE SYSTEM
+        // ============================================
+        function getViewCount(appId) {
+            return state.viewCounts[appId] || 0;
+        }
+
+        function incrementViewCount(appId) {
+            if (!state.viewCounts[appId]) {
+                state.viewCounts[appId] = 0;
+            }
+            state.viewCounts[appId]++;
+            saveState();
+        }
+
+        function isNewApp(appId) {
+            const viewCount = getViewCount(appId);
+            return viewCount < 4;
+        }
+
+        function updateNewBadgeDisplay() {
+            const titleSection = document.querySelector('.modal-title-section');
+            let existingBadge = titleSection.querySelector('.new-badge');
+            
+            if (existingBadge) {
+                existingBadge.remove();
+            }
+            
+            if (state.selectedApp && isNewApp(state.selectedApp.id)) {
+                const badge = document.createElement('span');
+                badge.className = 'new-badge';
+                badge.textContent = 'نوێ';
+                titleSection.appendChild(badge);
+            }
+        }
+
         // RENDER APPS
         // ============================================
         function renderApps(filter = '') {
-            const apps = filter 
+            let apps = filter 
                 ? APPS_DATA.filter(app => app.name.toLowerCase().includes(filter.toLowerCase()))
                 : APPS_DATA;
+            
+            apps = getSortedApps(apps);
 
             if (apps.length === 0) {
                 elements.contentArea.innerHTML = `
@@ -1857,12 +2119,13 @@
             const html = `
                 <div class="apps-grid">
                     ${apps.map((app, index) => `
-                        <div class="app-item-grid" data-id="${app.id}" style="animation-delay: ${index * 0.05}s">
+                        <div class="app-item-grid ${isFavorite(app.id) ? 'is-favorite' : ''} ${isNewApp(app.id) ? 'has-new-badge' : ''}" data-id="${app.id}" style="animation-delay: ${index * 0.05}s">
                             <div class="app-icon-wrapper">
                                 <img class="app-icon" src="${app.icon}" alt="${app.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23667eea%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2240%22>📱</text></svg>'">
                                 <div class="app-icon-glow"></div>
                             </div>
                             <span class="app-name">${app.name}</span>
+                            ${isFavorite(app.id) ? '<div class="favorite-indicator">⭐ بیری</div>' : ''}
                         </div>
                     `).join('')}
                 </div>
@@ -1875,7 +2138,7 @@
             const html = `
                 <div class="apps-list">
                     ${apps.map((app, index) => `
-                        <div class="app-item-list" data-id="${app.id}" style="animation-delay: ${index * 0.05}s">
+                        <div class="app-item-list ${isFavorite(app.id) ? 'is-favorite' : ''} ${isNewApp(app.id) ? 'has-new-badge' : ''}" data-id="${app.id}" style="animation-delay: ${index * 0.05}s; position: relative;">
                             <img class="app-icon" src="${app.icon}" alt="${app.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23667eea%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2240%22>📱</text></svg>'">
                             <div class="app-info">
                                 <h3>${app.name}</h3>
@@ -1904,6 +2167,9 @@
 
             state.selectedApp = app;
             
+            // Track view count for new badge system
+            incrementViewCount(appId);
+            
             document.getElementById('modalIcon').src = app.icon;
             document.getElementById('modalTitle').textContent = app.name;
             document.getElementById('modalVersion').textContent = `وەشان ${app.version}`;
@@ -1920,7 +2186,7 @@
                     <span>${app.size}</span>
                 </div>
                 <div class="detail-item">
-                    <label>نوێکردنەوە</label>
+                    <label>دواین نوێکردنەوە</label>
                     <span>${app.lastUpdate}</span>
                 </div>
                 <div class="detail-item">
@@ -1936,6 +2202,12 @@
             } else {
                 onlinePlayBtn.style.display = 'none';
             }
+            
+            // Update favorite button
+            updateFavoriteButton();
+            
+            // Update new badge display
+            updateNewBadgeDisplay();
             
             elements.appModal.classList.add('active');
         }
@@ -1979,9 +2251,11 @@
         }
 
         function renderSearchResults(query) {
-            const apps = query 
+            let apps = query 
                 ? APPS_DATA.filter(app => app.name.toLowerCase().includes(query.toLowerCase()))
                 : APPS_DATA;
+            
+            apps = getSortedApps(apps);
 
             if (apps.length === 0) {
                 elements.searchResults.innerHTML = `
@@ -1994,10 +2268,10 @@
             }
 
             elements.searchResults.innerHTML = apps.map(app => `
-                <div class="search-result-item" data-id="${app.id}">
+                <div class="search-result-item ${isFavorite(app.id) ? 'is-favorite' : ''}" data-id="${app.id}">
                     <img class="search-result-icon" src="${app.icon}" alt="${app.name}" loading="lazy" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%23667eea%22 width=%22100%22 height=%22100%22 rx=%2220%22/><text x=%2250%22 y=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2240%22>📱</text></svg>'">
                     <div class="search-result-info">
-                        <h4>${app.name}</h4>
+                        <h4>${app.name} ${isFavorite(app.id) ? '❤️' : ''} ${isNewApp(app.id) ? '<span style="background: linear-gradient(135deg, #ffaa00, #ff9500); color: white; padding: 2px 6px; border-radius: 8px; font-size: 10px; margin-right: 6px; font-weight: 900; box-shadow: 0 0 8px rgba(255, 170, 0, 0.6), 0 0 12px rgba(255, 153, 0, 0.4); display: inline-block; animation: orangeGlow 2s ease-in-out infinite;">نوێ</span>' : ''}</h4>
                         <p>${app.shortDescription}</p>
                     </div>
                 </div>
@@ -2088,6 +2362,13 @@
             });
             document.getElementById('launchBtn').addEventListener('click', launchApp);
             document.getElementById('onlinePlayBtn').addEventListener('click', playOnline);
+            document.getElementById('favoriteBtn').addEventListener('click', () => {
+                if (state.selectedApp) {
+                    toggleFavorite(state.selectedApp.id);
+                    updateFavoriteButton();
+                    renderApps();
+                }
+            });
             
             // Settings
             document.getElementById('settingsBack').addEventListener('click', closeSettings);
