@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ژمێرەری کوردی">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#0f172a">
+  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="icon" type="image/png" href="icon.png">
+  <title>ژمێرەری کوردی</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    html, body {
+      touch-action: manipulation;
+      overscroll-behavior: none;
+      font-family: 'Noto Sans Arabic', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    
+    input, textarea {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes slideUp {
+      from { transform: translateY(30px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes scaleIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+    .animate-slideUp { animation: slideUp 0.6s ease-out forwards; }
+    .animate-scaleIn { animation: scaleIn 0.4s ease-out forwards; }
+    .animate-pulse-slow { animation: pulse 2s ease-in-out infinite; }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-rotate { animation: rotate 2s linear infinite; }
+    
+    .gradient-bg {
+      background: linear-gradient(-45deg, #0f172a, #1e293b, #0f172a, #1e3a5f);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+    }
+    
+    .glass {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .glass-dark {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    
+    .btn-calc {
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-calc:active {
+      transform: scale(0.92);
+    }
+    
+    .wheel-picker {
+      height: 120px;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .wheel-picker::before,
+    .wheel-picker::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 40px;
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    .wheel-picker::before {
+      top: 0;
+      background: linear-gradient(to bottom, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0));
+    }
+    
+    .wheel-picker::after {
+      bottom: 0;
+      background: linear-gradient(to top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0));
+    }
+    
+    .wheel-item {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    
+    .wheel-selected {
+      background: rgba(99, 102, 241, 0.2);
+      border-radius: 8px;
+      font-weight: 600;
+      color: #818cf8;
+    }
+    
+    .tab-indicator {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .shimmer {
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 2s infinite;
+    }
+    
+    .safe-area-top {
+      padding-top: env(safe-area-inset-top, 20px);
+    }
+    
+    .safe-area-bottom {
+      padding-bottom: env(safe-area-inset-bottom, 20px);
+    }
+    
+    .number-display {
+      font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
+      font-variant-numeric: tabular-nums;
+    }
+    
+    .loading-ring {
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #818cf8;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: rotate 1s linear infinite;
+    }
+    
+    .stagger-1 { animation-delay: 0.1s; }
+    .stagger-2 { animation-delay: 0.2s; }
+    .stagger-3 { animation-delay: 0.3s; }
+    .stagger-4 { animation-delay: 0.4s; }
+    .stagger-5 { animation-delay: 0.5s; }
+    
+    .calculator-display {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.9));
+    }
+    
+    input[type="checkbox"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 50px;
+      height: 30px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      position: relative;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    input[type="checkbox"]::before {
+      content: '';
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      background: white;
+      border-radius: 50%;
+      top: 2px;
+      left: 2px;
+      transition: all 0.3s ease;
+    }
+    
+    input[type="checkbox"]:checked {
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    }
+    
+    input[type="checkbox"]:checked::before {
+      transform: translateX(20px);
+    }
+    
+    .page-transition {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .result-card {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.1));
+      border: 1px solid rgba(99, 102, 241, 0.3);
+    }
+  </style>
+</head>
+<body class="h-full bg-slate-900 text-white overflow-hidden">
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="fixed inset-0 gradient-bg z-50 flex flex-col items-center justify-center">
+    <div class="animate-float mb-8">
+      <div class="w-24 h-24 rounded-3xl glass flex items-center justify-center shadow-2xl">
+        <img src="icon.png" alt="App Icon" class="w-20 h-20 rounded-2xl" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 hidden items-center justify-center">
+          <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+    <h1 id="loadingTitle" class="text-2xl font-bold mb-4 animate-fadeIn">ژمێرەری کوردی</h1>
+    <div class="loading-ring mb-4"></div>
+    <p class="text-slate-400 text-sm animate-fadeIn">Loading...</p>
+  </div>
+
+  <!-- Main App Container -->
+  <div id="appContainer" class="h-full flex flex-col opacity-0 transition-opacity duration-500">
+    <!-- Status Bar Spacer -->
+    <div class="safe-area-top gradient-bg"></div>
+    
+    <!-- Header -->
+    <header class="gradient-bg px-4 py-3 flex items-center justify-between">
+      <h1 id="appTitle" class="text-xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">ژمێرەری کوردی</h1>
+      <button id="aboutBtn" class="w-10 h-10 rounded-full glass flex items-center justify-center transition-transform active:scale-90">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="gradient-bg px-4 pb-2">
+      <div class="relative glass rounded-2xl p-1 flex">
+        <div id="tabIndicator" class="tab-indicator absolute top-1 bottom-1 w-1/3 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl" style="transform: translateX(0); right: 0;"></div>
+        <button class="tab-btn flex-1 py-3 px-2 text-sm font-medium z-10 transition-colors" data-tab="simple">
+          <span class="flex flex-col items-center gap-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+            </svg>
+            <span>ئاسان</span>
+          </span>
+        </button>
+        <button class="tab-btn flex-1 py-3 px-2 text-sm font-medium z-10 transition-colors text-slate-400" data-tab="scientific">
+          <span class="flex flex-col items-center gap-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.871 4A17.926 17.926 0 003 12c0 2.874.673 5.59 1.871 8m14.258 0A17.926 17.926 0 0021 12c0-2.874-.673-5.59-1.871-8M9 9h1.246a1 1 0 01.961.725l1.586 5.55a1 1 0 00.961.725H15m-6 4h6"/>
+            </svg>
+            <span>زانستی</span>
+          </span>
+        </button>
+        <button class="tab-btn flex-1 py-3 px-2 text-sm font-medium z-10 transition-colors text-slate-400" data-tab="leave">
+          <span class="flex flex-col items-center gap-1">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            </svg>
+            <span>مۆڵەت</span>
+          </span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Content Area -->
+    <main class="flex-1 overflow-hidden relative">
+      <!-- Simple Calculator -->
+      <section id="simpleCalc" class="tab-content absolute inset-0 flex flex-col p-4 animate-fadeIn">
+        <div class="calculator-display glass rounded-3xl p-6 mb-4">
+          <div class="text-right">
+            <div id="simpleExpression" class="text-slate-400 text-lg h-7 mb-2 overflow-hidden"></div>
+            <div id="simpleDisplay" class="number-display text-5xl font-light text-white overflow-hidden">0</div>
+          </div>
+        </div>
+        <div class="flex-1 grid grid-cols-4 gap-3">
+          <button class="btn-calc glass rounded-2xl text-xl font-medium text-red-400" data-action="clear">AC</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium text-indigo-400" data-action="backspace">⌫</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium text-indigo-400" data-action="negate">±</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium text-indigo-400" data-action="percent">%</button>
+          
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="7">7</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="8">8</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="9">9</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl text-xl font-medium" data-action="operator" data-value="÷">÷</button>
+          
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="4">4</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="5">5</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="6">6</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl text-xl font-medium" data-action="operator" data-value="×">×</button>
+          
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="1">1</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="2">2</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="number" data-value="3">3</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl text-xl font-medium" data-action="operator" data-value="-">−</button>
+          
+          <button class="btn-calc glass rounded-2xl text-xl font-medium col-span-2" data-action="number" data-value="0">0</button>
+          <button class="btn-calc glass rounded-2xl text-xl font-medium" data-action="decimal">.</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl text-xl font-medium" data-action="operator" data-value="+">+</button>
+          
+          <button class="btn-calc bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl text-xl font-medium col-span-4" data-action="equals">=</button>
+        </div>
+      </section>
+
+      <!-- Scientific Calculator -->
+      <section id="scientificCalc" class="tab-content absolute inset-0 flex flex-col p-4 hidden">
+        <div class="calculator-display glass rounded-3xl p-4 mb-3">
+          <div class="text-right">
+            <div id="sciExpression" class="text-slate-400 text-sm h-5 mb-1 overflow-hidden"></div>
+            <div id="sciDisplay" class="number-display text-4xl font-light text-white overflow-hidden">0</div>
+          </div>
+        </div>
+        <div class="flex-1 grid grid-cols-5 gap-2">
+          <!-- Row 1 - Scientific Functions -->
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="sin">sin</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="cos">cos</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="tan">tan</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="log">log</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="ln">ln</button>
+          
+          <!-- Row 2 -->
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="sqrt">√</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="pow">x²</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="cube">x³</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="exp">eˣ</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="pi">π</button>
+          
+          <!-- Row 3 -->
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="inv">1/x</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="parenthesis" data-value="(">(</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="parenthesis" data-value=")">)</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="fact">n!</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="e">e</button>
+          
+          <!-- Row 4 -->
+          <button class="btn-calc glass rounded-xl text-base font-medium text-red-400" data-action="clear">AC</button>
+          <button class="btn-calc glass rounded-xl text-base font-medium text-indigo-400" data-action="backspace">⌫</button>
+          <button class="btn-calc glass rounded-xl text-base font-medium text-indigo-400" data-action="percent">%</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl text-base font-medium" data-action="operator" data-value="÷">÷</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl text-base font-medium" data-action="sci" data-value="powY">xʸ</button>
+          
+          <!-- Row 5 -->
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="7">7</button>
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="8">8</button>
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="9">9</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl text-base font-medium" data-action="operator" data-value="×">×</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="abs">|x|</button>
+          
+          <!-- Row 6 -->
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="4">4</button>
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="5">5</button>
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="6">6</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl text-base font-medium" data-action="operator" data-value="-">−</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="sci" data-value="mod">mod</button>
+          
+          <!-- Row 7 -->
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="1">1</button>
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="2">2</button>
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="number" data-value="3">3</button>
+          <button class="btn-calc bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl text-base font-medium" data-action="operator" data-value="+">+</button>
+          <button class="btn-calc glass rounded-xl text-sm font-medium text-purple-400" data-action="negate">±</button>
+          
+          <!-- Row 8 -->
+          <button class="btn-calc glass rounded-xl text-lg font-medium col-span-2" data-action="number" data-value="0">0</button>
+          <button class="btn-calc glass rounded-xl text-lg font-medium" data-action="decimal">.</button>
+          <button class="btn-calc bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl text-base font-medium col-span-2" data-action="equals">=</button>
+        </div>
+      </section>
+
+      <!-- Leave Calculator -->
+      <section id="leaveCalc" class="tab-content absolute inset-0 flex flex-col p-4 hidden overflow-y-auto">
+        <div class="space-y-4">
+          <!-- Departure Date -->
+          <div class="glass rounded-2xl p-4 animate-slideUp">
+            <label class="block text-sm font-medium text-indigo-400 mb-3">
+              <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+              </svg>
+              ڕۆژی پچڕاندن (Departure)
+            </label>
+            <div class="flex gap-2">
+              <div class="flex-1 glass-dark rounded-xl overflow-hidden">
+                <div class="wheel-picker" id="departDay"></div>
+                <div class="text-center text-xs text-slate-500 py-1">ڕۆژ</div>
+              </div>
+              <div class="flex-1 glass-dark rounded-xl overflow-hidden">
+                <div class="wheel-picker" id="departMonth"></div>
+                <div class="text-center text-xs text-slate-500 py-1">مانگ</div>
+              </div>
+              <div class="flex-1 glass-dark rounded-xl overflow-hidden">
+                <div class="wheel-picker" id="departYear"></div>
+                <div class="text-center text-xs text-slate-500 py-1">ساڵ</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Return Date -->
+          <div class="glass rounded-2xl p-4 animate-slideUp stagger-1">
+            <label class="block text-sm font-medium text-purple-400 mb-3">
+              <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+              </svg>
+              ڕۆژی گەڕانەوە (Return)
+            </label>
+            <div class="flex gap-2">
+              <div class="flex-1 glass-dark rounded-xl overflow-hidden">
+                <div class="wheel-picker" id="returnDay"></div>
+                <div class="text-center text-xs text-slate-500 py-1">ڕۆژ</div>
+              </div>
+              <div class="flex-1 glass-dark rounded-xl overflow-hidden">
+                <div class="wheel-picker" id="returnMonth"></div>
+                <div class="text-center text-xs text-slate-500 py-1">مانگ</div>
+              </div>
+              <div class="flex-1 glass-dark rounded-xl overflow-hidden">
+                <div class="wheel-picker" id="returnYear"></div>
+                <div class="text-center text-xs text-slate-500 py-1">ساڵ</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div id="leaveResults" class="result-card rounded-2xl p-4 animate-slideUp stagger-2">
+            <h3 class="text-lg font-semibold text-center mb-4 bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+              ماوەی مۆڵەت (Total Days)
+            </h3>
+            <div class="space-y-3">
+              <div class="flex justify-between items-center py-2 border-b border-slate-700/50">
+                <span class="text-slate-400">کۆی ڕۆژەکان</span>
+                <span id="totalDays" class="text-2xl font-bold text-white number-display">0</span>
+              </div>
+              <div class="flex justify-between items-center py-2 border-b border-slate-700/50">
+                <span class="text-slate-400">شەممە و ھەینی</span>
+                <span id="holidaysCount" class="text-lg font-medium text-orange-400 number-display">0</span>
+              </div>
+              <div class="flex justify-between items-center py-2">
+                <span class="text-slate-400">ڕۆژی کارکردن</span>
+                <span id="workDays" class="text-2xl font-bold text-emerald-400 number-display">0</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Options -->
+          <div class="glass rounded-2xl p-4 animate-slideUp stagger-3">
+            <h2 class="text-sm font-medium text-slate-300 mb-1">بژاردەکان (Options)</h2>
+            <div class="space-y-5">
+              <div class="flex items-center justify-between">
+                <label for="monthDisplay" class="text-sm text-slate-400"> دیسپل ەی مانگ: </label>
+                <select id="monthDisplay" class="px-3 py-1 rounded bg-slate-700 text-white text-sm">
+                  <option value="kurdish">کوردی</option>
+                  <option value="english">English</option>
+                  <option value="number">ژمارە</option>
+                </select>
+              </div>
+              <label class="flex items-center justify-between">
+                <span class="text-sm text-slate-400">نەژمێردنی ھەینی</span>
+                <input type="checkbox" id="excludeFriday">
+              </label>
+              <label class="flex items-center justify-between">
+                <span class="text-sm text-slate-400">نەژمێردنی شەممە</span>
+                <input type="checkbox" id="excludeSaturday">
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- About Page -->
+      <section id="aboutPage" class="tab-content absolute inset-0 flex flex-col p-4 hidden overflow-y-auto">
+        <div class="flex-1 flex flex-col items-center py-8">
+          <div class="animate-float mb-6">
+            <div class="w-28 h-28 rounded-3xl glass flex items-center justify-center shadow-2xl">
+              <img src="icon.png" alt="App Icon" class="w-24 h-24 rounded-2xl" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="w-24 h-24 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 hidden items-center justify-center">
+                <svg class="w-14 h-14 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          
+          <h2 id="aboutTitle" class="text-2xl font-bold mb-1 animate-slideUp">ژمێرەری کوردی</h2>
+          <p class="text-slate-400 text-sm mb-8 animate-slideUp stagger-1">v1.0.2</p>
+          
+          <div class="w-full space-y-4 animate-slideUp stagger-2">
+            <div class="glass rounded-2xl p-4">
+              <h3 class="text-lg font-semibold text-indigo-400 mb-3">دەربارەی ئەپڵیکەیشن</h3>
+              <p class="text-slate-300 text-sm leading-relaxed">
+                ئەم ئەپڵیکەیشنە ژمێرکارێکی تەواوە کە سێ بەشی جیاوازی تێدایە: ژمێرکاری ئاسان، ژمێرکاری زانستی، و ژمێرکاری مۆڵەتی کوردی. تایبەتمەندیی ئەم ئەپڵیکەیشنە ئاسانکردنی کاری ژمێریاریە.
+              </p>
+            </div>
+            
+            <div class="glass rounded-2xl p-4">
+              <h3 class="text-lg font-semibold text-purple-400 mb-3">تایبەتمەندیەکان</h3>
+              <ul class="text-slate-300 text-sm space-y-2">
+                <li class="flex items-center gap-2">
+                  <span class="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                  ژمێرکاری ئاسان بۆ کارە ڕۆژانەکان
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                  ژمێرکاری زانستی تەواو
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-2 h-2 bg-pink-500 rounded-full"></span>
+                  ژمێرکاری مۆڵەت بە کوردی
+                </li>
+                <li class="flex items-center gap-2">
+                  <span class="w-2 h-2 bg-orange-500 rounded-full"></span>
+                  کارکردن بە ئۆفلاین
+                </li>
+              </ul>
+            </div>
+            
+            <div class="glass rounded-2xl p-4">
+              <h3 class="text-lg font-semibold text-emerald-400 mb-3">دەربارەی گەشەپێدەر</h3>
+              <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-2xl font-bold">
+                  D
+                </div>
+                <div>
+                  <p id="developerName" class="text-lg font-semibold text-white">دیدار بختیار جلال</p>
+                  <p class="text-slate-400 text-sm">گەشەپێدەری ئەپڵیکەیشن</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="space-y-3 w-full animate-slideUp stagger-6 mt-8">
+            <a href="https://didar122.github.io/Didar-Library/" target="_blank" rel="noopener noreferrer" class="w-full block px-6 py-3 text-center bg-gradient-to-r from-green-500 to-emerald-600 rounded-full font-medium transition-transform active:scale-95">
+               بەرنامەی زیاتر
+            </a>
+            <button id="closeAbout" class="w-full px-8 py-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full font-medium transition-transform active:scale-95">
+              گەڕانەوە
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Safe Area Bottom -->
+    <div class="safe-area-bottom gradient-bg"></div>
+  </div>
+
+  <script>
+    // Default configuration
+    const defaultConfig = {
+      app_title: 'ژمێرەری کوردی',
+      developer_name: 'دیدار بختیار جلال'
+    };
+
+    let config = { ...defaultConfig };
+
+    // Initialize Element SDK
+    if (window.elementSdk) {
+      window.elementSdk.init({
+        defaultConfig,
+        onConfigChange: async (newConfig) => {
+          config = { ...defaultConfig, ...newConfig };
+          updateUI();
+        },
+        mapToCapabilities: (cfg) => ({
+          recolorables: [],
+          borderables: [],
+          fontEditable: undefined,
+          fontSizeable: undefined
+        }),
+        mapToEditPanelValues: (cfg) => new Map([
+          ['app_title', cfg.app_title || defaultConfig.app_title],
+          ['developer_name', cfg.developer_name || defaultConfig.developer_name]
+        ])
+      });
+    }
+
+    function updateUI() {
+      const title = config.app_title || defaultConfig.app_title;
+      const devName = config.developer_name || defaultConfig.developer_name;
+      
+      document.getElementById('appTitle').textContent = title;
+      document.getElementById('loadingTitle').textContent = title;
+      document.getElementById('aboutTitle').textContent = title;
+      document.getElementById('developerName').textContent = devName;
+    }
+
+    // App State
+    let currentTab = 'simple';
+    let simpleCalc = { display: '0', expression: '', operator: null, prev: null, newNumber: true };
+    let sciCalc = { display: '0', expression: '', operator: null, prev: null, newNumber: true, memory: 0 };
+    
+    // Months in different languages
+    const monthsKurdish = ['کانونی دووەم', 'شوبات', 'ئازار', 'نیسان', 'ئایار', 'حوزەیران', 'تەممووز', 'ئاب', 'ئەیلوول', 'تشرینی یەکەم', 'تشرینی دووەم', 'کانونی یەکەم'];
+    const monthsEnglish = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let months = monthsKurdish;
+    let monthFormat = 'kurdish';
+    
+    // Date picker state
+    let departDate = { day: new Date().getDate(), month: new Date().getMonth() + 1, year: new Date().getFullYear() };
+    let returnDate = { day: new Date().getDate() + 7, month: new Date().getMonth() + 1, year: new Date().getFullYear() };
+
+    // Loading Screen
+    setTimeout(() => {
+      document.getElementById('loadingScreen').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('appContainer').style.opacity = '1';
+      }, 500);
+    }, 2000);
+
+    // Tab Navigation
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        switchTab(tab);
+      });
+    });
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const indicator = document.getElementById('tabIndicator');
+      const tabs = ['simple', 'scientific', 'leave'];
+      const index = tabs.indexOf(tab);
+      // For RTL, use negative translate to move left
+      indicator.style.transform = `translateX(-${index * 100}%)`;
+      
+      document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+        btn.classList.toggle('text-white', i === index);
+        btn.classList.toggle('text-slate-400', i !== index);
+      });
+      
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      
+      const contentId = tab === 'simple' ? 'simpleCalc' : tab === 'scientific' ? 'scientificCalc' : 'leaveCalc';
+      document.getElementById(contentId).classList.remove('hidden');
+      document.getElementById('aboutPage').classList.add('hidden');
+    }
+
+    // About Page
+    document.getElementById('aboutBtn').addEventListener('click', () => {
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.add('hidden');
+      });
+      document.getElementById('aboutPage').classList.remove('hidden');
+      // Hide nav when on about page
+      document.querySelector('nav').style.display = 'none';
+    });
+
+    document.getElementById('closeAbout').addEventListener('click', () => {
+      document.getElementById('aboutPage').classList.add('hidden');
+      // Show nav when leaving about page
+      document.querySelector('nav').style.display = 'block';
+      switchTab(currentTab);
+    });
+
+    // Simple Calculator Logic
+    document.getElementById('simpleCalc').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      
+      const action = btn.dataset.action;
+      const value = btn.dataset.value;
+      
+      handleCalculator(action, value, 'simple');
+    });
+
+    // Scientific Calculator Logic
+    document.getElementById('scientificCalc').addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      
+      const action = btn.dataset.action;
+      const value = btn.dataset.value;
+      
+      handleCalculator(action, value, 'scientific');
+    });
+
+    function handleCalculator(action, value, type) {
+      const calc = type === 'simple' ? simpleCalc : sciCalc;
+      const displayEl = document.getElementById(type === 'simple' ? 'simpleDisplay' : 'sciDisplay');
+      const exprEl = document.getElementById(type === 'simple' ? 'simpleExpression' : 'sciExpression');
+      
+      switch (action) {
+        case 'number':
+          if (calc.newNumber) {
+            calc.display = value;
+            calc.newNumber = false;
+          } else {
+            calc.display = calc.display === '0' ? value : calc.display + value;
+          }
+          break;
+          
+        case 'decimal':
+          if (calc.newNumber) {
+            calc.display = '0.';
+            calc.newNumber = false;
+          } else if (!calc.display.includes('.')) {
+            calc.display += '.';
+          }
+          break;
+          
+        case 'operator':
+          if (calc.operator && !calc.newNumber) {
+            calculate(calc);
+          }
+          calc.prev = parseFloat(calc.display);
+          calc.operator = value;
+          calc.expression = `${formatNumber(calc.prev)} ${value}`;
+          calc.newNumber = true;
+          break;
+          
+        case 'equals':
+          if (calc.operator) {
+            calc.expression = `${formatNumber(calc.prev)} ${calc.operator} ${calc.display} =`;
+            calculate(calc);
+            calc.operator = null;
+            calc.newNumber = true;
+          }
+          break;
+          
+        case 'clear':
+          calc.display = '0';
+          calc.expression = '';
+          calc.operator = null;
+          calc.prev = null;
+          calc.newNumber = true;
+          break;
+          
+        case 'negate':
+          calc.display = String(-parseFloat(calc.display));
+          break;
+          
+        case 'percent':
+          calc.display = String(parseFloat(calc.display) / 100);
+          break;
+          
+        case 'backspace':
+          if (calc.display.length > 1) {
+            calc.display = calc.display.slice(0, -1);
+          } else {
+            calc.display = '0';
+          }
+          break;
+          
+        case 'sci':
+          handleScientific(value, calc);
+          break;
+          
+        case 'parenthesis':
+          // Basic parenthesis handling
+          if (calc.newNumber) {
+            calc.display = value;
+            calc.newNumber = false;
+          } else {
+            calc.display += value;
+          }
+          break;
+      }
+      
+      displayEl.textContent = formatDisplay(calc.display);
+      exprEl.textContent = calc.expression;
+    }
+
+    function calculate(calc) {
+      const current = parseFloat(calc.display);
+      let result;
+      
+      switch (calc.operator) {
+        case '+': result = calc.prev + current; break;
+        case '−': result = calc.prev - current; break;
+        case '×': result = calc.prev * current; break;
+        case '÷': result = current !== 0 ? calc.prev / current : 'Error'; break;
+        default: return;
+      }
+      
+      calc.display = typeof result === 'number' ? String(result) : result;
+    }
+
+    function handleScientific(func, calc) {
+      const num = parseFloat(calc.display);
+      let result;
+      
+      switch (func) {
+        case 'sin': result = Math.sin(num * Math.PI / 180); break;
+        case 'cos': result = Math.cos(num * Math.PI / 180); break;
+        case 'tan': result = Math.tan(num * Math.PI / 180); break;
+        case 'log': result = Math.log10(num); break;
+        case 'ln': result = Math.log(num); break;
+        case 'sqrt': result = Math.sqrt(num); break;
+        case 'pow': result = Math.pow(num, 2); break;
+        case 'cube': result = Math.pow(num, 3); break;
+        case 'exp': result = Math.exp(num); break;
+        case 'pi': result = Math.PI; break;
+        case 'e': result = Math.E; break;
+        case 'inv': result = 1 / num; break;
+        case 'fact': result = factorial(Math.floor(num)); break;
+        case 'abs': result = Math.abs(num); break;
+        case 'mod':
+          if (calc.operator) {
+            result = calc.prev % num;
+          } else {
+            calc.operator = 'mod';
+            calc.prev = num;
+            calc.expression = `${num} mod`;
+            calc.newNumber = true;
+            return;
+          }
+          break;
+        case 'powY':
+          calc.operator = '^';
+          calc.prev = num;
+          calc.expression = `${num} ^`;
+          calc.newNumber = true;
+          return;
+        default: return;
+      }
+      
+      calc.display = String(result);
+      calc.newNumber = true;
+    }
+
+    function factorial(n) {
+      if (n < 0) return NaN;
+      if (n === 0 || n === 1) return 1;
+      let result = 1;
+      for (let i = 2; i <= n; i++) result *= i;
+      return result;
+    }
+
+    function formatNumber(num) {
+      return num.toLocaleString('en-US', { maximumFractionDigits: 10 });
+    }
+
+    function formatDisplay(str) {
+      const num = parseFloat(str);
+      if (isNaN(num)) return str;
+      
+      // Check if it's a very large or very small number that needs scientific notation
+      if (Math.abs(num) >= 1e12 || (Math.abs(num) < 1e-10 && num !== 0)) {
+        return num.toExponential(6);
+      }
+      
+      // For regular numbers, return the string as-is to preserve trailing zeros
+      // Only return formatted version if the string looks like it needs formatting (very long)
+      if (str.length > 15) {
+        return num.toLocaleString('en-US', { maximumFractionDigits: 10 });
+      }
+      
+      return str;
+    }
+
+    // Wheel Picker Implementation
+    function createWheelPicker(container, items, selectedIndex, onChange) {
+      container.innerHTML = '';
+      
+      const wrapper = document.createElement('div');
+      wrapper.className = 'wheel-content';
+      wrapper.style.transform = `translateY(${40 - selectedIndex * 40}px)`;
+      wrapper.style.transition = 'transform 0.2s ease-out';
+      
+      items.forEach((item, index) => {
+        const div = document.createElement('div');
+        div.className = `wheel-item ${index === selectedIndex ? 'wheel-selected' : ''}`;
+        div.textContent = item.label;
+        div.addEventListener('click', () => {
+          selectWheelItem(wrapper, index, items.length, onChange);
+        });
+        wrapper.appendChild(div);
+      });
+      
+      container.appendChild(wrapper);
+      
+      // Touch/drag handling
+      let startY = 0;
+      let currentY = 0;
+      let isDragging = false;
+      
+      container.addEventListener('touchstart', (e) => {
+        startY = e.touches[0].clientY;
+        isDragging = true;
+        wrapper.style.transition = 'none';
+      });
+      
+      container.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+        const currentTransform = 40 - selectedIndex * 40;
+        wrapper.style.transform = `translateY(${currentTransform + diff}px)`;
+      });
+      
+      container.addEventListener('touchend', () => {
+        if (!isDragging) return;
+        isDragging = false;
+        wrapper.style.transition = 'transform 0.2s ease-out';
+        
+        const diff = currentY - startY;
+        const itemsMoved = Math.round(-diff / 40);
+        let newIndex = selectedIndex + itemsMoved;
+        newIndex = Math.max(0, Math.min(items.length - 1, newIndex));
+        
+        selectWheelItem(wrapper, newIndex, items.length, onChange);
+      });
+    }
+
+    function selectWheelItem(wrapper, index, totalItems, onChange) {
+      wrapper.style.transform = `translateY(${40 - index * 40}px)`;
+      
+      wrapper.querySelectorAll('.wheel-item').forEach((item, i) => {
+        item.classList.toggle('wheel-selected', i === index);
+      });
+      
+      onChange(index);
+    }
+
+    // Initialize Date Pickers
+    function initializeDatePickers() {
+      function getDaysInMonth(month, year) {
+        return new Date(year, month, 0).getDate();
+      }
+      
+      function createDayItems(month, year) {
+        const daysCount = getDaysInMonth(month, year);
+        return Array.from({ length: daysCount }, (_, i) => ({ value: i + 1, label: String(i + 1) }));
+      }
+      
+      const monthItems = months.map((m, i) => ({ value: i + 1, label: m }));
+      const currentYear = new Date().getFullYear();
+      const years = Array.from({ length: 10 }, (_, i) => ({ value: currentYear - 2 + i, label: String(currentYear - 2 + i) }));
+      
+      // Helper to create day pickers that update based on month/year changes
+      function createDatePickerGroup(dayContainerId, monthContainerId, yearContainerId, dateObj, calculateFn) {
+        const dayPicker = document.getElementById(dayContainerId);
+        const monthPicker = document.getElementById(monthContainerId);
+        const yearPicker = document.getElementById(yearContainerId);
+        
+        function updateDayPicker() {
+          const days = createDayItems(dateObj.month, dateObj.year);
+          const currentDay = Math.min(dateObj.day, days.length);
+          createWheelPicker(dayPicker, days, currentDay - 1, (i) => {
+            dateObj.day = i + 1;
+            calculateFn();
+          });
+        }
+        
+        updateDayPicker();
+        
+        // Store references for updating when month/year changes
+        dateObj._dayPicker = { container: dayPicker, updateDayPicker };
+        
+        createWheelPicker(monthPicker, monthItems, dateObj.month - 1, (i) => {
+          dateObj.month = i + 1;
+          updateDayPicker();
+          calculateFn();
+        });
+        
+        createWheelPicker(yearPicker, years, 2, (i) => {
+          dateObj.year = currentYear - 2 + i;
+          updateDayPicker();
+          calculateFn();
+        });
+      }
+      
+      // Departure pickers
+      createDatePickerGroup('departDay', 'departMonth', 'departYear', departDate, calculateLeave);
+      
+      // Return pickers
+      createDatePickerGroup('returnDay', 'returnMonth', 'returnYear', returnDate, calculateLeave);
+    }
+
+    // Leave Calculation
+    function calculateLeave() {
+      const start = new Date(departDate.year, departDate.month - 1, departDate.day);
+      const end = new Date(returnDate.year, returnDate.month - 1, returnDate.day);
+      
+      const excludeFriday = document.getElementById('excludeFriday').checked;
+      const excludeSaturday = document.getElementById('excludeSaturday').checked;
+      
+      let totalDays = 0;
+      let fridays = 0;
+      let saturdays = 0;
+      let workDays = 0;
+      
+      const current = new Date(start);
+      while (current <= end) {
+        totalDays++;
+        const dayOfWeek = current.getDay();
+        
+        if (dayOfWeek === 5) {
+          fridays++;
+          if (!excludeFriday) workDays++;
+        } else if (dayOfWeek === 6) {
+          saturdays++;
+          if (!excludeSaturday) workDays++;
+        } else {
+          workDays++;
+        }
+        
+        current.setDate(current.getDate() + 1);
+      }
+      
+      if (totalDays < 0) {
+        totalDays = 0;
+        fridays = 0;
+        saturdays = 0;
+        workDays = 0;
+      }
+      
+      // Combine holidays (Friday + Saturday)
+      const holidays = fridays + saturdays;
+      
+      // Animate number updates
+      animateNumber('totalDays', totalDays);
+      animateNumber('holidaysCount', holidays);
+      animateNumber('workDays', workDays);
+    }
+
+    function animateNumber(elementId, targetValue) {
+      const element = document.getElementById(elementId);
+      const currentValue = parseInt(element.textContent) || 0;
+      const diff = targetValue - currentValue;
+      const steps = 10;
+      const stepValue = diff / steps;
+      let step = 0;
+      
+      const animate = () => {
+        step++;
+        const value = Math.round(currentValue + stepValue * step);
+        element.textContent = value;
+        
+        if (step < steps) {
+          requestAnimationFrame(animate);
+        } else {
+          element.textContent = targetValue;
+        }
+      };
+      
+      requestAnimationFrame(animate);
+    }
+
+    // Checkbox listeners
+    document.getElementById('excludeFriday').addEventListener('change', calculateLeave);
+    document.getElementById('excludeSaturday').addEventListener('change', calculateLeave);
+    
+    // Month display format selector
+    document.getElementById('monthDisplay').addEventListener('change', (e) => {
+      monthFormat = e.target.value;
+      if (monthFormat === 'kurdish') {
+        months = monthsKurdish;
+      } else if (monthFormat === 'english') {
+        months = monthsEnglish;
+      } else {
+        // number format
+        months = Array.from({ length: 12 }, (_, i) => String(i + 1));
+      }
+      // Reinitialize date pickers with new month format
+      initializeDatePickers();
+    });
+
+    // Initialize
+    initializeDatePickers();
+    calculateLeave();
+    updateUI();
+
+    // Prevent zoom on double tap
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', (e) => {
+      const now = Date.now();
+      if (now - lastTouchEnd <= 300) {
+        e.preventDefault();
+      }
+      lastTouchEnd = now;
+    }, false);
+
+    // Service Worker Registration for Offline Support
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        // Create inline service worker
+        const swCode = `
+          const CACHE_NAME = 'calculator-pro-v1';
+          const urlsToCache = ['/'];
+          
+          self.addEventListener('install', (event) => {
+            event.waitUntil(
+              caches.open(CACHE_NAME)
+                .then((cache) => cache.addAll(urlsToCache))
+            );
+          });
+          
+          self.addEventListener('fetch', (event) => {
+            event.respondWith(
+              caches.match(event.request)
+                .then((response) => response || fetch(event.request))
+            );
+          });
+        `;
+        
+        const blob = new Blob([swCode], { type: 'application/javascript' });
+        const swUrl = URL.createObjectURL(blob);
+        
+        navigator.serviceWorker.register(swUrl).catch(() => {
+          // Service worker registration failed, app will still work online
+        });
+      });
+    }
+  </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9cf81c63567df752',t:'MTc3MTM2MDk0Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
