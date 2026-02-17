@@ -118,6 +118,9 @@
       height: 120px;
       overflow: hidden;
       position: relative;
+      touch-action: none;
+      overscroll-behavior: contain;
+      pointer-events: auto;
     }
     
     .wheel-picker::before,
@@ -148,6 +151,11 @@
       justify-content: center;
       transition: all 0.2s ease;
       cursor: pointer;
+    }
+    
+    .wheel-content {
+      width: 100%;
+      touch-action: none;
     }
     
     .wheel-selected {
@@ -920,17 +928,19 @@
         startY = e.touches[0].clientY;
         isDragging = true;
         wrapper.style.transition = 'none';
-      });
+        e.preventDefault();
+      }, { passive: false });
       
       container.addEventListener('touchmove', (e) => {
         if (!isDragging) return;
+        e.preventDefault();
         currentY = e.touches[0].clientY;
         const diff = currentY - startY;
         const currentTransform = 40 - selectedIndex * 40;
         wrapper.style.transform = `translateY(${currentTransform + diff}px)`;
-      });
+      }, { passive: false });
       
-      container.addEventListener('touchend', () => {
+      container.addEventListener('touchend', (e) => {
         if (!isDragging) return;
         isDragging = false;
         wrapper.style.transition = 'transform 0.2s ease-out';
@@ -941,7 +951,7 @@
         newIndex = Math.max(0, Math.min(items.length - 1, newIndex));
         
         selectWheelItem(wrapper, newIndex, items.length, onChange);
-      });
+      }, { passive: false });
     }
 
     function selectWheelItem(wrapper, index, totalItems, onChange) {
