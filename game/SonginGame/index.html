@@ -810,6 +810,25 @@
       <p class="text-gray-300 text-base">تکایە ووشەی تێپەڕ بنوسە 🔑</p>
      </div>
      <div class="w-full"><input id="password-input" type="password" placeholder="●●●●●" class="w-full px-6 py-4 rounded-2xl text-center font-mono text-lg">
+     <!-- Custom Virtual Keyboard for Password -->
+     <div id="password-keyboard" class="grid grid-cols-4 gap-2 mt-4 select-none">
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="1">1</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="2">2</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="3">3</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="@">@</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="4">4</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="5">5</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="6">6</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="#">#</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="7">7</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="8">8</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="9">9</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="$">$</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="&">&</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="0">0</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="del">⌫</button>
+       <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="clear">C</button>
+     </div>
      </div><button id="enter-btn" class="w-full py-4 rounded-2xl bg-gradient-to-r from-accent-rose to-accent-violet text-white font-bold btn-glass text-lg shadow-lg">چوونەژوورەوە</button>
      <div id="password-error" class="hidden text-center text-red-400 text-base animate-fade-in">
       ⚠️ ووشەی تێپەڕ هەڵەیە
@@ -1212,6 +1231,25 @@
       <div class="flex flex-col gap-2">
         <label class="text-sm text-gray-300">کاتی دیاریکە</label>
         <input id="timer-input" type="number" min="1" max="3600" value="60" class="w-full px-4 py-3 rounded-xl glass-sm text-white font-bold text-center text-lg" placeholder="کات">
+        <!-- Custom Virtual Keyboard for Timer -->
+        <div id="timer-keyboard" class="grid grid-cols-4 gap-2 mt-4 select-none">
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="1">1</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="2">2</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="3">3</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="@">@</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="4">4</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="5">5</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="6">6</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="#">#</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="7">7</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="8">8</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="9">9</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="$">$</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="&">&</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="0">0</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="del">⌫</button>
+          <button type="button" class="py-3 rounded-xl glass-sm text-xl font-bold" data-key="clear">C</button>
+        </div>
       </div>
 
       <!-- Control Buttons -->
@@ -1221,7 +1259,6 @@
       </div>
 
       <!-- Reset Button -->
-      <button id="timer-reset-btn" class="w-full py-4 rounded-xl glass-sm btn-glass text-white font-bold text-base shadow-md hover:shadow-lg transition-all">دووبارە دانانەوە</button>
 
       <!-- Preset Buttons -->
       <div class="grid grid-cols-2 gap-2 mt-4">
@@ -2968,9 +3005,6 @@
         });
 
         // Reset button
-        document.getElementById('timer-reset-btn').addEventListener('click', () => {
-          this.reset();
-        });
 
         // Input field
         document.getElementById('timer-input').addEventListener('change', (e) => {
@@ -3082,13 +3116,6 @@
         soundManager.playClick();
       },
 
-      reset() {
-        this.stop();
-        this.remainingSeconds = this.totalSeconds;
-        document.getElementById('timer-input').value = this.totalSeconds;
-        this.updateDisplay();
-        soundManager.playClick();
-      },
 
       updateDisplay() {
         const minutes = Math.floor(this.remainingSeconds / 60);
@@ -3310,4 +3337,58 @@
     });
   </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d93fda98776f75e',t:'MTc3Mjk5NTQ2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>
+// Custom virtual keyboard logic for password (uses the original input)
+const pwInput = document.getElementById('password-input');
+const pwKeyboard = document.getElementById('password-keyboard');
+if (pwInput && pwKeyboard) {
+  pwInput.setAttribute('readonly', '');
+  pwInput.setAttribute('tabindex', '-1');
+  pwKeyboard.addEventListener('click', function(e) {
+    if (e.target && e.target.dataset && e.target.dataset.key) {
+      let key = e.target.dataset.key;
+      if (key === 'del') {
+        pwInput.value = pwInput.value.slice(0, -1);
+      } else if (key === 'clear') {
+        pwInput.value = '';
+      } else {
+        pwInput.value += key;
+      }
+    }
+  });
+  // Prevent focus to avoid native keyboard
+  pwInput.addEventListener('focus', e => e.target.blur());
+}
+</script>
+<script>
+// Custom virtual keyboard logic for timer (uses the original input)
+const timerInput = document.getElementById('timer-input');
+const timerKeyboard = document.getElementById('timer-keyboard');
+if (timerInput && timerKeyboard) {
+  timerInput.setAttribute('readonly', '');
+  timerInput.setAttribute('tabindex', '-1');
+  timerKeyboard.addEventListener('click', function(e) {
+    if (e.target && e.target.dataset && e.target.dataset.key) {
+      let key = e.target.dataset.key;
+      if (key === 'del') {
+        timerInput.value = timerInput.value.slice(0, -1);
+      } else if (key === 'clear') {
+        timerInput.value = '';
+      } else {
+        timerInput.value += key;
+      }
+      // Trigger change event so timer logic updates
+      timerInput.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  });
+  // Prevent focus to avoid native keyboard
+  timerInput.addEventListener('focus', e => e.target.blur());
+}
+// Fix reset button display
+const timerResetBtn = document.getElementById('timer-reset-btn');
+if (timerResetBtn) {
+  timerResetBtn.style.display = 'block';
+  timerResetBtn.style.width = '100%';
+}
+</script>
 </html>
