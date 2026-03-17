@@ -1,0 +1,3313 @@
+<!doctype html>
+<html lang="ku" dir="rtl">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="سۆنگ ئین گەیم">
+  <link rel="apple-touch-icon" href="icon.png">
+  <title>سۆنگ ئین گەیم</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;family=Noto+Sans+Arabic:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            'arabic': ['Noto Sans Arabic', 'Poppins', 'sans-serif'],
+            'poppins': ['Poppins', 'sans-serif'],
+          },
+          colors: {
+            'app-bg': '#0f0f1e',
+            'glass-light': 'rgba(255, 255, 255, 0.1)',
+            'glass-dark': 'rgba(0, 0, 0, 0.2)',
+            'accent-rose': '#ff1654',
+            'accent-violet': '#a855f7',
+            'accent-cyan': '#06b6d4',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: manipulation;
+    }
+    html {
+      height: 100vh;
+      height: 100dvh;
+      width: 100%;
+      overflow: hidden;
+      margin: 0;
+      padding: 0;
+      -webkit-user-select: none;
+    }
+    
+    body {
+      height: 100vh;
+      height: 100dvh;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 100%);
+      -webkit-user-select: none;
+    }
+    
+    .safe-area-top { padding-top: env(safe-area-inset-top, 20px); }
+    .safe-area-bottom { padding-bottom: 0; }
+    .safe-area-left { padding-left: env(safe-area-inset-left, 0); }
+    .safe-area-right { padding-right: env(safe-area-inset-right, 0); }
+    
+    .glass {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+    }
+    
+    .glass-sm {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    @keyframes float-gentle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    @keyframes glow-pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 22, 84, 0.3), 0 0 40px rgba(168, 85, 247, 0.2); }
+      50% { box-shadow: 0 0 40px rgba(255, 22, 84, 0.5), 0 0 60px rgba(168, 85, 247, 0.3); }
+    }
+    
+    @keyframes slide-up {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes fade-in {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes pop-in {
+      from { transform: scale(0.8) translateY(50px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
+    }
+    
+    @keyframes bounce-scale {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    
+    @keyframes spin-soft {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes dice-roll {
+      0% { transform: rotateX(0deg) rotateY(0deg) scale(1); }
+      50% { transform: rotateX(720deg) rotateY(720deg) scale(1.1); }
+      100% { transform: rotateX(0deg) rotateY(0deg) scale(1); }
+    }
+    
+    @keyframes icon-bounce {
+      0%, 100% { transform: scale(1) translateY(0); }
+      25% { transform: scale(1.2) translateY(-5px); }
+      50% { transform: scale(1.3) translateY(-10px); }
+      75% { transform: scale(1.2) translateY(-5px); }
+    }
+    
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(255, 22, 84, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(255, 22, 84, 0.6), 0 0 60px rgba(168, 85, 247, 0.4); }
+    }
+    
+    @keyframes fade-out {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    
+    @keyframes icon-glow {
+      0%, 100% { text-shadow: 0 0 10px rgba(255, 22, 84, 0.3), 0 0 20px rgba(168, 85, 247, 0.2); }
+      50% { text-shadow: 0 0 20px rgba(255, 22, 84, 0.6), 0 0 40px rgba(168, 85, 247, 0.4), 0 0 60px rgba(6, 182, 212, 0.2); }
+    }
+    
+    .animate-float-gentle { animation: float-gentle 3s ease-in-out infinite; }
+    .animate-glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
+    .animate-slide-up { animation: slide-up 0.5s ease-out; }
+    .animate-fade-in { animation: fade-in 0.4s ease-out; }
+    .animate-bounce-scale { animation: bounce-scale 0.6s ease-out; }
+    .animate-spin-soft { animation: spin-soft 3s linear infinite; }
+    .animate-dice-roll { animation: dice-roll 0.8s ease-out; }
+    .animate-icon-bounce { animation: icon-bounce 0.8s ease-out; }
+    .animate-pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+    .animate-icon-glow { animation: icon-glow 2.5s ease-in-out infinite; }
+    .animate-pop-in { animation: pop-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    /* Timer Panel Animations */
+    @keyframes timer-slide-in {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    @keyframes timer-slide-out {
+      from { transform: translateX(0); }
+      to { transform: translateX(100%); }
+    }
+
+
+
+    #timer-panel {
+      transition: transform 0.5s ease-out, top 0s ease-out !important;
+      transform: translateX(100%);
+    }
+
+    #timer-panel.panel-open {
+      transform: translateX(0) !important;
+    }
+
+    #timer-panel.panel-closed {
+      transform: translateX(100%) !important;
+    }
+
+    #timer-toggle-btn {
+      transition: right 0.5s ease-out !important;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      outline: none !important;
+      border: none !important;
+      touch-action: none;
+      -webkit-touch-callout: none;
+    }
+
+    #timer-toggle-btn:active,
+    #timer-toggle-btn:focus,
+    #timer-toggle-btn:focus-visible {
+      outline: none !important;
+      box-shadow: -5px 0 20px rgba(255, 22, 84, 0.2) !important;
+    }
+
+    #timer-toggle-btn.button-shifted {
+      right: 320px !important;
+    }
+
+    #timer-toggle-btn.button-normal {
+      right: 0 !important;
+    }
+
+    /* Completely disable ALL press animations on timer button */
+    #timer-toggle-btn *,
+    #timer-toggle-btn,
+    #timer-toggle-btn:active,
+    #timer-toggle-btn:focus {
+      transform: none !important;
+      scale: 1 !important;
+      transition: right 0.5s ease-out !important;
+    }
+
+    @keyframes timer-button-slide-in {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
+    }
+
+    @keyframes timer-button-slide-out {
+      from { transform: translateX(0); }
+      to { transform: translateX(100%); }
+    }
+
+    /* Override button press animation for timer button */
+    #timer-toggle-btn:active {
+      transform: none !important;
+    }
+
+    /* Hide timer when not in a mod */
+    #timer-panel-wrapper.hidden-timer {
+      display: none;
+    }
+
+    @keyframes heart-float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(-100px) rotate(5deg); opacity: 0; }
+    }
+
+    @keyframes romantic-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), 0 0 40px rgba(236, 72, 153, 0.2); }
+      50% { box-shadow: 0 0 40px rgba(239, 68, 68, 0.6), 0 0 80px rgba(236, 72, 153, 0.4); }
+    }
+
+    @keyframes romantic-float {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(-10px) translateX(2px); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    @keyframes celebration-pop {
+      0% { transform: scale(0.3) rotateZ(-10deg); opacity: 0; }
+      50% { transform: scale(1.1) rotateZ(5deg); }
+      100% { transform: scale(1) rotateZ(0deg); opacity: 1; }
+    }
+
+    @keyframes party-shine {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    .animate-celebration { animation: celebration-pop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .animate-party-shine { 
+      background: linear-gradient(90deg, rgba(255, 22, 84, 0), rgba(255, 22, 84, 0.3), rgba(168, 85, 247, 0.3), rgba(255, 22, 84, 0));
+      background-size: 200% 100%;
+    }
+
+    @keyframes circular-pulse {
+      0% { box-shadow: 0 0 20px rgba(255, 22, 84, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(255, 22, 84, 0.6), 0 0 40px rgba(168, 85, 247, 0.3); }
+      100% { box-shadow: 0 0 20px rgba(255, 22, 84, 0.4); }
+    }
+
+    @keyframes level-up {
+      0% { transform: scale(1) translateY(0); }
+      50% { transform: scale(1.2) translateY(-10px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+
+    .animate-level-up { animation: level-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    #truthdare-truth-btn {
+      animation: circular-pulse 2s ease-in-out infinite;
+    }
+
+    #truthdare-dare-btn {
+      animation: circular-pulse 2s ease-in-out infinite 0.3s;
+    }
+
+    #truthdare-truth-btn:hover, #truthdare-dare-btn:hover {
+      animation: none;
+    }
+
+    /* Theme: Default Dark */
+    body.theme-dark {
+      background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 100%);
+      color: white;
+    }
+    
+    #app {
+      background: inherit;
+    }
+
+    body.theme-dark #app {
+      background: linear-gradient(135deg, #0f0f1e 0%, #1a0a2e 100%);
+    }
+
+    body.theme-dark .glass {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    body.theme-dark .glass-sm {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* Theme: Glassy White */
+    body.theme-white {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf1 100%);
+      color: #1a1a2e;
+    }
+    
+    body.theme-white #app {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e8ecf1 100%);
+    }
+
+    body.theme-white .glass {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    body.theme-white .glass-sm {
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+
+    body.theme-white h1, body.theme-white h2, body.theme-white h3, body.theme-white p, body.theme-white button {
+      color: #1a1a2e;
+    }
+
+    body.theme-white .text-gray-300 {
+      color: #2d3748 !important;
+    }
+
+    body.theme-white .text-gray-400 {
+      color: #4a5568 !important;
+    }
+
+    body.theme-white .text-white {
+      color: #1a1a2e !important;
+    }
+
+    body.theme-white .text-gray-200 {
+      color: #2d3748 !important;
+    }
+
+    body.theme-white .btn-glass {
+      color: #1a1a2e;
+    }
+
+    body.theme-white svg {
+      color: #1a1a2e !important;
+    }
+
+    body.theme-white span {
+      color: #1a1a2e;
+    }
+
+    body.theme-white input {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(200, 210, 230, 0.8);
+      color: #1a1a2e;
+    }
+
+    body.theme-white input::placeholder {
+      color: #718096;
+    }
+
+    body.theme-white .glass-sm {
+      background: rgba(255, 255, 255, 0.6);
+      border-color: rgba(200, 210, 230, 0.9);
+    }
+
+    /* Theme: Red Romantic */
+    body.theme-romantic {
+      background: linear-gradient(135deg, #1a0f0f 0%, #2d1414 100%);
+      color: white;
+    }
+    
+    body.theme-romantic #app {
+      background: linear-gradient(135deg, #1a0f0f 0%, #2d1414 100%);
+    }
+
+    body.theme-romantic .glass {
+      background: rgba(239, 68, 68, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.1);
+      animation: romantic-glow 3s ease-in-out infinite;
+    }
+
+    body.theme-romantic .glass-sm {
+      background: rgba(239, 68, 68, 0.06);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      animation: romantic-glow 3s ease-in-out infinite;
+    }
+
+    body.theme-romantic .btn-glass {
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.2);
+    }
+
+    body.theme-romantic .mode-card {
+      border: 2px solid transparent;
+      background: linear-gradient(rgba(239, 68, 68, 0.08), rgba(236, 72, 153, 0.08));
+      transition: all 0.4s ease;
+    }
+
+    body.theme-romantic .mode-card:hover {
+      border-color: rgba(236, 72, 153, 0.4);
+      box-shadow: 0 0 30px rgba(236, 72, 153, 0.3);
+      transform: translateY(-8px);
+    }
+
+    body.theme-romantic .animate-glow-pulse {
+      animation: glow-pulse 2.5s ease-in-out infinite, romantic-float 4s ease-in-out infinite;
+    }
+
+    body.theme-romantic .mode-card span {
+      animation: romantic-float 6s ease-in-out infinite;
+    }
+
+    body.theme-romantic #dicegame-gender-selector button {
+      border: 2px solid rgba(236, 72, 153, 0.3) !important;
+      transition: all 0.3s ease;
+    }
+
+    body.theme-romantic #dicegame-gender-selector button:hover {
+      border-color: rgba(236, 72, 153, 0.6) !important;
+    }
+
+    body.theme-romantic #dicegame-gender-selector button.border-accent-rose,
+    body.theme-romantic #dicegame-gender-selector button.border-accent-violet {
+      border: 3px solid #ff1654 !important;
+      background: rgba(236, 72, 153, 0.2) !important;
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.4);
+    }
+
+    body.theme-romantic .animate-dice-roll {
+      animation: dice-roll 0.8s ease-out;
+    }
+
+    body.theme-white #dicegame-gender-selector button {
+      border: 2px solid rgba(26, 26, 46, 0.3) !important;
+      color: #1a1a2e !important;
+    }
+
+    body.theme-white #dicegame-gender-selector button:hover {
+      border-color: rgba(26, 26, 46, 0.6) !important;
+    }
+
+    body.theme-white #dicegame-gender-selector button.border-accent-rose,
+    body.theme-white #dicegame-gender-selector button.border-accent-violet {
+      border: 3px solid #ff1654 !important;
+      background: rgba(255, 22, 84, 0.15) !important;
+      box-shadow: 0 0 15px rgba(255, 22, 84, 0.2);
+      color: #1a1a2e !important;
+    }
+
+    body.theme-romantic input {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      box-shadow: inset 0 0 10px rgba(239, 68, 68, 0.1);
+    }
+
+    body.theme-romantic input:focus {
+      box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), inset 0 0 10px rgba(239, 68, 68, 0.1);
+    }
+
+    body.theme-romantic #app-title {
+      animation: romantic-float 5s ease-in-out infinite;
+    }
+
+    /* Romantic theme heart animation */
+    .romantic-heart {
+      position: fixed;
+      pointer-events: none;
+      font-size: 20px;
+      opacity: 0;
+    }
+
+    .romantic-heart.float {
+      animation: heart-float 3s ease-out forwards;
+    }
+    
+    .btn-glass {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-glass:active {
+      transform: scale(0.95);
+    }
+    
+    .btn-glass:hover {
+      box-shadow: 0 0 30px rgba(255, 22, 84, 0.4);
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    input[type="password"],
+    input[type="text"] {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      font-size: 18px;
+      transition: all 0.3s ease;
+    }
+    
+    input[type="password"]:focus,
+    input[type="text"]:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 22, 84, 0.5);
+      box-shadow: 0 0 20px rgba(255, 22, 84, 0.2);
+    }
+    
+    .gender-btn {
+      transition: all 0.3s ease;
+    }
+    
+    .gender-btn.active {
+      background: linear-gradient(135deg, #ff1654 0%, #a855f7 100%);
+      box-shadow: 0 0 30px rgba(255, 22, 84, 0.4);
+    }
+    
+    .timer-ring {
+      transform: rotate(-90deg);
+    }
+    
+    .timer-ring-circle {
+      transition: stroke-dashoffset 0.3s linear;
+    }
+    
+    .mode-card {
+      perspective: 1000px;
+      position: relative;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(255, 22, 84, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .mode-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 22, 84, 0.2), rgba(168, 85, 247, 0.2));
+      border-radius: 12px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .mode-card:hover::before {
+      opacity: 1;
+    }
+    
+    @media (max-width: 640px) {
+      .mode-card {
+        min-height: 120px;
+      }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      background: linear-gradient(to right, rgba(255, 22, 84, 0.3), rgba(168, 85, 247, 0.3));
+      border-radius: 5px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, #ff1654 0%, #a855f7 100%);
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 22, 84, 0.4);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: linear-gradient(135deg, #ff1654 0%, #a855f7 100%);
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 10px rgba(255, 22, 84, 0.4);
+    }
+
+    body.theme-white input[type="range"] {
+      background: linear-gradient(to right, rgba(26, 26, 46, 0.2), rgba(26, 26, 46, 0.2));
+    }
+
+    body.theme-white input[type="range"]::-webkit-slider-thumb {
+      background: linear-gradient(135deg, #ff1654 0%, #a855f7 100%);
+      box-shadow: 0 0 8px rgba(255, 22, 84, 0.3);
+    }
+
+    body.theme-romantic input[type="range"] {
+      background: linear-gradient(to right, rgba(239, 68, 68, 0.3), rgba(236, 72, 153, 0.3));
+    }
+
+    body.theme-romantic input[type="range"]::-webkit-slider-thumb {
+      background: linear-gradient(135deg, #ef4444 0%, #ec4899 100%);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    }
+
+    /* 3D Dice Styling */
+    .dice-3d {
+      transform-style: preserve-3d;
+      position: relative;
+      transition: transform 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    /* Dice Game Styles */
+    @keyframes roll-dice-spin {
+      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      100% { transform: rotateX(720deg) rotateY(360deg) rotateZ(180deg); }
+    }
+
+    @keyframes roll-dice-spin-alt {
+      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      100% { transform: rotateX(-720deg) rotateY(-360deg) rotateZ(-180deg); }
+    }
+
+    .dice-3d {
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .dice-3d.rolling {
+      animation: roll-dice-spin 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    #dice-2.rolling {
+      animation: roll-dice-spin-alt 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .dice-face {
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 2.5rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      border-radius: 16px;
+      backdrop-filter: blur(10px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 8px 32px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .dice-face-emoji {
+      font-size: 4.5rem;
+      line-height: 1;
+    }
+
+    .dice-face-label {
+      font-size: 0.95rem;
+      font-weight: semibold;
+      text-align: center;
+      max-width: 130px;
+      word-break: break-word;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+    }
+
+    /* Position each face */
+    .dice-face.face-1 { transform: translateZ(75px); }
+    .dice-face.face-2 { transform: rotateY(180deg) translateZ(75px); }
+    .dice-face.face-3 { transform: rotateY(90deg) translateZ(75px); }
+    .dice-face.face-4 { transform: rotateY(-90deg) translateZ(75px); }
+    .dice-face.face-5 { transform: rotateX(90deg) translateZ(75px); }
+    .dice-face.face-6 { transform: rotateX(-90deg) translateZ(75px); }
+
+    #dicegame-gender-selector button.active {
+      border-color: currentColor !important;
+      background: rgba(255, 22, 84, 0.15);
+    }
+  </style>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { box-sizing: border-box; }
+    #app { 
+      height: 100vh;
+      height: 100dvh;
+      width: 100%;
+      max-height: 100vh;
+      max-height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+    
+    /* Prevent any element from extending beyond app bounds */
+    #app > * {
+      overflow: hidden;
+    }
+    
+    /* Ensure screen containers fill the entire space */
+    [id$="-screen"] {
+      padding-bottom: 0 !important;
+      margin-bottom: 0 !important;
+      height: 100vh;
+      height: 100dvh;
+      max-height: 100vh;
+      max-height: 100dvh;
+    }
+  </style>
+ </head>
+ <body class="h-full bg-app-bg font-arabic text-white overflow-hidden">
+  <div id="app" class="h-full w-full overflow-hidden">
+   <!-- SPLASH SCREEN -->
+   <div id="splash-screen" class="fixed inset-0 bg-app-bg z-50 flex flex-col items-center justify-center safe-area-top">
+    <div class="animate-bounce-scale">
+     <div class="w-32 h-32 rounded-full glass flex items-center justify-center animate-glow-pulse mb-8"><span class="text-6xl animate-float-gentle">💕</span>
+     </div>
+    </div>
+    <h1 class="text-4xl font-bold text-white animate-fade-in mb-2">سۆنگ ئین گەیم</h1>
+    <p class="text-lg text-accent-cyan animate-fade-in">یاری هاوسەران ❤️</p>
+   </div>
+
+   <!-- CONGRATULATIONS SPLASH SCREEN -->
+   <div id="congratulations-screen" class="hidden fixed inset-0 bg-app-bg z-50 flex flex-col items-center justify-center safe-area-top overflow-hidden">
+    <div class="absolute w-full h-full flex flex-col items-center justify-center pointer-events-none">
+     <!-- Fireworks effect elements -->
+     <div class="absolute text-6xl animate-float-gentle" style="left: 10%; top: 20%; animation-delay: 0s;">🎉</div>
+     <div class="absolute text-6xl animate-float-gentle" style="right: 10%; top: 20%; animation-delay: 0.3s;">🎊</div>
+     <div class="absolute text-5xl animate-float-gentle" style="left: 15%; bottom: 35%; animation-delay: 0.6s;">✨</div>
+     <div class="absolute text-5xl animate-float-gentle" style="right: 15%; bottom: 35%; animation-delay: 0.9s;">🌟</div>
+     <div class="absolute text-6xl animate-float-gentle" style="left: 20%; bottom: 15%; animation-delay: 1.2s;">💎</div>
+     <div class="absolute text-6xl animate-float-gentle" style="right: 20%; bottom: 15%; animation-delay: 1.5s;">👑</div>
+    </div>
+
+    <div class="flex flex-col items-center gap-6 relative z-10">
+     <div class="animate-pulse-glow">
+      <div class="w-40 h-40 rounded-full glass flex items-center justify-center animate-glow-pulse">
+       <span class="text-8xl">🏆</span>
+      </div>
+     </div>
+     <h1 class="text-5xl font-bold text-center text-white animate-fade-in" style="animation-delay: 0.3s;">پیرۆزە!</h1>
+     <h2 class="text-4xl font-bold text-center bg-gradient-to-r from-accent-rose to-accent-violet bg-clip-text text-transparent animate-fade-in" style="animation-delay: 0.5s;">ئێستا تۆ شارەزایت!</h2>
+     <p class="text-xl text-accent-cyan text-center max-w-xs animate-fade-in" style="animation-delay: 0.7s;">بەسەرکەوتووی گەیشتیت بە پلەی شارەزا! 👑</p>
+     <button id="congratulations-continue-btn" class="mt-8 py-4 px-8 rounded-2xl bg-gradient-to-r from-accent-rose to-accent-violet text-white font-bold btn-glass text-lg shadow-lg animate-bounce-scale">وەک شارەزایەک بەردەوامبە</button>
+    </div>
+   </div>
+
+   <!-- PASSWORD SCREEN -->
+   <div id="password-screen" class="hidden h-full w-full flex flex-col items-center justify-center safe-area-top animate-fade-in">
+    <div class="flex flex-col items-center gap-8 w-full px-6 max-w-sm">
+     <div class="animate-bounce-scale">
+      <div class="w-28 h-28 rounded-2xl glass flex items-center justify-center animate-glow-pulse"><span class="text-6xl">🔐</span>
+      </div>
+     </div>
+     <div class="text-center">
+      <h1 class="text-3xl font-bold mb-3">بەخێربێن</h1>
+      <p class="text-gray-300 text-base">تکایە ووشەی تێپەڕ بنوسە 🔑</p>
+     </div>
+     <div class="w-full"><input id="password-input" type="password" placeholder="●●●●●" class="w-full px-6 py-4 rounded-2xl text-center font-mono text-lg">
+     </div><button id="enter-btn" class="w-full py-4 rounded-2xl bg-gradient-to-r from-accent-rose to-accent-violet text-white font-bold btn-glass text-lg shadow-lg">چوونەژوورەوە</button>
+     <div id="password-error" class="hidden text-center text-red-400 text-base animate-fade-in">
+      ⚠️ ووشەی تێپەڕ هەڵەیە
+     </div>
+    </div>
+   </div><!-- HOME SCREEN -->
+   <div id="home-screen" class="hidden h-full w-full flex flex-col safe-area-top">
+    <header class="flex-shrink-0 px-4 pt-4 pb-3">
+     <div class="flex items-center justify-between"><button id="settings-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass">
+       <svg class="w-6 h-6 text-accent-cyan" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+       </svg></button>
+      <div class="flex-1 text-center">
+       <div class="inline-flex items-center gap-2"><span class="text-3xl animate-float-gentle">💕</span>
+        <h1 id="app-title" class="text-2xl font-bold text-white">سۆنگ ئین گەیم</h1>
+       </div>
+      </div><button id="logout-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass" style="border: 1px solid rgba(220, 38, 38, 0.3);">
+       <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+       </svg></button>
+     </div>
+    </header>
+    <main class="flex-1 overflow-y-auto scrollbar-hide px-4 py-4">
+     <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 auto-rows-max">
+      <!-- Truth or Dare Mode -->
+      <div class="mode-card glass p-3 rounded-xl cursor-pointer btn-glass group transition-all" data-mode="truthdare" style="animation: bounce-scale 0.6s ease-out;">
+       <div class="flex flex-col items-center text-center relative z-10">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-cyan/30 to-accent-violet/30 flex items-center justify-center mb-1 group-hover:animate-icon-bounce"><span class="text-xl animate-icon-glow">😇😈</span>
+        </div>
+        <h3 class="font-bold text-sm mb-1">ڕاستی یان بوێری</h3>
+        <p class="text-xs text-gray-400">یان ڕاستگۆبە یان باجەکەی بە</p>
+        <div class="mt-2 px-2 py-1 rounded-lg text-xs bg-accent-cyan/20 text-accent-cyan font-mono">
+         +400 هەل
+        </div>
+       </div>
+      </div><!-- Roll The Dice Mode -->
+      <div class="mode-card glass p-3 rounded-xl cursor-pointer btn-glass group transition-all" data-mode="dicegame" style="animation: bounce-scale 0.6s ease-out 0.1s;">
+       <div class="flex flex-col items-center text-center relative z-10">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-500/30 to-accent-cyan/30 flex items-center justify-center mb-1 group-hover:animate-icon-bounce"><span class="text-xl animate-icon-glow">🎲</span>
+        </div>
+        <h3 class="font-bold text-sm mb-1">زاری بەخت</h3>
+        <p class="text-xs text-gray-400">زارەکە هەڵبە و بەختت تاقیکەرەوە</p>
+        <div class="mt-2 px-2 py-1 rounded-lg text-xs bg-purple-500/20 text-purple-400 font-mono">
+         ∞ بەخت
+        </div>
+       </div>
+      </div><!-- Word Challenge Mode -->
+      <div class="mode-card glass p-3 rounded-xl cursor-pointer btn-glass group transition-all" data-mode="wordchallenge" style="animation: bounce-scale 0.6s ease-out 0.2s;">
+       <div class="flex flex-col items-center text-center relative z-10">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/30 to-accent-rose/30 flex items-center justify-center mb-1 group-hover:animate-icon-bounce"><span class="text-xl animate-icon-glow">📝</span>
+        </div>
+        <h3 class="font-bold text-sm mb-1">دۆزینەوەی وشەکان</h3>
+        <p class="text-xs text-gray-400">وشەکان بدۆزەرەوە و خەڵاتەکەت وەرگرە</p>
+        <div class="mt-2 px-2 py-1 rounded-lg text-xs bg-orange-500/20 text-orange-400 font-mono">
+         ∞ ووشە
+        </div>
+       </div>
+      </div><!-- Sex Positions Mode -->
+      <div class="mode-card glass p-3 rounded-xl cursor-pointer btn-glass group transition-all" data-mode="sexpositions" style="animation: bounce-scale 0.6s ease-out 0.3s;">
+       <div class="flex flex-col items-center text-center relative z-10">
+        <div class="w-12 h-12 rounded-lg bg-gradient-to-br from-accent-rose/30 to-accent-violet/30 flex items-center justify-center mb-1 group-hover:animate-icon-bounce"><span class="text-xl animate-icon-glow">💏</span>
+        </div>
+        <h3 class="font-bold text-sm mb-1">شێوازەکانی سێکسکردن</h3>
+        <p class="text-xs text-gray-400">شێوازی نوێی سێکسکردن تاقی بکەرەوە</p>
+        <div class="mt-2 px-2 py-1 rounded-lg text-xs bg-accent-rose/20 text-accent-rose font-mono">
+         69 جوڵە
+        </div>
+       </div>
+      </div>
+     </div>
+    </main><!-- Progress Bar at Bottom -->
+    <div class="px-4 py-3 pb-2 bg-gradient-to-t from-app-bg to-transparent">
+     <div class="glass p-4 rounded-2xl border border-accent-rose/20 shadow-lg" style="background: rgba(255, 22, 84, 0.05); backdrop-filter: blur(20px);">
+      <div class="flex items-center justify-between mb-3">
+       <div class="flex items-center gap-4 flex-1">
+        <span class="text-sm font-bold text-accent-rose">🎮</span>
+        <div>
+         <p class="text-xs text-gray-400 mb-1">خاڵەکان</p>
+         <p class="text-sm font-bold text-white"><span id="home-completed-count">0</span>/<span id="home-threshold-next">100</span></p>
+        </div>
+       </div>
+       <div class="flex items-center gap-4">
+        <span class="text-sm font-bold text-accent-violet">📊</span>
+        <div>
+         <p class="text-xs text-gray-400 mb-1">ئاستی ئێسْتا</p>
+         <p class="text-sm font-bold text-accent-violet">ئاست <span id="home-current-level">1</span></p>
+        </div>
+       </div>
+      </div>
+      <div id="home-progress" class="h-3 rounded-full glass overflow-hidden" style="background: rgba(0, 0, 0, 0.3);">
+       <div id="home-progress-bar" class="h-full bg-gradient-to-r from-accent-rose via-accent-violet to-accent-cyan rounded-full transition-all duration-500" style="width: 0%;"></div>
+      </div>
+     </div>
+    </div>
+   </div><!-- SETTINGS SCREEN -->
+   <div id="settings-screen" class="hidden h-full w-full flex flex-col safe-area-top">
+    <header class="flex-shrink-0 px-4 pt-4 pb-4">
+     <div class="flex items-center gap-4"><button id="settings-back-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass">
+       <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+       </svg></button>
+      <h1 class="text-lg font-bold">تایبەتمەندیەکان</h1>
+     </div>
+    </header>
+    <main class="flex-1 overflow-y-auto scrollbar-hide px-4 pb-4">
+     <!-- Theme Selection -->
+     <div class="p-5 rounded-xl glass mb-4">
+      <h3 class="font-bold mb-4">🎨 ڕەنگ</h3>
+      <div class="grid grid-cols-3 gap-3">
+       <button class="theme-btn p-4 rounded-xl glass-sm text-center transition-all" data-theme="dark">
+        <div class="text-2xl mb-2">🌙</div>
+        <p class="text-xs font-bold">تاریک</p>
+       </button>
+       <button class="theme-btn p-4 rounded-xl glass-sm text-center transition-all" data-theme="white">
+        <div class="text-2xl mb-2">☀️</div>
+        <p class="text-xs font-bold">سپی</p>
+       </button>
+       <button class="theme-btn p-4 rounded-xl glass-sm text-center transition-all" data-theme="romantic">
+        <div class="text-2xl mb-2">💕</div>
+        <p class="text-xs font-bold">رۆمانسی</p>
+       </button>
+      </div>
+     </div>
+     <!-- Sound Settings -->
+     <div class="p-5 rounded-xl glass mb-4">
+      <div class="flex items-center justify-between mb-3">
+       <h3 class="font-bold">🔊 دەنگ</h3><button id="sound-toggle" class="w-12 h-6 rounded-full glass-sm bg-gradient-to-r from-accent-rose to-accent-violet flex items-center transition-all relative">
+        <div class="w-5 h-5 rounded-full bg-white shadow-lg transition-all absolute" style="left: 3px;"></div></button>
+      </div>
+      <p class="text-xs text-gray-400">گشت دەنگەکانی تر</p>
+     </div><!-- Music Settings -->
+     <div class="p-5 rounded-xl glass mb-4">
+      <div class="flex items-center justify-between mb-3">
+       <h3 class="font-bold">🎵 موسیقا</h3><button id="music-toggle" class="w-12 h-6 rounded-full glass-sm bg-gray-600 flex items-center transition-all relative">
+        <div class="w-5 h-5 rounded-full bg-white shadow-lg transition-all absolute" style="left: 0px;"></div></button>
+      </div>
+      <p class="text-xs text-gray-400 mb-4">مۆسیقای پاشبنەما</p>
+      <div class="mb-4">
+       <p class="text-xs text-gray-400 mb-2">جۆری موسیقا:</p>
+       <div class="flex gap-2">
+        <button id="music-select-file1" class="flex-1 px-3 py-2 text-xs rounded-lg glass-sm bg-accent-rose/20 text-accent-rose border border-accent-rose/50 transition-all">خێرا</button>
+        <button id="music-select-file2" class="flex-1 px-3 py-2 text-xs rounded-lg glass-sm transition-all border border-gray-600">هێمن</button>
+       </div>
+      </div>
+      <div class="flex items-center gap-3">
+       <span class="text-sm text-gray-400">🔉</span>
+       <input id="music-volume-slider" type="range" min="0" max="100" value="30" class="flex-1 h-2 rounded-lg bg-gray-700 appearance-none cursor-pointer" style="outline: none;">
+       <span class="text-sm text-gray-400">🔊</span>
+      </div>
+      <p id="volume-display" class="text-xs text-gray-400 text-center mt-2">ئاستی دەنگ: 30%</p>
+     </div><!-- About Section -->
+     <div class="p-5 rounded-xl glass mb-4">
+      <h3 class="font-bold mb-3">ℹ️ دەربارە</h3>
+      <p class="text-gray-400 text-sm mb-2">وەشان : 1.3.7</p>
+      <p class="text-gray-400 text-sm">یاریەک تایبەت بە هاوسەران بە مەبەستی بەسەربردنی کاتێکی خۆش و تاقیکردنەوەی شتی نوێ 💕</p>
+     </div><!-- Statistics -->
+     <div class="p-5 rounded-xl glass mb-4">
+      <h3 class="font-bold mb-3">📊 ئامار</h3>
+      <div class="space-y-2">
+       <p class="text-sm text-gray-300">خاڵەکان: <span id="stats-completed" class="text-accent-rose font-bold">0</span></p>
+       <p class="text-sm text-gray-300">ئاستی ئێستا: <span id="stats-level" class="text-accent-violet font-bold">1</span></p>
+      </div>
+     </div><!-- Tips -->
+     <div class="p-5 rounded-xl glass-sm">
+      <h3 class="font-bold mb-2 text-sm">⚙️ گەشەپێدەر</h3>
+      <p class="text-xs text-gray-400">دیدار بختیار جلال</p>
+     </div>
+    </main>
+   </div><!-- GENDER SELECTION SCREEN -->
+   <div id="gender-screen" class="hidden h-full w-full flex flex-col safe-area-top animate-fade-in">
+    <header class="flex-shrink-0 px-4 pt-4 pb-4">
+     <div class="flex items-center gap-4"><button id="gender-back-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass">
+       <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+       </svg></button>
+     </div>
+    </header>
+    <main class="flex-1 flex flex-col items-center justify-center px-4 gap-6">
+     <div class="flex gap-4 w-full max-w-sm"><button id="gender-girl-btn" class="flex-1 py-6 rounded-2xl glass gender-btn btn-glass border-2 border-transparent transition-all hover:border-accent-rose" data-gender="girl">
+       <div class="flex flex-col items-center gap-2"><span class="text-5xl">👩</span> <span class="font-bold text-lg">ژن</span>
+       </div></button> <button id="gender-boy-btn" class="flex-1 py-6 rounded-2xl glass gender-btn btn-glass border-2 border-transparent transition-all hover:border-accent-violet" data-gender="boy">
+       <div class="flex flex-col items-center gap-2"><span class="text-5xl">👨</span> <span class="font-bold text-lg">پیاو</span>
+       </div></button>
+     </div>
+    </main>
+   </div><!-- TRUTH OR DARE GAME SCREEN -->
+   <div id="truthdare-screen" class="hidden h-full w-full flex flex-col safe-area-top">
+    <header class="flex-shrink-0 px-4 pt-4 pb-3">
+     <div class="flex items-center gap-3"><button id="truthdare-back-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass">
+       <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+       </svg></button>
+      <div class="flex-1">
+       <h1 class="text-base font-bold">ڕاستی یان بوێری 😇😈</h1>
+       <p id="truthdare-progress" class="text-xs text-gray-400">0 / 0</p>
+      </div>
+     </div>
+    </header>
+    <main class="flex-1 overflow-y-auto scrollbar-hide px-4 py-3 flex flex-col gap-3 items-center justify-center">
+     <!-- Welcome State -->
+     <div id="truthdare-welcome" class="flex flex-col items-center justify-center gap-6 py-12 w-full">
+      <div class="text-center space-y-4">
+       <p class="text-6xl">😇😈</p>
+       <h2 class="text-2xl font-bold">ڕاستی یان بوێری</h2>
+       <p class="text-gray-300 text-sm leading-relaxed max-w-xs">راستی یان بوێری ؟ کاتی هاتووە زیاتر لە یەکتر نزیک ببنەوە . وەڵامی پرسیارە بوێرانەکان بدەنەوە یان ئاستەنگە کەیفخۆشەکان بشکێنن . ئایا ئامادەی ڕوو بە ڕووی ئارەزووەکانت بیتەوە؟</p>
+      </div>
+      <button id="truthdare-begin-btn" class="py-4 px-8 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold btn-glass text-lg">🎮 بڕۆ پێش بێت</button>
+     </div>
+     <!-- Game State -->
+     <div id="truthdare-game-state" class="hidden flex flex-col items-center gap-8 py-6 w-full">
+     <div id="truthdare-selection" class="flex flex-col items-center gap-8 py-6">
+      <button id="truthdare-truth-btn" class="w-32 h-32 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 text-white font-bold btn-glass shadow-lg flex items-center justify-center flex-col gap-2 transition-all hover:scale-110 active:scale-95" style="box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);"><span class="text-4xl">😇</span><span class="text-sm">ڕاستی</span></button>
+      <button id="truthdare-dare-btn" class="w-32 h-32 rounded-full bg-gradient-to-br from-accent-rose to-accent-violet text-white font-bold btn-glass shadow-lg flex items-center justify-center flex-col gap-2 transition-all hover:scale-110 active:scale-95" style="box-shadow: 0 0 30px rgba(255, 22, 84, 0.4);"><span class="text-4xl">😈</span><span class="text-sm">بوێری</span></button>
+     </div>
+     <div id="truthdare-card" class="flex-1 glass rounded-2xl p-6 flex flex-col items-center justify-center text-center animate-bounce-scale hidden w-full max-w-sm max-h-64 overflow-auto">
+      <div id="truthdare-icon" class="text-5xl mb-3">
+       ⚡
+      </div>
+      <p id="truthdare-type" class="text-xs bg-accent-cyan/20 text-accent-cyan px-3 py-1 rounded-lg font-mono mb-2"></p>
+      <h2 id="truthdare-content" class="text-lg font-bold leading-relaxed mb-4 text-white"></h2>
+     </div>
+     <div class="flex justify-center pb-2 pt-2">
+      <button id="truthdare-next-round-btn" class="py-4 px-12 rounded-full bg-gradient-to-r from-accent-rose to-accent-violet text-white font-bold btn-glass flex items-center justify-center gap-2 text-base hidden shadow-lg hover:shadow-xl transition-all" style="box-shadow: 0 0 30px rgba(255, 22, 84, 0.4);">➡️ خۆلی نوێ</button>
+     </div>
+    </main>
+   </div><!-- DICE GAME SCREEN -->
+   <!-- DICE GAME SCREEN -->
+   <div id="dicegame-screen" class="hidden h-full w-full flex flex-col safe-area-top">
+    <header class="flex-shrink-0 px-4 pt-4 pb-3">
+     <div class="flex items-center gap-3">
+      <button id="dicegame-back-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass">
+       <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+      </button>
+      <div class="flex-1">
+       <h1 class="text-base font-bold">زاری بەخت 🎲</h1>
+       <p id="dicegame-progress" class="text-xs text-gray-400">رۆل: 0</p>
+      </div>
+     </div>
+    </header>
+    <main class="flex-1 overflow-y-auto scrollbar-hide px-4 py-6 flex flex-col gap-6 items-center justify-between">
+     <!-- Welcome State -->
+     <div id="dicegame-welcome" class="flex flex-col items-center justify-center gap-6 py-12 w-full">
+      <div class="text-center space-y-4">
+       <p class="text-6xl">🎲</p>
+       <h2 class="text-2xl font-bold">زاری بەخت</h2>
+       <p class="text-gray-300 text-sm leading-relaxed max-w-xs">تەنها زارەکە بهاوێژە و بەختت تاقی بکەرەوە. ڕێگەیەکی کەیفخۆش و ئاسانکار بۆ بڕیاردان لەسەر شێوازەکانی بەیەکەوەبوون و کەمێک نوێگەری بخەرە ژیانی تایبەتیت .</p>
+      </div>
+      <button id="dicegame-begin-btn" class="py-4 px-8 rounded-xl bg-gradient-to-r from-purple-600 to-pink-500 text-white font-bold btn-glass text-lg">🎲 بڕۆ پێش بێت</button>
+     </div>
+     <!-- Game State -->
+     <div id="dicegame-game-state" class="hidden w-full flex flex-col gap-6 items-center justify-between flex-1">
+     <!-- Gender Selector -->
+     <div class="w-full max-w-sm">
+      <p class="text-center text-gray-300 mb-4 text-sm">ڕەگەزەکە هەڵبژێرە 👇</p>
+      <div id="dicegame-gender-selector" class="flex gap-3">
+       <button class="flex-1 py-3 px-4 rounded-xl glass-sm btn-glass text-sm font-bold border-2 border-transparent hover:border-accent-rose transition-all" data-gender="girl">♀️ مێ</button>
+       <button class="flex-1 py-3 px-4 rounded-xl glass-sm btn-glass text-sm font-bold border-2 border-transparent hover:border-accent-violet transition-all" data-gender="boy">♂️ نێر</button>
+      </div>
+     </div>
+
+     <!-- Dice Display Area -->
+     <!-- 3D Dice Display -->
+     <div class="w-full flex justify-center my-6 px-2">
+      <div id="dice-display" class="flex gap-2 sm:gap-4 items-center justify-center" style="perspective: 1200px;">
+       <!-- Dice 1 -->
+       <div class="flex flex-col items-center gap-2">
+        <div id="dice-1" class="dice-3d" style="transform-style: preserve-3d; width: 150px; height: 150px; position: relative; min-width: 150px;">
+         <!-- 6 faces with emoji and label together -->
+        </div>
+       </div>
+       
+       <div class="text-2xl sm:text-4xl font-bold text-gray-400">+</div>
+       
+       <!-- Dice 2 -->
+       <div class="flex flex-col items-center gap-2">
+        <div id="dice-2" class="dice-3d" style="transform-style: preserve-3d; width: 150px; height: 150px; position: relative; min-width: 150px;">
+         <!-- 6 faces with emoji and label together -->
+        </div>
+       </div>
+      </div>
+     </div>
+
+     <!-- Roll Button -->
+     <button id="dicegame-roll-btn" class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-600 to-accent-rose text-white font-bold text-6xl shadow-2xl hover:shadow-3xl transition-all active:scale-95 disabled:opacity-50 mb-6">🎲</button>
+    </main>
+   </div>
+   <div id="wordchallenge-screen" class="hidden h-full w-full flex flex-col safe-area-top">
+    <header class="flex-shrink-0 px-4 pt-4 pb-3">
+     <div class="flex items-center gap-3"><button id="wordchallenge-back-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass">
+       <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+       </svg></button>
+      <div class="flex-1">
+       <h1 class="text-base font-bold">دۆزینەوەی وشەکان 📝</h1>
+       <p id="wordchallenge-progress" class="text-xs text-gray-400">خول : 1</p>
+      </div>
+     </div>
+    </header>
+    <main class="flex-1 flex flex-col items-center justify-center px-4 py-3 gap-6">
+     <!-- Start Round State -->
+     <div id="wordchallenge-start-state" class="flex flex-col items-center justify-center gap-8 w-full">
+      <div class="text-5xl">📝</div>
+      <p class="text-xl font-bold text-center text-gray-200">دۆزینەوەی ووشەی جیاواز بە تەنها زانینی پیتی سەرەتا و کۆتایی </p>
+      <p class="text-sm text-gray-400 text-center max-w-xs">هەرکەسێکتان توانی زووتر وشەیەک بدۆزێتەوە کە بەو دوو پیتە دەستپێبکات و کۆتای بێت کە بۆی دیاری دەکرێت، شانسی بردنەوەی کارێکی دەبێت لەلایەن هاوبەشەکەیەوە، بۆیە پاش بردنەوە دەبێت ڕەگەزی بەرامبەر دیاری بکرێت</p>
+      <button id="wordchallenge-new-round-btn" class="w-full max-w-xs py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-accent-rose text-white font-bold btn-glass text-lg shadow-lg">🔔 دەستپێکردن</button>
+     </div>
+
+     <!-- Challenge Round State -->
+     <div id="wordchallenge-round-state" class="hidden flex flex-col items-center justify-center gap-8 w-full flex-1">
+      <!-- Letters Display -->
+      <div class="text-center">
+       <p class="text-sm text-gray-400 mb-3">ووشەکە دەستپێدەکات بە :</p>
+       <div id="wordchallenge-letter1" class="text-6xl font-bold text-accent-rose mb-6 animate-bounce-scale">ئ</div>
+       
+       <p class="text-sm text-gray-400 mb-2">و</p>
+       
+       <p class="text-sm text-gray-400 mb-3">ووشەکە کۆتایی دێت بە:</p>
+       <div id="wordchallenge-letter2" class="text-6xl font-bold text-accent-violet mb-6 animate-bounce-scale">ە</div>
+      </div>
+
+      <!-- Timer Display -->
+      <div class="text-4xl font-bold text-orange-400">⏱️ <span id="wordchallenge-timer-text">10</span></div>
+
+      <!-- Gender & Message State (Hidden until timer ends) -->
+      <div id="wordchallenge-result-state" class="hidden w-full flex flex-col items-center gap-6">
+       <p class="text-sm text-gray-400 font-bold">خەڵاتی براوەی ئەم خولە</p>
+       <div id="wordchallenge-message" class="text-lg font-bold text-center text-accent-rose px-4 py-6 rounded-2xl glass-sm border-2 border-accent-rose/50 animate-pulse-glow w-full"></div>
+      </div>
+
+      <!-- Gender Buttons (Hidden until timer ends) -->
+      <div id="wordchallenge-gender-buttons" class="hidden flex flex-col items-center gap-4 w-full max-w-xs">
+       <p class="text-sm text-gray-300 font-bold">براوەی ئەم خولە ڕەگەزی بەرامبەر دیاریکە، یاخود ئەگەر ووشە نەدۆزرایەوە بڕۆ بۆ خولی داهاتوو</p>
+       <div class="flex gap-3 w-full">
+        <button id="wordchallenge-gender-girl-btn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-accent-rose to-pink-500 text-white font-bold btn-glass transition-all">♀️ مێ</button>
+        <button id="wordchallenge-gender-boy-btn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-accent-violet to-blue-500 text-white font-bold btn-glass transition-all">♂️ نێر</button>
+       </div>
+      </div>
+
+      <!-- Next Round Button (Shows with gender buttons) -->
+      <button id="wordchallenge-next-round-btn" class="hidden w-full max-w-xs py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-violet text-white font-bold btn-glass">➡️ خولی نوێ</button>
+     </div>
+    </main>
+   </div><!-- SEX POSITIONS SCREEN -->
+   <div id="sexpositions-screen" class="hidden h-full w-full flex flex-col safe-area-top">
+    <header class="flex-shrink-0 px-4 pt-4 pb-3">
+     <div class="flex items-center gap-3"><button id="sexpositions-back-btn" class="w-12 h-12 rounded-xl glass flex items-center justify-center btn-glass">
+       <svg class="w-6 h-6 text-gray-300" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+       </svg></button>
+      <div class="flex-1">
+       <h1 class="text-base font-bold">شێوازەکانی سێکسکردن 💏</h1>
+       <p id="sexpositions-progress" class="text-xs text-gray-400">1 / 4</p>
+      </div>
+     </div>
+    </header>
+    <main class="flex-1 overflow-y-auto scrollbar-hide px-4 py-3 flex flex-col gap-3">
+     <!-- Welcome State -->
+     <div id="sexpositions-welcome" class="flex flex-col items-center justify-center gap-6 py-12">
+      <div class="text-center space-y-4">
+       <p class="text-6xl">💏</p>
+       <h2 class="text-2xl font-bold">شێوازەکانی سێکسکردن</h2>
+       <p class="text-gray-300 text-sm leading-relaxed">یارییەکی تایبەت بۆ هاوسەران ! دڵەڕاوکێ و شەرم و ترس لەبیر بکە، بە چەند جوڵەیەکی نوێ و کەیفخۆش ئارەزووەکانی یەکتر بدۆزنەوە و کاتی خۆتان بە پێکەنین و ئەزموونی جیاواز بڕازێننەوە، بیرت نەچێ ناتوانم نیە، چێژ ببینە لە نوێگەری .</p>
+      </div>
+      <button id="sexpositions-begin-btn" class="py-4 px-8 rounded-xl bg-gradient-to-r from-accent-rose to-accent-violet text-white font-bold btn-glass text-lg">🔥 بڕۆ پێش بێت</button>
+     </div>
+     <!-- Position Card State -->
+     <div id="sexpositions-card-state" class="hidden flex-1 flex flex-col gap-3">
+      <!-- Image Placeholder -->
+      <div id="sexpositions-image" class="w-full glass rounded-2xl overflow-hidden flex items-center justify-center bg-gradient-to-br from-accent-rose/20 to-accent-violet/20 mb-4">
+       <div class="text-center">
+        <p class="text-5xl mb-3">📸</p>
+        <p class="text-gray-400 text-sm">sexpositions/position1.png</p>
+       </div>
+      </div><!-- Info Card -->
+      <div class="glass rounded-2xl p-4">
+       <h2 id="sexpositions-title" class="text-lg font-bold mb-2">Position 1</h2>
+       <p id="sexpositions-desc" class="text-sm text-gray-300">Romantic &amp; Intimate</p>
+      </div><!-- Gender Selector -->
+      <div id="sexpositions-gender-selector" class="flex gap-2 pb-2">
+       <button class="flex-1 py-3 rounded-xl glass-sm btn-glass text-sm border border-transparent hover:border-accent-rose transition-all" data-gender="girl">♀️ مێ</button> <button class="flex-1 py-3 rounded-xl glass-sm btn-glass text-sm border border-transparent hover:border-accent-violet transition-all" data-gender="boy">♂️ نێر</button>
+      </div><!-- Action Button - Only Next -->
+      <div class="flex justify-center pt-6">
+       <button id="sexpositions-next-btn" class="py-3 px-6 rounded-xl bg-gradient-to-r from-accent-rose to-accent-violet text-white font-bold btn-glass flex items-center justify-center gap-2 text-sm">شێوازێکی تر</button>
+      </div>
+     </div>
+    </main>
+   </div>
+
+   <!-- TIMER SLIDER PANEL -->
+   <div id="timer-panel-wrapper" class="fixed right-0 top-0 h-full w-full pointer-events-none z-50 hidden-timer">
+    <!-- Timer Button -->
+    <button id="timer-toggle-btn" class="absolute right-0 top-1/2 -translate-y-1/2 w-16 h-20 rounded-r-none glass flex flex-col items-center justify-center gap-1 pointer-events-auto cursor-grab active:cursor-grabbing" style="box-shadow: -5px 0 20px rgba(255, 22, 84, 0.2); border-top-right-radius: 0; border-bottom-right-radius: 0; background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.15);" draggable="false">
+      <span class="text-2xl">⏱️</span>
+    </button>
+
+    <!-- Timer Panel Slide -->
+    <div id="timer-panel" class="absolute right-0 top-0 h-full w-80 glass rounded-l-3xl flex flex-col p-6 gap-4 pointer-events-auto transform overflow-y-auto" style="box-shadow: -10px 0 40px rgba(0, 0, 0, 0.5); z-index: 51;">
+      <!-- Title -->
+      <h2 class="text-2xl font-bold text-center mt-6">⏱️ کاتژمێرەر</h2>
+
+      <!-- Time Display -->
+      <div class="bg-gradient-to-br from-accent-rose/20 to-accent-violet/20 rounded-2xl p-8 text-center">
+        <p id="timer-display" class="text-6xl font-bold text-white font-mono">00:00</p>
+      </div>
+
+      <!-- Input Time -->
+      <div class="flex flex-col gap-2">
+        <label class="text-sm text-gray-300">کاتی دیاریکە</label>
+        <input id="timer-input" type="number" min="1" max="3600" value="60" class="w-full px-4 py-3 rounded-xl glass-sm text-white font-bold text-center text-lg" placeholder="کات">
+      </div>
+
+      <!-- Control Buttons -->
+      <div class="flex gap-2">
+        <button id="timer-start-btn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-bold btn-glass text-sm">دەستپێکردن</button>
+        <button id="timer-stop-btn" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-red-500 to-red-600 text-white font-bold btn-glass text-sm">ڕاگرتن</button>
+      </div>
+
+      <!-- Reset Button -->
+      <button id="timer-reset-btn" class="w-full py-4 rounded-xl glass-sm btn-glass text-white font-bold text-base shadow-md hover:shadow-lg transition-all">دووبارە دانانەوە</button>
+
+      <!-- Preset Buttons -->
+      <div class="grid grid-cols-2 gap-2 mt-4">
+        <button class="timer-preset py-3 rounded-lg glass-sm btn-glass text-white text-sm font-bold" data-time="30">30 چرکە</button>
+        <button class="timer-preset py-3 rounded-lg glass-sm btn-glass text-white text-sm font-bold" data-time="60">1 خولەک</button>
+        <button class="timer-preset py-3 rounded-lg glass-sm btn-glass text-white text-sm font-bold" data-time="180">3 خولەک</button>
+        <button class="timer-preset py-3 rounded-lg glass-sm btn-glass text-white text-sm font-bold" data-time="300">5 خولەک</button>
+      </div>
+    </div>
+   </div>
+
+  </div>
+  <script>
+    // ==================== GAME CONTENT ====================
+    const GAME_CONTENT = {
+      truthdare: {
+        title: 'ڕاستی یان بەرگرتن',
+        icon: '⚡',
+        truths: [
+          { level: 'ئاسان', content: 'شێتترین خەیاڵی سێکسی تۆ چییە ؟' },
+          { level: 'ئاسان', content: 'شەرمهێنەرترین ئەزموونی سێکسی تۆ چی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە شوێنێکی گشتیدا سێکس کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەگەڵ کەسێک سێکس کردووە کە زۆر لە خۆت گەورەتر یان بچووکتر بێت ؟' },
+          { level: 'ئاسان', content: 'کاتێک بەکارە سێکسییەکانت دەست پێ کرد چەند ساڵ بوویت ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە سێکسی قوڕگت کرد چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'ئازایانەترین شوێن کە سێکس تێیدا کردووە کوێ بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا حەزت لە قسەی وروژێنەر هەیە ؟' },
+          { level: 'ئاسان', content: 'تا ئێستا تامی ئاوی هاوبەشتت کردووە، ئەگەر کردوتە چۆنە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز فیلمت لە سێکسکردنی خۆت گرتووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز یارییە سێکسییەکانت بەکارهێناوە ؟' },
+          { level: 'ئاسان', content: 'زۆرترین ژمارەی ئۆرگازم لە یەک رۆژدا چەند بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز خۆت وەک ئەوە پیشان داوە کە گەیشتوویت بە ئۆرگازم ؟' },
+          { level: 'ئاسان', content: 'هەرگیز لە کاتی سێکسدا تڕت لێداوە، پێی زانرابێت یا نا ؟' },
+          { level: 'ئاسان', content: 'کام دۆخی سێکسکردن زیاتر حەزت لێیە ؟' },
+          { level: 'ئاسان', content: 'پێت باشترە کۆنترۆڵ بکەیت یان کۆنترۆڵ بکرێیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز خەونی سێکسیت لەگەڵ کەسێک بینیوە کە نەدەبوو بیبینیت ؟' },
+          { level: 'ئاسان', content: 'درێژترین ماوە کە بەبێ سێکس بەسەرت بردووە چەند بووە ؟' },
+          { level: 'ئاسان', content: 'هەرگیز ڕویداوە هاوبەشت بێجەو بێت و تۆ بەبێ پرس دەستت کردبێ بە مژینی ئەندامی هاوبەشت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا گیراویت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز حەزت لە مامۆستایەک یان بەڕێوەبەرەکەت بووە ؟' },
+          { level: 'ئاسان', content: 'کام بەشەی جەستەی هاوبەشەکەت زیاتر حەزت لێیە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز چویتەتە یانەی سەمای وروژێنەر ؟' },
+          { level: 'ئاسان', content: 'رای تۆ دەربارەی ڕۆڵگێڕان چییە لەکاتی سێکسکردندا ؟' },
+          { level: 'ئاسان', content: 'زۆرترین ژمارەی ئەو کەسانەی لە یەک هەفتەدا سێکسیت لەگەڵ کردوون چەند بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بەشداری ئاهەنگی سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە مەلەوانگە یان حەوزی گەرمدا سێکس کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا دەستبەستراویت یان بەستراویتەتەوە ؟' },
+          { level: 'ئاسان', content: 'هەرگیز هاوبەشت بەزۆر سێکسی قنی لەگەڵ کردویت ؟' },
+          { level: 'ئاسان', content: 'کام جۆرەی پێشەکی سێکست زیاتر حەز لێیە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەگەڵ کەسێکدا سەمای وروژێنەرت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز وێنەیەکی ڕووتی خۆتت بۆ کەسێک ناردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز خیانەتت لە هاوبەکەت کردووە ؟' },
+          { level: 'ئاسان', content: 'هەرگیز لە 3 جار کەمتر سێکس کردووە لە هەفتەیەکدا و بۆچی ؟' },
+          { level: 'ئاسان', content: 'وروژێنەرترین ئەو نامەیەی کە ناردووتە یان وەرتگرتووە چی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە یەک ڕۆژدا لەگەڵ زیاتر لە یەک کەس سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'بوێرانەترین کارێک کە لە سێکسدا کردووتە چی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسی کۆم ( قن)ت تاقی کردووەتەوە ؟' },
+          { level: 'ئاسان', content: 'چی زیاتر لە هەموو شتێک دەتوروژێنێت ؟' },
+          { level: 'ئاسان', content: 'گەورەترین پەشیمانی سێکسی تۆ چییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە شوێنێکی گشتیدا دەستپەڕت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکست بە نامە کردووە ؟' },
+          { level: 'ئاسان', content: 'سەیرترین شت کە دەتوروژێنێت چییە ؟' },
+          { level: 'ئاسان', content: 'تا ئێستا هاوبەشت ئازاری سێکسی داویت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا ڕۆڵگێڕانت کردووە ؟' },
+          { level: 'ئاسان', content: 'شێتترین کارێک کە لە سێکسدا کردووتە چی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز ئەزموونێکی سێکسی بووە کە لێی پەشیمان بیت ؟' },
+          { level: 'ئاسان', content: 'کام شوێنی جەستەت حەز دەکەیت ماچ بکرێت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەگەڵ کەسێک سێکسیت کردووە کە یەکەم جار بووە بینیوتە ؟' },
+          { level: 'ئاسان', content: 'وروژێنەرترین شت کە لەبەر خۆت کردووە چی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز هەستت بە ئیرەیی کردووە بەرامبەر ئەزموونی سێکسی پێشووی هاوبەشەکەت ؟' },
+          { level: 'ئاسان', content: 'کام کاتەی ڕۆژ بۆ سێکسکردن لای تۆ باشترینە ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات لە سێکسدا زۆر دڵخۆش بیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا ناوی کەسێکی ترت بەهەڵە هێناوە ؟' },
+          { level: 'ئاسان', content: 'ئایا حەزت لە سێکسکردنە لەگەڵ مۆسیقا یان بێدەنگی ؟' },
+          { level: 'ئاسان', content: 'هەرگیز حەزت لێبووە هاوبەشت مژینت بۆ بکات و نەتوێرابێت داوایکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بە نهێنی سەیری خێزانەکەت/هاوسەرەکەت کردووە کاتێک خۆی دەگۆڕێت ؟' },
+          { level: 'ئاسان', content: 'گەورەترین ترس لە سێکسکردندا چییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەسەر کار سێکسیت کردووە یان خەیاڵت بۆی چوووە ؟' },
+          { level: 'ئاسان', content: 'تا ئێستا داوای شتێکت لە هاوبەشت کردووە و نەیهێشتبێت بەڵام خۆت بەزۆر کردبێتت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە پەیوەندی هەبووە ؟' },
+          { level: 'ئاسان', content: 'کام جلوبەرگەی جەستە لای تۆ وروژێنەرترە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بە کحول یان ماددەی هۆشبەر وروژاویت ؟' },
+          { level: 'ئاسان', content: 'ئایا حەزت لە ماچی زۆرە یان سێکس ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەناو ئۆتۆمبێل سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز هاوبەشەکەت ناچارت کردووە شتێک بکات کە نەیویستووە ؟' },
+          { level: 'ئاسان', content: 'تا ئێستا هاوبەشت ئازارێکی داویت لەکاتی سێکسکردن و لە دڵت مابێتەوە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بە شێوەیەکی ئاشکرا لە دەرەوە ڕووت بوویتەتەوە ؟' },
+          { level: 'ئاسان', content: 'زۆرترین کات کە سێکسیت پێ کردووە چەند بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بیرت لەوە کردووەتەوە کە ببیتە سێکس وێرکەر ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسکردندا خەوت لێ کەوتووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بە گریانەوە سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'ڕای تۆ دەربارەی سێکس لە تەمەنی هەرزەکاریدا چییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز کێشەی سێکسیت لەگەڵ هاوبەشەکەت هەبووە و نەتوانیوە باسی بکەیت ؟' },
+          { level: 'ئاسان', content: 'کام بەشی جەستەی خۆت زیاتر حەز لێ دەکەیت دەست لێ بدرێت ؟' },
+          { level: 'ئاسان', content: 'حەزت لێیە کێری هاوبەشت گەورەتربوایە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسکردندا هاوار یان دەنگێکی بەرزت دەرکردووە ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە شەرمەزاری بکەیت لە سێکسدا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بەهۆی سێکسەوە تووشی کێشەی تەندروستی بوویت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە ڕقت لێی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە جێگەی نووستنی کەسێکی تر سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'کام بۆنەی جەستە لای تۆ زۆر وروژێنەرە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بەهۆی سێکسەوە پەیوەندیت لەگەڵ کەسێک پچڕاندووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز هاوبەشەکەت ناچاری کردووە کە شتێکی نوێ تاقی بکاتەوە ؟' },
+          { level: 'ئاسان', content: 'کاتێک بەتەنها بیت، چۆن خۆت دەوروژێنیت ؟' },
+          { level: 'ئاسان', content: 'قەت حەزت لێبوە لە مەتبەخ و لە کاتی ئیشدا لەدواوە باوەش بکرێت و سێکس بکەن ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بیرت لەوە کردووەتەوە کە لەگەڵ کەسێکی هاوڕەگەزی خۆت سێکس بکەیت ؟' },
+          { level: 'ئاسان', content: 'گەورەترین چێژ کە لە سێکسدا بینیوتە چی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بە گۆرانی وتن سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'هەرگیز لە کاتی سوڕی مانگانەدا حەزت بە ئەنەل بووە و نەتوێرابێت داوایکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسکردندا پێت وتراوە کە تۆ "باش" نیت ؟' },
+          { level: 'ئاسان', content: 'کام ڕەنگەی جلی ژێرەوە لای تۆ وروژێنەرترە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە زۆر دەوڵەمەند یان هەژار بووە ؟' },
+          { level: 'ئاسان', content: 'حەز دەکەیت کاتێک هاوژینت خەوتووا پەلاماری بەیت و سێکسی لەگەڵکەیت ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە ئارامی بکەیت لە سێکسدا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسکردندا بە شێوەیەکی گاڵتەجاڕانە پێکەنیویت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە تەنها بۆ پارە بووە ؟' },
+          { level: 'ئاسان', content: 'کامیان زیاتر خۆشترە : سێکس لە پێشەوە یان لە دواوە ؟' },
+          { level: 'ئاسان', content: 'کامیان زیاتر دەتوروژێنێت : سێکس لە پێش خۆرئاوابوون یان لە تاریکی شەودا ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە سێکسی مەمکت کرد چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز وێنەی ئەندامی سێکسی خۆتت گرتووە ؟' },
+          { level: 'ئاسان', content: 'گەورەترین "سووربوونی" تۆ لە سێکسدا چییە ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە سێکسی قنت کرد چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەبەر ئەوەی بێزار بوویت سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسکردندا پێت وتراوە کە تۆ زۆر دەنگت هەیە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە ناوی نەزانیت ؟' },
+          { level: 'ئاسان', content: 'وروژێنەرترین شت کە کەسێک پێت وتووە چی بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بە بێزاربوون کردووە ؟' },
+          { level: 'ئاسان', content: 'کام بەشی جەستەی خۆتت بە زۆر سێکسی دەزانیت ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە سێکسی قوزت کرد چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بە نهێنی لە شوێنێکی گشتیدا دەست بۆ ئەندامی سێکسی خۆت بردووە ؟' },
+          { level: 'ئاسان', content: 'وروژێنەرترین شت کە لە سێکسدا تاقیت کردووەتەوە چی بووە ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە شەرم بکەیت لە کاتی سێکسدا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا پێکەنیویت ؟' },
+          { level: 'ئاسان', content: 'کام ڕەنگەی پێست لای تۆ زۆر سێکسییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەگەڵ هاوبەشەکەت بە هەڵە سێکسیت کردووە (بەبێ متمانە) ؟' },
+          { level: 'ئاسان', content: 'چی ڕێگرتە لە بەدیهێنانی داخوازی هاوبەشەکەت بۆ جۆرێک لە سێکس ؟' },
+          { level: 'ئاسان', content: 'چۆن بە یەک وشە سێکسکردنی خۆت پێناسە دەکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە هێشتا هاوسەرگیریت نەکردبێت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بەنهێنی چاوەڕێی سێکسکردن بوویت لەگەڵ کەسێکی دیاریکراو ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە ئازادی بکەیت لە سێکسدا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەسەر کورسی سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'تا ئێستا لەکاتی خەودا سەیری هاوبەشت کردووە و حەزت لە سێکسبوبێ لەگەڵیکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بە "خۆشەویستییەکی زۆر" کردووە ؟' },
+          { level: 'ئاسان', content: 'کام بەشی جەستەی هاوبەشەکەت حەز دەکەیت زۆر ماچی بکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا بە شێوەیەکی توند ڕەفتارت کردووە ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە ئارەزووی سێکسی بکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا بیرت لە شتی تر کردووەتەوە ؟' },
+          { level: 'ئاسان', content: 'کام جۆرەی قسەی وروژێنەر لای تۆ باشە ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە بەهێزی بکەیت لە سێکسدا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا ئاو یان شلەی ترت بەکارهێناوە ؟' },
+          { level: 'ئاسان', content: 'کام شێوازەی ماچکردن لای تۆ سێکسییە ؟' },
+          { level: 'ئاسان', content: 'کام جلوبەرگەی هاوبەشەکەت حەز دەکەیت لێی بکەیتەوە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بەوە کردووە کە لە دۆخێکی نادروستدایت ؟' },
+          { level: 'ئاسان', content: 'کام شێوازەی "دەست لێدان" لای تۆ زۆر وروژێنەرە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز "سێکسی توندوتیژ"ت تاقی کردۆتەوە ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە دەست پەڕت کرد چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'چۆن بە یەک وشە هاوبەشەکەت پێناسە دەکەیت لە ناو جێگەدا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا دەستت بەسەر جەستەی کەسێکدا گرتووە ؟' },
+          { level: 'ئاسان', content: 'کام جۆرەی "ماچکردن" حەز دەکەیت هەر ئێستا تاقی بکەیتەوە ؟' },
+          { level: 'ئاسان', content: 'تا ئێستا لەدوای سێکسکردن شەلیویت یا ئازارێکی زۆرت هەبوبێت ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە ئارەزووی زۆر بکەیت بۆ سێکس ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەسەر مێز سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بەوە کردووە کە "ناچاریت" شتێک بکەیت ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە سێکسی پێکانت کرد چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا بۆ ماوەیەک وەستاویت ؟' },
+          { level: 'ئاسان', content: 'کام کاتەی شەو لای تۆ بۆ سێکسکردن زۆر گونجاوە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بیرت لە سێکسکردن لەگەڵ مامۆستاکەت کردووەتەوە ؟' },
+          { level: 'ئاسان', content: 'کام شێوازەی سێکسکردن لای تۆ زۆر وروژێنەرە ؟' },
+          { level: 'ئاسان', content: 'تا ئێستا هاوبەشت داوایەکتی ڕەت کردۆتەوە بۆ جۆرێکی سێکسکردن ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسکردندا هاوارکردنی هاوبەشەکەتت بیستووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەسەر جێگەی نوستنی میوان سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە "تەمبەڵی" بکەیت لە سێکسدا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا چاوەکانت داخستووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە زۆر پێی دڵخۆش بوویت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسکردندا هەستت بە بێزاری کردووە ؟' },
+          { level: 'ئاسان', content: 'کام بەشی جەستەی هاوبەشت لای تۆ زۆر سێکسییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە زۆر لە خۆت باڵابەرزتر بێت ؟' },
+          { level: 'ئاسان', content: 'یەکەم تەواوبوون لەناوەوە چ هەستێکت هەبوو هەم بۆ قوز هەم بۆ قن هەم بۆ دەم ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بیرت لەوە کردووەتەوە کە "جلوبەرگی سەیری سێکسی" لەبەر بکەیت ؟' },
+          { level: 'ئاسان', content: 'چۆن بە یەک وشە هەستت پێناسە دەکەیت پاش سێکس ؟' },
+          { level: 'ئاسان', content: 'کام شێوازەی "ماچکردن" حەز دەکەیت بۆ هەمیشە لەگەڵ هاوبەشەکەت بیکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەسەر ڕێگای گشتی سێکسیت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بەوە کردووە کە "شەرم" دەکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا پێکەنیویت بەبێ هۆکار ؟' },
+          { level: 'ئاسان', content: 'خۆشترین کون کە حەز بکەیت سێکسی لێوە بکەیت کام کونەیە ؟' },
+          { level: 'ئاسان', content: 'کام ڕەنگەی قژ لای تۆ زۆر سێکسییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا بە شێوەیەکی توند و ئازاربەخش ڕەفتارت کردووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز سێکسیت لەگەڵ کەسێک کردووە کە زۆر لە خۆت لاوازتر بووە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بیرت لەوە کردووەتەوە کە سێکس لە شوێنێکی بەرز بکەیت ؟' },
+          { level: 'ئاسان', content: 'چی وادەکات کە تۆ هەست بە ئارەزووی سێکسی بکەیت بەرامبەر کەسێک ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا بیرت لە داهاتووت کردووەتەوە ؟' },
+          { level: 'ئاسان', content: 'کام جلوبەرگەی هاوبەشەکەت حەز دەکەیت هەر ئێستا لێی بکەیتەوە ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە یاریە سێکسیەکانت بەکارهێنا چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'ئەگەر تەنها یەک دانەیان بکەیت تا کۆتایی ژیانت سێکسی کامیان هەڵدەبژێریت، قوز یا قن ؟' },
+          { level: 'ئاسان', content: 'کام ڕەنگەی چاو لای تۆ زۆر سێکسییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز بیرت لەوە کردووەتەوە کە سێکس لە ناو ئاو یان مەلەوانگە بکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بە "دڵەڕاوکێ" کردووە سەبارەت بەو کارەی دەیکەیت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا تەنها بە یەک پەنجە ڕەفتارت کردووە بۆ تاقیکردنەوەی وروژاندنی کەسێک ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لەسەر دارستانێک یان شوێنێکی سروشتی سێکسیت کردووە بە ئاشکرا ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا بە شێوەیەکی توند ڕەفتارت کردووە بە داوای هاوبەشەکەت ؟' },
+          { level: 'ئاسان', content: 'یەکەمجار کە سێکسی دەمت کرد چ هەستێکت هەبوو ؟' },
+          { level: 'ئاسان', content: 'هەرگیز بەبێ پرسکردن و لەپڕدا ئەندامی هاوبەشتت مژیوە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بە گوناح کردووە پاش ئەوەی تەواو بوویت لەگەڵ هاوبەشەکەت ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بەوە کردووە کە "ناچاریت" شتێک بکەیت کە حەزت لێ نییە ؟' },
+          { level: 'ئاسان', content: 'ئایا هەرگیز لە کاتی سێکسدا هەستت بە "تەنیایی" کردووە سەرەڕای ئەوەی کەسێکی ترت لەگەڵ بووە ؟' },
+        ],
+        dares: [
+          { level: 'ئاسان', content: 'هاوبەشەکەت با شەش حەرەکە بکات و تۆ دوبارەیکەرەوە' },
+          { level: 'ئاسان', content: 'هەموو جلەکانت بۆ چوار خولی داهاتوو داکەنە' },
+          { level: 'ئاسان', content: 'چاوت داخە و هاوبەشەکەت با ئەندامێکی لەشی بکاتە سەر دەستت ، ئەگەر نەتناسیەوە دوبارەیکەنەوە و ئەندامێکیتر بەکار بهێنن' },
+          { level: 'ئاسان', content: 'لەبەردەم هاوبەشەکەتا خۆت بوروژێنە' },
+          { level: 'ئاسان', content: 'یادگارییەکی سێکسی خۆت بگێڕەوە .' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ ئازارمبە.' },
+          { level: 'ئاسان', content: 'نامەیەکی وروژێنەر بۆ هاوبەشەکەت بنێرە کاتێک لە هەمان ژوورن .' },
+          { level: 'ئاسان', content: 'بۆ ماوەی 1 خولەک چاوەکانت داخە و با هاوبەشەکەت چی ئەوێت لێت بکات.' },
+          { level: 'ئاسان', content: 'نهێنییە سێکسییەکان بە چرپە بە یەکتر بڵێن .' },
+          { level: 'ئاسان', content: 'یەک خولەک تەرخان بکە بۆ هاوبەشەکەت بۆ گەڕان بە جەستەتدا بە دەست لێدانی سووک.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ ماچێکی قوزی هاوبەشەکەت بکە ، بۆ کچ ماچێکی کێری هاوبەشەکەت بکە.' },
+          { level: 'ئاسان', content: 'شێتترین خەیاڵەکانت لە گوێی هاوبەشەکەتدا بڵێ.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک قوزی هاوبەشەکەت بلێسەرەوە ، بۆ کچ بۆ ماوی 1 خولەک کێری هاوبەشەکەت بلێسەرەوە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت شتێکی سێکسی لە جەستەت بکات کە پێشتر نەیکردووە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک کونی کۆمی هاوبەشەکەت بلێسەرەوە ، بۆ کچ بۆ ماوی 1 خولەک سەری کێری هاوبەشەکەت بلێسەرەوە.' },
+          { level: 'ئاسان', content: 'ئیمۆجییەکی وروژێنەر بۆ هاوبەشەکەت بنێرە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت ئەو شێوازە سێکسییەی کە زۆر حەزی لێیە نیشانت بدات.' },
+          { level: 'ئاسان', content: 'بۆ کچ بە لیک پەنجەیەکت تەڕکە و بە خواستی هاوباشاکەت بیکە بە کونێکتا بەبەرچاویەوە ، بۆ کوڕ بە لیک کێرت تەڕکە و بە هێواشی دەستی پیابێنە بەبەرچاوی هاوبەشەکەتەوە.' },
+          { level: 'ئاسان', content: 'بۆ یەک خولەک بە زمانت بە جەستەی هاوبەشەکەتدا بگەڕێ.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی یەک خولەک بهێڵە هاوبەشەکەت لە کێر و گونەکانت بڕوانێت لە نزیکەوە ، بۆ کچ بۆ ماوی یەک خولەک بهێڵە هاوبەشەکەت لە هەردوو کونی خوارەوەت بڕوانێت لە نزیکەوە.' },
+          { level: 'ئاسان', content: 'نامەیەکی وروژێنەر بۆ هاوبەشەکەت بنووسە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ تەنها سەری کێری کوڕ بکرێتە هەریەک لە کونەکانی کچ بەڵام تەنها سەری کێر و تەنها یەک جاریش.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت بە شێوەیەکی وروژێنەر دەستت لێ بدات.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ زمانێک بهێنە بە قوزی هاوبەشەکەت لە کونی دواوە تا سەرەوەی قوزی بە بێ بەردان ، بۆ کچ زمانێک بهێنە بە ژێری گونەکانی هاوبەشت تا سەری کێری بە بێ بەردان.' },
+          { level: 'ئاسان', content: 'وێنەیەکی وروژێنەری جەستەت بنێرە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت هەموو شتێک بە دڵی خۆی بکات بۆ ماوەی یەک خولەک.' },
+          { level: 'ئاسان', content: 'بۆ کچ بۆ ماوی 30 چرکە با هاوبەشت لە یەک کاتدا دوو پەنجە بکاتە دەمت و دوو پەنجە قوزت ، بۆ کوڕ بۆ ماوی 30 چرکە دوو پەنجە بکە هەرکونێکی هاوبەشت کە پێی خۆشە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی ٣٠ چرکە بە شێوەیەکی وروژێنەر لە چاوی هاوبەشەکەت بڕوانە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی یەک خولەک جی سپۆتی هاوبەشت بوروژێنە ، بۆ کچ هەوڵ بدە هەموو لاشەی کێری هاوبەشت بخەیتە دەم و قورگت تەنها یەک جار .' },
+          { level: 'ئاسان', content: 'بەبێ ئەوەی دەست بەکاربهێنیت، پارچەیەک لە جلەکانی هاوبەشەکەت لابدە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ کاتێک کێری کوڕ لە قوزی کچەکەدایە هەوڵ بدەن 360 پلە لە ناویدا بیسوڕێنن بەبێ هێنانە دەرەوە .' },
+          { level: 'ئاسان', content: 'سەمایەکی وروژێنەر بۆ هاوبەشەکەت بکە ئەگەر ئەیزانیت.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 30 چرکە بەبێ چەورکردن ئەنەل بکەن.' },
+          { level: 'ئاسان', content: 'وێنەیەکی ڕووتی یان نیمچە ڕووتی خۆت بگرە و بۆ هاوبەشەکەت بینێرە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ هەوڵ بدەن دوو پەنجەی کوڕەکە بە تەواوی بکرێتە هەردوو کونی خوارەوەی کچەکە تەنها یەک جار و بە بێ جوڵاندن.' },
+          { level: 'ئاسان', content: 'خەیاڵێکی سێکسی کە تا ئێستا بە کەست نەوتووە، بۆ هاوبەشەکەت بە چرپە بیڵێ.' },
+          { level: 'ئاسان', content: 'سەمایەکی "ستریپتیز" بۆ هاوبەشەکەت بکە تا ئەو کاتەی تەنها جلی ژێرەوەت دەمێنێت.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک بەردەوام هاوبەشەکەت ماچ بکە (هەموو جێگەیەک جگە لە لێو).' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 5 خولەک هەموو جەستەی هاوژینت مەساجکە بە چەورکردنەوە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت دۆخێکی سێکسی نوێ تاقی بکاتەوە لەسەرت کە تا ئێستا نەتانکردووە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک سێکسی مەمک بکەن.' },
+          { level: 'ئاسان', content: 'دەنگێکی وروژێنەر بۆ هاوبەشەکەت تۆمار بکە و بینێرە بۆی.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 30 چرکە سەربکە بەینی مەمکەکانی خێزانت و بیانوروژێنە ، بۆ کچ لەسەر پشت پاڵکەوە و سەرت لەسەر قەراخی سیسەمەکە شۆڕکەرەوە و هەوڵ بدە هەموو لاشەی کێری هاوبەشت بخەیتە دەم و قورگت تەنها یەک جار.' },
+          { level: 'ئاسان', content: 'قسەیەکی وروژێنەر لە گوێی هاوبەشەکەتدا بڵێ.' },
+          { level: 'ئاسان', content: 'چاوی هاوبەشەکەت ببەستە و بۆ ماوەی سێ خولەک بە دەست یان بە لێوت بیوروژێنە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک بکەوە سەر ئەژنۆ با هاوژینت قوز لە دەمووچاوت بخشێنێ ، بۆ کچ بۆ ماوی 1 خولەک بکەوە سەر ئەژنۆ با هاوژینت کێر لە دەمووچاوت بخشێنێ' },
+          { level: 'ئاسان', content: 'مەساجێکی وروژێنەر بە ڕۆن بۆ شان و پشتی هاوبەشەکەت بکە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک زمان لە سەری قوزی هاوژینت بخشێنە ، بۆ کچ بۆ ماوی 1 خولەک زمان لە سەری کێری هاوژینت بخشێنە' },
+          { level: 'ئاسان', content: 'ڕۆڵگێڕان ئەنجام بدە؛ بۆ ماوەی یەک خولەک خۆت وەک کەسێکی غەریبە پیشان بدە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک با هاوژینت لەسەرت پاڵکەوێت بە هەربارێکدا کە خۆی بیەوێت بە بێ سێکسکردن .' },
+          { level: 'ئاسان', content: 'ئەزموونێکی شەرمهێنەری سێکسی خۆت بە هاوبەشەکەت بڵێ.' },
+          { level: 'ئاسان', content: 'خۆت بە شێوەیەکی وروژێنەر بۆ هاوبەشەکەت پیشان بدە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک بە پاڵکەوتووی و لەسەر لا با هاوژینت خۆی بچوککات لە باوەشتا و تۆش ماچی پشتە ملیکە و توند باوەشی پێداکە.' },
+          { level: 'ئاسان', content: 'جلی ژێرەوەت لەگەڵ هاوبەشەکەت بگۆڕە بۆ ماوەی یەک خولەک.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک مەمکی هاوبەشت بمژە ، بۆ کچ بۆ ماوی 1 خولەک پەنجەی هاوبەشت بمژە' },
+          { level: 'ئاسان', content: 'بە زمانت نەخشەیەک لەسەر سکی هاوبەشەکەت بکێشە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک ژێرپێی هاوبەشت مەساجکە ، بۆ کچ بۆ ماوی 1 خولەک شانی هاوبەشت مەساجکە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک بەبێ دەنگ و تەنها بە چاو سەیری جەستەی یەکتر بکەن.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک بچۆ سەر شانی هاوبەشت و ئەندامی جنس خۆت لە پشت ملی بخشێنە.' },
+          { level: 'ئاسان', content: 'گازێکی نەرم لە ملی هاوبەشەکەت بگرە و نیشانەیەک جێبهێڵە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک بە دانیشتویی لە پشتەوە باوەش بکە بە هاوبەشتا.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی دوو خولەک لەسەر قاچی هاوبەشەکەت دانیشە بەبێ ئەوەی سێکس بکەن.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی یەک خولەک زمان بخە قوڕگی هاوبەشت و بە دەست قوزی یا قنی بوروژێنە ، بۆ کچ بۆ ماوی یەک خولەک زمان بخە قوڕگی هاوبەشت و بە دەست کێری بوروژێنە.' },
+          { level: 'ئاسان', content: 'جلی ژێرەوەی هاوبەشەکەت بە ددانەکانت دابکەنە.' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ چییت لێ دەکات ئەگەر ئێستا لە ژوورێکی چۆڵ بوونایە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک بە شێوازی مقەستی سێکس بکەن.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک هاوبەشەکەت باوەش بکە بەبێ ئەوەی جوڵە بکەن.' },
+          { level: 'ئاسان', content: '3 جار زلە بکێشە بە دەموچاوی هاوبەشتا و پاشان توند باوەشیکە و ماچی فەڕەنسیکەن.' },
+          { level: 'ئاسان', content: 'دەست بدە لە هەموو ئەو شوێنانەی جەستەی هاوبەشەکەت کە حەزی پێ دەکات.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک سێکس بکەن تەنها بە بەکارهێنانری سەری کێری کوڕەکە لەناو قوزی کچەکە بەبێ بردنە ناوەوەی لاشەکەی.' },
+          { level: 'ئاسان', content: 'لە کاتی سێکسدا داوا لە هاوبەشەکەت بکە کۆنترۆڵی تەواوی جەستەت بکات.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک بەپێوە سێکس بکەن.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی ٢ خولەک بە شێوەیەکی سێکسی لە پێش هاوبەشەکەتدا بڕۆ.' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ کام بەشی جەستەی زۆرترین وروژاندنی پێ دەبەخشێت.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 3 خولەک هەموو جەستەی هاوبەشت ماچکە لە پێکانەوە تا سەر.' },
+          { level: 'ئاسان', content: 'هیچ قسەیەک نەکەن، تەنها بە ئاماژە و ماچکردن داواکارییەکانتان بگەیەنن.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک لە کاتی ئەنەلدا دەست بگرە بە مەمکی هاوبەشت بۆ زەخت کردن ، بۆ کچ بۆ ماوی 1 خولەک لە کاتی ئەنەلدا دەست بگرە بە هەردوو گوپی قنی هاوبەشت بۆ زەخت کردن.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت بە ئارەزووی خۆی دەست لە جەستەت بدات بۆ ماوەی دوو خولەک.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 3 خولەک سێکس بکەن و هەرچی قسەی سێکسیە بە هاوبەشەکەتی بڵێ بە بێ وەستان.' },
+          { level: 'ئاسان', content: 'لە گوێی هاوبەشەکەتدا بە چرپە پێی بڵێ چی لە جەستەی زۆر حەز لێیە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک شەست و نۆ ( 69 ) بکەن بە بێ ئەوەی بگەنە تەواوبوون.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک بە قژت دەست لە جەستەی هاوبەشەکەت بدە.' },
+          { level: 'ئاسان', content: 'لە کاتی پێشەکی سێکسدا، قژت بە هاوبەشەکەت بدە تا یاری پێ بکات.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ هاوبەشەکەت بخە سەر ئەژنۆت بە پاڵکەوتووی و 10 جار لە قنی بدە بە بەهێزی ، بۆ کچ لە 10 شوێنی جیاوازی لەشی هاوبەشەکەت مووەکانی ڕاکێشە بە بەهێزی.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت ماچێکی درێژ لە ڕانت بکات.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 30 چرکە کێرت ڕاوەشێنە لەبەردەم هاوبەشەکەتدا ، بۆ کچ بۆ ماوی 30 چرکە تویرک بکە لەبەردەم هاوبەشتدا.' },
+          { level: 'ئاسان', content: 'بە شێوەیەکی وروژێنەر بە هاوبەشەکەت بڵێ "ئێستا چی بکەین؟".' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ هەموو جلی هاوبەشت دابنێ بەشێوازێ سێکسی.' },
+          { level: 'ئاسان', content: 'بە دەنگێکی کەمێک بەرز پێی بڵێ "تۆ زۆر سێکسییت".' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ تامی ئاوی یەکترکەن و بەیەک بڵێن کە تامی چۆنە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک لەسەر پشتی هاوبەشەکەت دانیشە و مەساجی شانەکانی بۆ بکە.' },
+          { level: 'ئاسان', content: 'بە شێوەیەکی هێواش و وروژێنەر جلەکانت دابکەنە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک ناوکی هاوبەشت بلێسەرەوە و بیمژە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت ماچێکی توند لەسەر لێوت جێبهێڵێت.' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ یەکێک لە "شێتترین" خەیاڵە سێکسییەکانت چییە و داوای لێ بکە تاقی بکەنەوە.' },
+          { level: 'ئاسان', content: 'لە کاتی وروژاندندا، ناوی هاوبەشەکەت بە شێوەیەکی وروژێنەر بانگ بکە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 30 چرکە هەموو کێرت بکەرە دوو کونی هاوبەشت بە بێ جوڵاندن و کونەکان بە خواستی هاوبەشت ، بۆ کچ بۆ ماوی 30 چرکە هاوبەشت هەموو کێری بکاتە دوو کونتەوە بە بێ جوڵاندن و کونەکان بە خواستی هاوبەشت.' },
+          { level: 'ئاسان', content: 'لە بەردەم ئاوێنەدا بە شێوەیەکی وروژێنەر خۆت پیشان بدە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت بە شێوەیەکی ئەمر "کۆنترۆڵکەر" پێت بڵێت چی بکەیت وەک پاشا.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت جلی ژێرەوەی خۆی لەبەرچاو تۆ دابکەنێت.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی دوو خولەک مەساجێکی وروژێنەر بۆ پێیەکانی هاوبەشەکەت بکە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 3 خولەک ڕۆلی بەندە بگێڕە و هەموو خواستی هاوبەشت جێ بەجێ کە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەیەک چاوەکانت داخە و هەست بە لێدانەکانی دڵی هاوبەشەکەت بکە.' },
+          { level: 'ئاسان', content: 'بە شێوەیەکی "نەرم" و وروژێنەر ماچێکی درێژ لەسەر گەردنی هاوبەشەکەت بکە' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ چ کاتێک زیاتر ئارەزووت بۆ سێکس هەیە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت بەشێکی جەستەت ماچ بکات کە پێشتر نەی کردووە.' },
+          { level: 'ئاسان', content: 'بە شێوەیەکی وروژێنەر پێی بڵێ "ئەمشەو تەنها بۆ تۆم".' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک بە شێوەیەکی وروژێنەر لەسەر جێگەکە جوڵە بکە.' },
+          { level: 'ئاسان', content: 'بە شێوەیەکی سووک دەست لە گوێچکەی هاوبەشەکەت بدە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 3 خولەک دەست و پێ و چاوت ببەستە و با هاوبەشت چی لە جەستەت دەکات بیکات.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی دوو خولەک مەساجێکی بەهێز بۆ بەشی خوارەوەی پشتی هاوبەشەکەت بکە.' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ کام دیمەنی سێکسی زیاتر لە خەیاڵتدا دەمێنێتەوە.' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ چی بکەیت کە زیاتر چێژی پێ دەبەخشێت.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ پێنج جار بکێشە بە قنی هاوبەشتا بە خواستی خۆت.' },
+          { level: 'ئاسان', content: 'بە دەنگێکی نزم پێی بڵێ چەند حەزت لێیە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت ماچێکی توند لەسەر پشتت جێبهێڵێت.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک بە شێوەیەکی هێواش دەست لە قژی هاوبەشەکەت بدە.' },
+          { level: 'ئاسان', content: 'لە کاتی سێکسدا، بە هاوبەشەکەت بڵێ کام کونەت زیاتر حەزت لێیە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک بە شێوەیەکی سێکسی لەسەر قاچی هاوبەشەکەت دابنیشە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی ٣ خولەک سێکس بکەن لەڕێی قوزەوە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی ١ خولەک بە شێوەیەکی وروژێنەر سەیری جەستەی یەکتر بکەن.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بە مژین یەکەم پیتی ناوت لەسەر جەستەی هاوباشت دروستکە.' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ چەند حەزت لە شێوازی جوڵەکانیەتی لە کاتی سێکسدا.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت ماچێکی درێژ لەسەر گۆنات بکات.' },
+          { level: 'ئاسان', content: 'بە شێوەیەکی وروژێنەر پێی بڵێ "تۆ زۆر جیاوازیت".' },
+          { level: 'ئاسان', content: 'بۆ ماوەی 1 خولەک کاتی سێکسدا، داوا لە هاوبەشەکەت بکە زیاتر لەگەڵت بمێنێتەوە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی ١ خولەک بە شێوەیەکی وروژێنەر سەیری چاوی یەکتر بکەن.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 5 خولەک هەموو جەستەی هاوژینت مەساجکە بە چەورکردنەوە.' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت ماچێکی توند لەسەر پشتی دەستت جێبهێڵێت.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ 10 تەکانی بەهێز بۆ خێزانت بکە و لەوکاتەدا با ئەویش بە چنگ سنگت بڕوشێنێ ، بۆ کچ با هاوبەشت 10 تەکانی بەهێزت بۆ بکا و لەوکاتەدا با قژت بە قایمی ڕاکێشێ.' },
+          { level: 'ئاسان', content: 'لە کاتی سێکسدا، با هاوبەشەکەت دەست لە هەموو ئەو شوێنانەت بدات کە حەزت لێیە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی دوو خولەک بە شێوەیەکی هێواش مەساج بۆ دەستەکانی هاوبەشەکەت بکە.' },
+          { level: 'ئاسان', content: 'بە تەنها بە چاوەکانت پەیامی وروژاندن بگەیەنە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی دوو خولەک بە شێوەیەکی هێواش و وروژێنەر دەست لە قاچەکانی هاوبەشەکەت بدە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک بە چەورکردنەوە ئەنەل بکەن.' },
+          { level: 'ئاسان', content: 'بە شێوەیەکی وروژێنەر پێی بڵێ "چاوەڕێی چی دەکەیت؟".' },
+          { level: 'ئاسان', content: 'بۆ کوڕ بۆ ماوی 1 خولەک سێکس بکە لەگەڵ هاوبەشەکەت و هەردوو مەمکی یا گوپی قنی بە بەهێزی بگرە ، بۆ کچ ماوی 30 چرکە کێری هاوبەشەت بمژە و هەردوو گوپی قنی بە بەهێزی بگرە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی ٢ خولەک با هاوبەشەکەت لەسەر پشتت پاڵکەوێت.' },
+          { level: 'ئاسان', content: 'بە هاوبەشەکەت بڵێ چەند حەزت لە شێوازی قسەکردنیەتی لە کاتی سێکسدا.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی 1 خولەک تەنها بە دەست لێدانی سووک دەست لە ڕووخساری هاوبەشەکەت بدە.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی یەک خولەک بە شێوەیەکی هێواش و وروژێنەر ماچێکی درێژ لەسەر لێوی هاوبەشەکەت جێبهێڵە.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک شەست و نۆ ( 69 ) بکەن بە بێ ئەوەی بگەنە تەواوبوون.' },
+          { level: 'ئاسان', content: 'لە کاتی وروژاندندا، با هاوبەشەکەت بە شێوەیەکی هێواش جلی ژێرەوەت دابکەنێت.' },
+          { level: 'ئاسان', content: 'بۆ کوڕ/کچ بۆ ماوی 1 خولەک کێری کوڕ بە تەڕکراوی لە بەینی قوز و قنی هاوبەشت بخشێنە بە بێ کردنە ناوەوە .' },
+          { level: 'ئاسان', content: 'با هاوبەشەکەت بە شێوەیەکی سووک دەست لە گوێچکەت بدات.' },
+          { level: 'ئاسان', content: 'بۆ ماوەی 2 خولەک بە شێوەیەکی هێواش مەساج بۆ ڕانەکانی هاوبەشەکەت بکە.' },
+        ]
+      },
+
+      dicegame: {
+        title: 'تۆلان سڕاپێچی',
+        icon: '🎲',
+        girl: {
+          dice1: [
+            { icon: '👄', label: 'لێو و دەم' },
+            { icon: '👤', label: 'مل و گەردن' },
+            { icon: '🐱', label: 'قوز' },
+            { icon: '🍊', label: 'مەمکەکان' },
+            { icon: '🦵', label: 'ڕان' },
+            { icon: '🍑', label: 'قن' }
+          ],
+          dice2: [
+            { icon: '👅', label: 'بیلێسەرەوە' },
+            { icon: '💋', label: 'ماچیکە' },
+            { icon: '😋', label: 'بیمژە' },
+            { icon: '✋', label: 'بەهێواشی بیشێلە' },
+            { icon: '🍆', label: 'کێری لێبخشێنە' },
+            { icon: '🙈', label: 'بیدە لە دەموچاوتەوە' }
+          ]
+        },
+        boy: {
+          dice1: [
+            { icon: '👄', label: 'لێو و دەم' },
+            { icon: '👤', label: 'مل و گەردن' },
+            { icon: '👂', label: 'گوێ' },
+            { icon: '🍆', label: 'کێر' },
+            { icon: '🍆', label: 'کێر' },
+            { icon: '🍒', label: 'گونەکان' }
+          ],
+          dice2: [
+            { icon: '👅', label: 'بیلێسەرەوە' },
+            { icon: '💋', label: 'ماچیکە' },
+            { icon: '😋', label: 'بیمژە' },
+            { icon: '✋', label: 'بەهێواشی بیشەلە' },
+            { icon: '👃', label: 'لوتی لێبخشێنە' },
+            { icon: '🙈', label: 'بیدە لە دەموچاوتەوە' }
+          ]
+        }
+      },
+
+      wordchallenge: {
+        title: 'تەحەددی وشە',
+        icon: '📝',
+        letters: ['ئ', 'ا', 'ب', 'پ', 'ت', 'ڤ', 'ج', 'چ', 'ح', 'خ', 'د', 'ژ', 'ر', 'ڕ', 'ز', 'ڵ', 'س', 'ش', 'ص', 'ھ', 'ط', 'ۆ', 'ع', 'غ', 'ف', 'ق', 'ک', 'گ', 'ل', 'م', 'ن', 'و', 'ە']
+      },
+
+      sexpositions: {
+        title: 'Sex Positions',
+        icon: '💃',
+        positions: [
+          { id: 1, name: 'فایر مان', image: 'sexpositions/1.png', description: 'یەکێک بەپێوە ئەوی تر هەڵدەگرێت و قاچەکانی لە کەمەری دەپێچێتەوە؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە نزیکییەکی زۆر دەکەن' },
+          { id: 2, name: 'گوڵەبەڕۆژە', image: 'sexpositions/2.png', description: 'هەردوو لا بە شێوەیەک بەرامبەر یەک دادەنیشن کە قاچەکانیان ئاڵۆسکاوە؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە پەیوەندییەکی قوڵ و دڵنیایی دەکەن' },
+          { id: 3, name: 'مژینی زێ', image: 'sexpositions/3.png', description: 'یەکێک بە پاڵکەوتوویی دەمێنێتەوە و ئەوی تریان بە زمانی خزمەتی دەکات؛ تایبەتە بە وروژاندنی زێ و هەست بە چێژێکی زۆر و نزیکیی سۆزداری دەکەن' },
+          { id: 4, name: 'شەمەندەفەری شێت', image: 'sexpositions/4.png', description: 'یەکێک لەسەر جێگا پاڵدەکەوێت و ئەوی تریان بە شێوازی "سەگ" لەسەری دادەنیشێت و لە پشتەوە دەستی پێدەکات؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە چێژێکی خێرا و پڕ لە جووڵە دەکەن' },
+          { id: 5, name: 'سێکسکردنی دەمی تایبەت', image: 'sexpositions/5.png', description: 'یەکێک بە پاڵکەوتوویی دەمێنێتەوە و ئەوی تریان بە دەم خزمەتی دەکات؛ تایبەتە بە وروژاندنی ئەندامی نێرینە و هەست بە چێژێکی زۆر و ئارەزوویەکی قوڵ دەکەن' },
+          { id: 6, name: 'عەرەبانە', image: 'sexpositions/6.png', description: 'یەکێک لەسەر دەستەکانی وەستاوە و ئەوی تریان قاچەکانی هەڵدەگرێت؛ بۆ جووتبوونی زێ گونجاوە و هەست بە کۆنتڕۆڵ و چێژێکی قوڵ دەکەن' },
+          { id: 7, name: 'لێدانی کەر', image: 'sexpositions/7.png', description: 'یەکێک بە شێوازی کڕنوش بردن (کڕنووش) دەوەستێت و ئەوی تریان لە پشتەوە دەچێتە ناوی؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە هێز و چێژێکی پڕ لە ئارەزوو دەکەن' },
+          { id: 8, name: 'خەون', image: 'sexpositions/8.png', description: 'هەردوو لا بە پاڵکەوتوویی و بە تەنیشت یەکدا دەخەون و بە ڕووی یەکدا دەبن؛ بۆ جووتبوونی کۆم گونجاوە و هەست بە ئارامی و بەستراوەییەکی سۆزداریی زۆر دەکەن' },
+          { id: 8, name: 'تیکەی چا', image: 'sexpositions/9.png', description: 'یەکێک بە پاڵکەوتوویی دەمێنێتەوە و ئەوی تریان بەسەر دەموچاویدا دادەنیشێت؛ بۆ وروژاندنی کۆم گونجاوە و هەست بە کۆنتڕۆڵ و چێژێکی جیاواز دەکەن' },
+          { id: 8, name: 'هۆدینی', image: 'sexpositions/10.png', description: 'یەکێک لەسەر پشتی پاڵدەکەوێت و قاچەکانی بەرز دەکاتەوە و ئەوی تر لەسەری دادەنیشێت بە ڕووکردنە دەرەوە؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە ئازادی و چێژێکی ناوازە دەکەن' },
+          { id: 8, name: 'بایە شەماڵ', image: 'sexpositions/11.png', description: 'هەردوو لا بە ئارامی دەجووڵێن؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە ئارامی و نزیکییەکی ڕۆحی دەکەن' },
+          { id: 8, name: 'کلیتۆریسی تێرنەخۆر', image: 'sexpositions/12.png', description: 'یەکێک بە پاڵکەوتوویی دەمێنێتەوە و ئەوی تریان بە دەست یان بە زمان خزمەتی کلیتۆریس دەکات؛ تایبەتە بە وروژاندنی زێ و هەست بە چێژێکی زۆر و لوتکەی سێکس دەکەن' },
+          { id: 8, name: 'سەرسوڕماوی', image: 'sexpositions/13.png', description: 'یەکێک لەسەر کورسییەک دۆگی دەوەستێت و ئەوی تریان ڕوو بە ڕووی دەبێت؛ تایبەتە بە وروژاندنی کێر و هەست بە گەڕان بەدوای چێژ و دۆزینەوەی دەکەن' },
+          { id: 8, name: 'ئانا', image: 'sexpositions/14.png', description: 'یەکێک لەسەر جێگا پاڵدەکەوێت و ئەوی تریان بە ڕووکردنە لا لەسەری دادەنیشێت؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە کۆنتڕۆڵ و پەیوەندییەکی توند دەکەن' },
+          { id: 8, name: 'کورسیی تانترا', image: 'sexpositions/15.png', description: 'بە بەکارهێنانی کورسییەکی تایبەت، هەردوو لا بە ڕووکردنە یەکتر دەجووڵێن؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە ئاسوودەیی و قوڵاییەکی سۆزداریی زۆر دەکەن' },
+          { id: 8, name: 'سەگ لەسەر قەراغ', image: 'sexpositions/16.png', description: 'یەکێک لە قەراغی جێگا یان مێزێک دەوەستێت و ئەوی تریان لە پشتەوە دەستی پێدەکات؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە ڕاکێشانی زیاتر و چێژێکی قووڵ دەکەن' },
+          { id: 8, name: 'تویێڕک لەسەر کێر', image: 'sexpositions/17.png', description: 'یەکێک بە پاڵکەوتوویی دەمێنێتەوە و ئەوی تریان بەسەریدا دادەنیشێت و بە خێرایی جووڵەی کەمەری دەکات؛ بۆ جووتبوونی زێ گونجاوە و هەست بە چێژێکی خێرا و وروژێنەر دەکەن' },
+          { id: 8, name: 'مارگر', image: 'sexpositions/18.png', description: 'یەکێک خۆی شۆڕدەکاتەوە لەسە کورسی یا قەنەفە و ئەوی تریان بە شێوەیەکی خاو و بە دەست و بە لێو دەیوروژێنێت، بۆ وروژاندنی کێر گونجاوە و هەست و چێژێکی قوڵ دەبەخشێت' },
+          { id: 8, name: 'چیبی', image: 'sexpositions/19.png', description: 'یەکێک لەسەر پشتی پاڵدەکەوێت و ئەوی تریان بە شێوەیەکی کەمتر لە بڕبڕەی پشت و بە جووڵەی بچووک و ورد لەسەری دادەنیشێت؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە نزیکییەکی زۆر و جووڵەی نەرم دەکەن' },
+          { id: 8, name: 'دابەزین', image: 'sexpositions/20.png', description: 'یەکێک بە پاڵکەوتوویی دەمێنێتەوە و قاچەکانی بۆ سەرەوە و ئەوی تریان بە شێوەیەکی هێواش و بە ئاراستەی دەبێت؛ بۆ جووتبوونی زێ گونجاوە و هەست بە کۆنتڕۆڵ و چێژێکی هێواش و قووڵ دەکەن' },
+          { id: 8, name: 'کەتەپۆڵت', image: 'sexpositions/21.png', description: 'یەکێک لەسەر پشت پاڵدەکەوێت و قاچەکانی بەرەو سنگ بەرز دەکاتەوە (یان دەیانخاتە سەر شانی کەسی بەرامبەر)، ئەوی تریان لە نێوانیاندا جێگیر دەبێت؛ بۆ جووتبوونی زێ زۆر گونجاوە و ڕێگە بە قووڵاییەکی زیاتر و کۆنتڕۆڵی تەواوی جووڵەکان دەدات' },
+          { id: 8, name: 'ستیکمان', image: 'sexpositions/22.png', description: 'یەکێک بە شێوەیەکی ڕاست و ستوونی لەسەر ئەوی تر دادەنیشێت کە پاڵکەوتووە، بەڵام بە جۆرێک جەستەیان بە تەواوی ڕێک و کشاو دەمێنێتەوە؛ بۆ جووتبوونی زێ گونجاوە و هەست بە نزیکییەکی جەستەیی زۆر و دیمەنێکی جیاواز دەکەن' },
+          { id: 8, name: 'جووسی ئاس', image: 'sexpositions/23.png', description: 'ئەم پۆزیشینە جەخت لەسەر بەکارهێنانی کەمەر دەکات؛ کەسێک بە سەرنەوی (بە دەست و ئەژنۆ) دەوەستێت و ئەوی تریان لە پشتەوە دەستی پێدەکات بە شێوەیەک کە جووڵەکان خێرا و پڕ لە چێژ بن؛ بۆ جووتبوونی کۆم یان زێ گونجاوە و هەست بە لێواری پڕچێژ و وروژاندنی بەهێز دەکەن' },
+          { id: 8, name: 'هارپ', image: 'sexpositions/24.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر پشت دەمێنێتەوە و قاچەکانی بەرز دەکاتەوە و بە دەستەکانی دەگرێت (یان دەیانخاتە سەر شانی کەسی بەرامبەر)، بە جۆرێک شێوەی کەوانەیەک دروست دەبێت؛ بۆ جووتبوونی زێ گونجاوە و هەست بە قووڵاییەکی زیاتر و جووڵەی نەرم و ڕێکخراو دەکەن' },
+          { id: 8, name: 'گاڵتە', image: 'sexpositions/25.png', description: 'یەکێکیان بە دۆگی سنگ نزم دەوەستێت و ئەوی تریان لەسەر ئەژنۆ دەست دەکات بە لێسانەوە، بۆ وروژاندنی کۆم گونجاوە و بۆ ئاسودەیی و کەمکردنی سترێس و فشارە' },
+          { id: 8, name: 'گێملێت', image: 'sexpositions/26.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر لا دەمێنێتەوە و قاچەکانی باوەش دەکات و ئەویتر داخڵ دەبێت بە قوڵی؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە گۆشەیەکی جیاواز و دەستگەیشتن بە خاڵە هەستیارەکان دەکەن' },
+          { id: 8, name: 'حەوانەوە', image: 'sexpositions/27.png', description: 'یەکێک دادەنیشێت و ئەوی تریان لە باوەشیدا بە هەمان ئاڕاستە دادەنیشێت؛ بۆ پشوواردن، نزیکیی سۆزداری و جووتبوونی زێ گونجاوە و هەست بە ئارامی و قوڵاییەکی دەروونی دەکەن' },
+          { id: 8, name: 'سوارچاک', image: 'sexpositions/28.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر پشت دەمێنێتەوە و ئەوی تریان بەسەریدا (بە مقەستی) دەوەستێت؛ بۆ جووتبوونی زێ گونجاوە و هەست بە کۆنتڕۆڵی تەواو لەلایەن کەسی سەرەوە و دیمەنێکی وروژێنەر دەکەن' },
+          { id: 8, name: 'شیو', image: 'sexpositions/29.png', description: 'یەکێک لەسەر لێواری جێگایەک یان کورسییەک دادەنیشێت و ئەوی تریان لە بەردەمیدا بە شێوەیەکی ستوونی دەوەستێت، بە جۆرێک جەستەیان وەک لێوار و شیوێک لێک دەئاڵێن؛ بۆ جووتبوونی زێ گونجاوە و هەست بە نزیکییەکی تەواو و جووڵەی نەرم و بەردەوام دەکەن' },
+          { id: 8, name: 'گرد', image: 'sexpositions/30.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر پشت دەمێنێتەوە و سەرینێک یان پاڵپشتێک دەخاتە ژێر کەمەری بۆ ئەوەی حەوزەکەی بەرز بێتەوە، ئەوی تریان لە نێوان قاچەکانیدا جێگیر دەبێت؛ بۆ جووتبوونی زێ زۆر گونجاوە و هەست بە گەیشتن بە قووڵاییەکی زیاتر و بەرکەوتنی ڕاستەوخۆ دەکەن' },
+          { id: 8, name: 'زۆرانبازی', image: 'sexpositions/31.png', description: 'هەردوو لایەن بە توندی لە یەکتری دەئاڵێن و بە بەردەوامی شوێنی خۆیان دەگۆڕن (جارێک یەکێک لەسەرەوە و جارێکی تر ئەوی تر)؛ بۆ جووتبوونی زێ گونجاوە و هەست بە چالاکییەکی جەستەیی زۆر، وزەی بەرز و وروژاندنی کێبڕکێکارانە دەکەن' },
+          { id: 8, name: 'سەگی پاسیڤ', image: 'sexpositions/32.png', description: 'ئەمە گۆڕانکارییەکە لە پۆزیشنی باوی "سەگی" کە تێیدا لایەنی دووەم موسەیتەرە؛ لەم شێوازەدا کەسی یەکەم بە تەواوی لەسەر پشت پاڵدەکەوێت و قاچەکانی بەرز دەکاتەوە، و کەسی دووەم لە پێشەوە بە شێوازی دۆگی دێتە سەری؛ ئەمە ڕێگە بە جووڵەی هێواشتر ئارامی زیاتر و قووڵاییەکی جیاواز دەدات' },
+          { id: 8, name: 'جاک', image: 'sexpositions/33.png', description: 'لەم شێوازەدا، یەکێک بە پاڵکەوتوویی لەسەر سنگ و کەمێ لا دەمێنێتەوە و قاچێکی بەرز دەکاتەوە، ئەوی تریان لە نێوان قاچەکانیدا بە چەمانەوە یان بە ئەژنۆ جێگیر دەبێت؛ بۆ جووتبوونی زێ زۆر گونجاوە و ڕێگە بە چوونەژوورەوەیەکی قووڵ و کۆنتڕۆڵی تەواوی کەسی سەرەوە دەدات' },
+          { id: 8, name: 'کامیلیۆن', image: 'sexpositions/34.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر سک (دەموچاو بەرەو خوار) دەمێنێتەوە و کەمێک حەوز یان قاچەکانی بەرز دەکاتەوە، ئەوی تریان بە تەواوی لەسەر پشت و جەستەی ئەو ڕادەکشێت؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە لکانی تەواوی جەستە و گەرمییەکی زۆر دەکەن' },
+          { id: 8, name: 'پەرستن', image: 'sexpositions/35.png', description: 'یەکێک بەشێوازی سوجدەی تەواو و قاچەکانی دەکاتەوە لەسەر شوێنێک لە ئاستی کەسی دووەم و ئەوی تریش بە هێواشیەکی زۆرەوە داخڵ دەبێت، بۆ جوتبوونی کۆم زیاتر باوە و بۆ زێش دەبێت' },
+          { id: 8, name: 'بێرمودا ترایەنگڵ', image: 'sexpositions/36.png', description: 'ئەمە پۆزیشینێکی داهێنەرانەیە بۆ شێوازی 69 کە تێیدا بە تەواوی و قوڵتر داخڵ بەیەکتر دەبن، بۆ وروژاندنی تەواوەتی زێ و کێر دەبێت' },
+          { id: 8, name: 'شوێنی ئارام', image: 'sexpositions/37.png', description: 'ئەمە زیاتر لە شێوازێکی سۆزداری دەچێت تا پۆزیشنێکی ئاڵۆز؛ هەردوو لایەن بە لاتەنیشتدا و ڕووکاری یەکتری پاڵدەکەون و قاچەکانیان لەناو یەکتردا دەئاڵێنن (وەک باوەشێکی تەواو)، یان یەکێکیان لە باوەشی ئەوی تریاندا دەمێنێتەوە؛ بۆ جووتبوونی زێ گونجاوە و هەست بە گەرمییەکی زۆر، لێدانی دڵ و پەیوەندییەکی دەروونی قووڵ دەکەن' },
+          { id: 8, name: 'جولیا', image: 'sexpositions/38.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر پشت دەمێنێتەوە و قاچەکانی بە تەواوی بۆ سەرەوە بەرز دەکاتەوە و دەیاننووسێنێت بە سنگی خۆیەوە، ئەوی تریان لە نێوان قاچەکانیدا بە ئەژنۆوە دەوەستێت و کەمێک بەرەو پێشەوە دەچەمێتەوە؛ بۆ جووتبوونی زێ زۆر گونجاوە و ڕێگە بە چوونەژوورەوەیەکی زۆر قووڵ و بینینی ڕاستەوخۆی یەکتر دەدات' },
+          { id: 8, name: 'چەکوشەکەی سۆر', image: 'sexpositions/39.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر پشت دەمێنێتەوە و قاچەکانی دەبات بۆلای سنگی، ئەوی تریان بە پێوە یان بە ئەژنۆ لەسەری دەوەستێت ؛ بۆ جووتبوونی زێ زۆر گونجاوە و هەست بە هێزێکی زۆر، قووڵاییەکی بێوێنە و کۆنتڕۆڵێکی تەواو دەکەن' },
+          { id: 8, name: 'جی فۆرس', image: 'sexpositions/40.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر پشت دەمێنێتەوە و قاچەکانی بە تەواوی بەرەو لای سەری ڕادەکێشێت (قەد دەبێتەوە)، ئەوی تریان لە سەرەوە بە ئەژنۆ جێگیر دەبێت و بە هێزەوە پاڵ دەنێت؛ بۆ جووتبوونی زێ زۆر گونجاوە و هەست بە پەستانێکی زۆر، قووڵاییەکی بێوێنە و وزەیەکی چڕ دەکەن کە وەک کێشکردنێکی بەهێز وایە' },
+          { id: 8, name: 'سویت پوسی', image: 'sexpositions/41.png', description: 'یەکێک با دانیشتووی لەسەر قەنەفەیەک دادەنیشێت و ئەوی تریان بەرەوڕوی سەری دەوەستێتەوە، بۆ وروژاندنی زێ زۆر گونجاو و پڕ جێژە' },
+          { id: 8, name: 'تایتانیک', image: 'sexpositions/42.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر پشت دەمێنێتەوە و قاچەکانی کەمێک بەرز دەکاتەوە، ئەوی تریان بەسەریدا (بە ڕووکردنە پێیەکانی کەسی یەکەم) دادەنیشێت و جەستەی بەرەو دواوە دەبات، وەک ئەوەی لەسەر کەشتییەک بێت؛ بۆ جووتبوونی زێ گونجاوە و هەست بە بینینێکی جیاواز، کۆنتڕۆڵی تەواوی کەسی سەرەوە و گۆشەیەکی وروژێنەر دەکەن' },
+          { id: 8, name: 'دیپ ستیک', image: 'sexpositions/43.png', description: 'هەردولا بە پێوە و بەرەوڕوی یەکتر جوت دابن و یاکێکیان قاچێکی بەرز دەکاتەوە تا ئاستی سنگی، بۆ زێ گونجاوە و چێژێکی زۆر دەبەخشێت' },
+          { id: 8, name: 'ئەسپی دەریا', image: 'sexpositions/44.png', description: 'یەکێک بە شێوازی دۆگی دەوەستێ و ئەوی تریش دەچێتە سەری، بۆ جووتبونی ڕاستەوخۆی کۆم بەکار دێت و هەست بە کۆنتڕۆڵی تەواوی کەسی سەرەوە و لەرەلەرێکی بەردەوام وەک شەپۆل دەکەن' },
+          { id: 8, name: 'کەشتی ڕاکێشەر', image: 'sexpositions/45.png', description: 'یەکێکیان بە شێوازی دۆگی دەوەستێت لەسەر هەردو دەستی و ئەویتر بە بەرزکردنەوەی هەردوو قاجهی تا ئاستی کەمەری دەوەستێتەوە، بۆ جووتبوونی زێ گونجاوە و هەست بە هێزێکی ڕاکێشان، هاوسەنگییەکی بەهێز و جووڵەیەکی ڕیتمی وەک شەپۆل دەکەن' },
+          { id: 8, name: 'هێڵی ڕاست', image: 'sexpositions/46.png', description: 'لەم پۆزیشنەدا هەردوو لایەن بە تەواوی بە درێژایی پاڵدەکەون (یەکێکیان لەسەر پشت و ئەوی تریان لەسەری)، بە شێوەیەک کە جەستەیان وەک هێڵێکی ڕاست دەردەکەوێت و قاچەکانیان بە ڕێکی دەمێنێتەوە؛ بۆ جووتبوونی زێ گونجاوە و هەست بە لکانی تەواوی پێست، نزیکییەکی زۆر و جووڵەیەکی هێواش و قووڵ دەکەن' },
+          { id: 8, name: 'فوڵ نێڵسن', image: 'sexpositions/47.png', description: 'ئەمە پۆزیشنێکی بەهێز و پڕ لە کۆنتڕۆڵە؛ یەکێک لەسەر چوارپێ (وەک کڕنۆش) یان بە دانیشتنەوە دەبێت، ئەوی تریان لە پشتەوە دێت و دەستەکانی دەخاتە ژێر باڵەکانی و لە پشت ملیدا توند دەستەکانی قفڵ دەکات؛ بۆ جووتبوونی زێ و بە تایبەتیش کۆم گونجاوە و هەست بە کۆنتڕۆڵێکی تەواوی جەستە، نزیکییەکی زۆر و جووڵەیەکی قووڵ دەکەن' },
+          { id: 8, name: 'ڕیڤەرساید', image: 'sexpositions/48.png', description: 'یەکێک بە پاڵکەوتوویی لەسەر لا دەمێنێتەوە و دەستەکانی بەرەو خوارەوە شۆڕ دەکاتەوە، ئەوی تریان لە پشتی و بەڕێکی؛ بۆ جووتبوونی زێ و کۆم زۆر گونجاوە و ڕێگە بە جووڵەی ئازادانە، گۆشەیەکی جیاواز و کۆنتڕۆڵی تەواوی کەسی بەپێوە دەدات' },
+          { id: 8, name: 'ئەمەچۆر', image: 'sexpositions/49.png', description: 'ئەم پۆزیشنە بە سادەیی و سروشتیبوونی دەناسرێتەوە؛ هەردوو لایەن بە دانیشتنێکی کەمێک خوارەوە جێگیر دەبن و قاچەکانیان بە ئارامی لە دەوری یەکتر دەئاڵێنن؛ بۆ جووتبوونی زێ زۆر گونجاوە و ڕێگە بە ماچکردن، سەیرکردنی چاوەکان و پەیوەندییەکی سۆزداریی زۆر گەرم دەدات بەبێ هیچ فشارێکی جەستەیی زیادە' },
+          { id: 8, name: 'تاوانی شیرین', image: 'sexpositions/50.png', description: 'یەکێکە لە شێوازە پڕ چێژەکان کە تێیدا کەسی یەکەم دادەنیشێ و کەسی دووەم بەرەوڕوی و قاچەکەنی دەکاتە سەر شانی، بە تایبەت بۆ جوتبونی کۆم دەبێت کە تێیدا خۆشترین هەست دەبەخشێت بە هەردولا و بۆ زێش بەکاردێ، نزیکیەکی بێوێنە و جەڵەیەکی زۆر نەرم و لەسەرخۆ دەبەخشێت' },
+          { id: 8, name: 'فڕینی شەو', image: 'sexpositions/51.png', description: 'یەکێکیان بە پاڵکەوتووی لەسەر پشت و ئەوی تریان لەسەر لا دادەنیشێت لەسەر کەسی یەکەم بە شێوەی پیتی تی هەڵگەڕاوە، بۆ جووتبوونی زێ زۆر گونجاوە و هەست بە نزیکییەکی زۆر' },
+          { id: 8, name: 'بڕغوو', image: 'sexpositions/52.png', description: 'لەم پۆزیشنەدا یەکێک بە پاڵکەوتوویی لەسەر لا دەمێنێتەوە، کەسی دووەم لە پشتیەوە جێگیر دەبێت و بە جووڵەیەکی خولی (وەک سووڕانەوەی بڕغوو) کارەکە ئەنجام دەدات؛ بۆ جووتبوونی کۆم زۆر گونجاوە و هەست بە لکانی تەواوی جەستە، گوشارێکی چڕ و گۆشەیەکی گۆڕاو دەکەن کە چێژێکی بەردەوام دەبەخشێت' },
+          { id: 8, name: 'جاڵجاڵۆکەی وروژێنەر', image: 'sexpositions/53.png', description: 'لەم پۆزیشنەدا هەردوو لایەن بە دانیشتنەوە ڕووبەڕووی یەکتری دەبن، بە شێوەیەک کە قاچەکانیان لەناو یەکتردا دەئاڵێنن و دەستەکانیان لە دواوە بۆ هاوسەنگی جێگیر دەکەن (وەک شێوەی قاچەکانی جاڵجاڵۆکە)؛ بۆ جووتبوونی زێ زۆر گونجاوە و ڕێگە بە جووڵەیەکی هاوبەش، ماچکردنی بەردەوام و بینینی ڕاستەوخۆی یەکتر دەدات لە کاتێکی زۆر نزیکدا' },
+          { id: 8, name: 'تیرۆداکتیڵ', image: 'sexpositions/54.png', description: 'ئەمە پۆزیشنێکی پێشکەوتوو و چالاکە، یەکێکیان لەسەر ئەوی تریان دەوەستێتەوە و قاچێکی لە ئاستی کەسی ژێرەوە دەبێت و هەردوکیان لەسەر مێزێک دەبن یا شوێنێکی بەرز، بۆ جەتبوونی کۆم زۆر باوە و بە چێژە، کۆنتڕۆڵی تەواوی کەسی سەرەوە و دیمەنێکی وروژێنەر دەکەن' },
+          { id: 8, name: 'ژێی کەوان', image: 'sexpositions/55.png', description: 'ەکێک بە پاڵکەوتوویی لەسەر لایەک ڕادەکشێت و یەکێک لە قاچەکانی بە تەواوی بۆ سەرەوە ڕادەکێشێت (وەک ژێی کەوانێکی ڕاکێشراو)، ئەوی تریان لە نێوان قاچەکانیدا بە ئەژنۆوە دەوەستێت و قاچە بەرزکراوەکە دەگرێت؛ بۆ جووتبوونی زێ زۆر گونجاوە و هەست بە چوونەژوورەوەیەکی قووڵ، کشانی ماسولکەکان و بینینێکی ڕوونی یەکتری دەکەن' },
+          { id: 8, name: 'دیپ ثرۆت', image: 'sexpositions/56.png', description: 'ئەمە زیاتر وەک تەکنیکێکی سێکسی زارەکی دەناسرێت نەک تەنها پۆزیشنێکی جەستەیی؛ تێیدا کەسی وەرگر ڕێگە دەدات چووک بە تەواوی بچێتە ناو قوڕگییەوە (تێپەڕبوونی بەربەستی ناو دەم)، ئەمەش پێویستی بە کۆنتڕۆڵکردنی هەستی ڕشانەوە و هێواشی هەیە؛ بۆ چێژی زۆر و هەستکردن بە پڕبوونی قوڕگ گونجاوە و زۆرجار بە دانیشتن، چۆکدادان یان پاڵکەوتن ئەنجام دەدرێت' },
+          { id: 8, name: 'کورسی نەرم', image: 'sexpositions/57.png', description: 'یەکێک لەسەر کورسییەکی ئارام یان کەناری جێگاکە پاڵدەکەوێت، ئەوی تریان لەسەری دادەنیشێت؛ بۆ جووتبوونی زێ زۆر گونجاوە و هەست بە نزیکییەکی زۆر دەکەن، لە کاتێکدا کێشی جەستەیان لەسەر کورسییەکە جێگیرە' },
+          { id: 8, name: 'کۆبرا', image: 'sexpositions/58.png', description: 'لەم پۆزیشنەدا یەکێک بە تەواوی لەسەر سک پاڵدەکەوێت، ئەوی تریان لە پشتەوە لەسەری جێگیر دەبێت و کەسی یەکەم بە دەستەکانی جەستەی سەرەوەی کەمێک بەرز دەکاتەوە (وەک شێوەی ماری کۆبرا)؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە کشانی ماسولکەکانی سک، چوونەژوورەوەیەکی قووڵ و نزیکییەکی زۆر لە پشتەوە دەکەن' },
+          { id: 8, name: 'ڕیەر ئەدمیراڵ', image: 'sexpositions/59.png', description: 'لەم پۆزیشنەدا یەکێک بە شێوەی چوارپێ (وەک کڕنۆش) لەسەر جێگاکە جێگیر دەبێت، ئەوی تریان لە پشتەوە بە پێوە دەوەستێت یان بە ئەژنۆ لەسەر جێگاکە دەبێت؛ بۆ جووتبوونی زێ یان کۆم زۆر گونجاوە و ڕێگە بە چوونەژوورەوەیەکی قووڵ، کۆنتڕۆڵی تەواوی کەسی پشتەوە و جووڵەیەکی خێرا و بەهێز دەدات' },
+          { id: 8, name: 'ئێکس فاکتەر', image: 'sexpositions/60.png', description: 'لەم پۆزیشنەدا هەردوو لایەن ڕووبەڕووی یەکتر بە پاڵەوتنەوە جێگیر دەبن، بە شێوەیەک کە قاچەکانیان بە شێوەی پیتی ئێکس بەسەر یەکتردا تێپەڕ دەکەن و دەستەکانیان بۆ پشتگیری جەستەیان دادەنێن؛ بۆ جووتبوونی کۆم زۆر گونجاوە و ڕێگە بە قوڵیەکی زۆر و جووڵەیەکی هاوسەنگ لەلایەن هەردوو لایەنەوە دەدات' },
+          { id: 8, name: 'نوستووی جوان', image: 'sexpositions/61.png', description: 'لەم پۆزیشنەدا یەکێک بە ئارامی لەسەر دەم پاڵدەکەوێت (وەک ئەوەی خەوتبێت)، ئەوی تریان لە پشتەوە دەچێتە سەری؛ بۆ جووتبوونی زێ یان کۆم گونجاوە و هەست بە ئارامییەکی زۆر، نزیکییەکی سۆزداری و جووڵەیەکی زۆر لەسەرخۆ دەکەن، کە زۆر گونجاوە بۆ کاتی بەیانیان یان پێش خەوتن' },
+          { id: 8, name: 'گوشاری توند', image: 'sexpositions/62.png', description: 'لەم پۆزیشنەدا یەکێک قاچەکانی بە توندی پێکەوەیان دەنوسێنێت، ئەوی تریان لەسەر ئەژنۆ لە نێوان قاچەکانیدا جێگیر دەبێت؛ بۆ جووتبوونی زێ زۆر تایبەتە، چونکە نوسانی قاچەکان وا دەکات کەناڵەکە زۆر تەسک ببێتەوە و هەست بە لێکخشاندنێکی چڕ، چوونەژوورەوەیەکی سنووردار بەڵام پڕ بە چێژ بکەن' },
+          { id: 8, name: 'یۆنیکۆرن', image: 'sexpositions/63.png', description: 'لەم پۆزیشنەدا یەکێک لەسەر پشت پاڵدەکەوێت و قاچەکانی بە تەواوی بەرەو دواوە دەبات بە شێوەیەک کە قاچەکانی لە تەنیشت گوێچکەکانی جێگیر دەبن (یان لەسەر شانی کەسی بەرامبەر)، کەسی دووەم لەسەرەوە بە ئەژنۆوە جێگیر دەبێت؛ بۆ جووتبوونی زۆری کۆم و کەمێک زێ گونجاوە و هەست بە چوونەژوورەوەیەکی زۆر قووڵ، کشانی تەواوی جەستە و بینینێکی ناوازەی گۆشەی جووتبوونەکە دەکەن' },
+          { id: 8, name: 'ئیمپراتۆر', image: 'sexpositions/64.png', description: 'لەم پۆزیشنەدا یەکێک بە شێوەیەکی پاشایانە لەسەر جێگاکە یان کورسییەکی گەورە پاڵدەکەوێت لەسەر لا و بە ئیسراحەت،  ئەوی تریان لە دواوە خزمەتی دەکات،بۆ ژەتبونی کۆم زۆر گونجاوە و هەست بە خۆشی و دەسەڵات لەلایەن کەسی پاڵکەوتوەوە باوەڕپێنەکراو دەبێت' },
+          { id: 8, name: 'سپۆک', image: 'sexpositions/65.png', description: 'لەم پۆزیشنەدا کەسی یەکەم دۆگی دەوەستێت و سەری ڕێک دەکات و تەواوی ئەندامی کەسی دووەم دەکاتە نا دەم و قورگیەوە و کەسی دووەمیش هەوڵ دەدات هەردوو گوپی سمتی کەسی یەکەم بگرێت' },
+          { id: 8, name: 'سفینکس', image: 'sexpositions/66.png', description: 'لەم شێوازەدا کەسی یەکەم لەسەر پشت پاڵدەکەووێت و کەسی دوام بە دەستەکانی لێوارەکانی زێ ی دەکاتەوە تا کەسی یەکەم خەریکی لێسانەوەیبێت' },
+          { id: 8, name: 'تویکس', image: 'sexpositions/67.png', description: 'لەم پۆزیشنەدا هەردوو لایەن لەسەر لایەک (تەنیشت) پاڵدەکەون و ڕووبەڕووی یەکتر دەبن، بە شێوەیەک کە قاچەکانیان لە ناو یەکتردا تێهەڵدەکێشن (وەک دوو پارچە بسکیت لە ناو یەک پاکەتدا)؛ بۆ جووتبوونی زێ زۆر گونجاوە و هەست بە نزیکییەکی زۆری جەستەیی، توانای ماچکردنی بەردەوام و جووڵەیەکی هێواش و سۆزداری دەکەن بەبێ ئەوەی ماندوو ببن' },
+          { id: 8, name: 'کلیپ', image: 'sexpositions/68.png', description: 'ەم پۆزیشنەدا یەکێک لەسەر لایەک پاڵدەکەوێت (شێوازی کەوچکی)، ئەوی تریان لە پشتەوە لێی نزیک دەبێتەوە و قاچەکانی لە دەوری قاچ و کەمەری کەسی پێشەوە دەئاڵێنێت، ڕێک وەک "کلیپێک" کە کاغەزەکان پێکەوە دەبەستێت؛ بۆ جووتبوونی زێ زۆر نایابە و هەست بە گەرمییەکی زۆر، نزیکییەکی سۆزداری و توانای دەستگەیشتن بە زۆربەی شوێنەکانی جەستە دەکەن، لە کاتێکدا هەردوو لایەن زۆر ئاسودەن' },
+          { id: 8, name: 'ئاسۆ', image: 'sexpositions/69.png', description: 'ئەمە شێوازێکی 69یە بەڵام لەسەر لا تیایدا هەردوو هاوبەش هەست بە ئیسراحەت و چێژ و خۆشیەکی بێوێنە دەکەن بەشێوەیەک کە ناتوانن یەکتر بەربدەن' }
+        ]
+      }
+    };
+
+    // ==================== THEME SYSTEM ====================
+    const ThemeManager = {
+      currentTheme: localStorage.getItem('gameTheme') || 'romantic',
+      
+      init() {
+        this.setTheme(this.currentTheme);
+      },
+      
+      setTheme(theme) {
+        // Remove all theme classes
+        document.body.classList.remove('theme-dark', 'theme-white', 'theme-romantic');
+        // Add selected theme
+        document.body.classList.add(`theme-${theme}`);
+        this.currentTheme = theme;
+        localStorage.setItem('gameTheme', theme);
+        
+        // Start romantic effects if romantic theme
+        if (theme === 'romantic') {
+          this.startRomanticEffects();
+        } else {
+          this.stopRomanticEffects();
+        }
+      },
+      
+      startRomanticEffects() {
+        if (this.romanticInterval) return;
+        this.romanticInterval = setInterval(() => {
+          this.createFloatingHeart();
+        }, 800);
+      },
+      
+      stopRomanticEffects() {
+        if (this.romanticInterval) {
+          clearInterval(this.romanticInterval);
+          this.romanticInterval = null;
+        }
+      },
+      
+      createFloatingHeart() {
+        const hearts = ['❤️', '❤️', '❤️', '❤️', '❤️', '❤️'];
+        const heart = document.createElement('div');
+        heart.className = 'romantic-heart float';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.bottom = '-30px';
+        document.body.appendChild(heart);
+        
+        setTimeout(() => heart.remove(), 3000);
+      }
+    };
+
+    // ==================== SOUND SYSTEM ====================
+    class SoundManager {
+      constructor() {
+        this.enabled = localStorage.getItem('gameSoundEnabled') !== 'false';
+        this.audioContext = null;
+        this.musicEnabled = localStorage.getItem('gameMusicEnabled') !== 'false';
+        this.musicVolume = parseFloat(localStorage.getItem('gameMusicVolume')) || 0.3;
+        this.selectedMusic = localStorage.getItem('gameSelectedMusic') || 'music.mp3';
+        this.backgroundMusic = new Audio(this.selectedMusic);
+        this.backgroundMusic.loop = true;
+        this.backgroundMusic.volume = this.musicVolume;
+      }
+
+      playClick() {
+        if (!this.enabled) return;
+        this.playTone(400, 0.1, 0.05);
+      }
+
+      playSuccess() {
+        if (!this.enabled) return;
+        this.playTone(600, 0.15, 0.2);
+        setTimeout(() => this.playTone(800, 0.15, 0.2), 150);
+      }
+
+      playBuzz() {
+        if (!this.enabled) return;
+        // Longer warning alarm sound - like a real timer warning
+        this.playTone(600, 0.15, 0.2);
+        setTimeout(() => this.playTone(500, 0.15, 0.2), 240);
+        setTimeout(() => this.playTone(600, 0.15, 0.2), 480);
+        setTimeout(() => this.playTone(500, 0.15, 0.2), 720);
+        setTimeout(() => this.playTone(600, 0.15, 0.2), 960);
+        setTimeout(() => this.playTone(500, 0.15, 0.2), 1200);
+      }
+
+      playTone(freq, volume, duration) {
+        try {
+          if (!this.audioContext) {
+            this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+          }
+          const ctx = this.audioContext;
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.frequency.value = freq;
+          gain.gain.setValueAtTime(volume, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + duration);
+          osc.start(ctx.currentTime);
+          osc.stop(ctx.currentTime + duration);
+        } catch (e) {}
+      }
+
+      toggle() {
+        this.enabled = !this.enabled;
+        localStorage.setItem('gameSoundEnabled', this.enabled);
+      }
+
+      toggleMusic() {
+        this.musicEnabled = !this.musicEnabled;
+        localStorage.setItem('gameMusicEnabled', this.musicEnabled);
+        if (this.musicEnabled && isAuthenticated) {
+          this.backgroundMusic.play().catch(() => {});
+        } else {
+          this.backgroundMusic.pause();
+        }
+      }
+
+      setMusicVolume(volume) {
+        this.musicVolume = Math.max(0, Math.min(1, volume));
+        this.backgroundMusic.volume = this.musicVolume;
+        localStorage.setItem('gameMusicVolume', this.musicVolume);
+      }
+
+      selectMusic(musicFile) {
+        this.selectedMusic = musicFile;
+        localStorage.setItem('gameSelectedMusic', musicFile);
+        const wasPlaying = !this.backgroundMusic.paused;
+        this.backgroundMusic.pause();
+        this.backgroundMusic = new Audio(this.selectedMusic);
+        this.backgroundMusic.loop = true;
+        this.backgroundMusic.volume = this.musicVolume;
+        if (wasPlaying && this.musicEnabled && isAuthenticated) {
+          this.backgroundMusic.play().catch(() => {});
+        }
+      }
+
+      stopMusic() {
+        this.backgroundMusic.pause();
+      }
+
+      startMusic() {
+        if (this.musicEnabled && isAuthenticated) {
+          this.backgroundMusic.play().catch(() => {});
+        }
+      }
+    }
+
+    const soundManager = new SoundManager();
+
+    // ==================== APP STATE ====================
+    let appState = {
+      currentScreen: 'splash',
+      currentMode: null,
+      selectedGender: null,
+      currentIndex: 0,
+      shuffledItems: [],
+      timerInterval: null,
+      timerRemaining: 0,
+      selectedType: null,
+      selectedLetter1: null,
+      selectedLetter2: null,
+      completedGames: parseInt(localStorage.getItem('gameCompletedGames')) || 0,
+      playerScore: parseInt(localStorage.getItem('gamePlayerScore')) || 0,
+      currentLevel: 1,
+      rollCount: 0,
+      diceRolling: false,
+    };
+
+    // Level thresholds for score system - 20 levels total
+    const LEVEL_THRESHOLDS = [100, 250, 450, 700, 1000, 1350, 1750, 2200, 2700, 3250, 3900, 4650, 5450, 6300, 7200, 8150, 9150, 10200, 11300, 12450];
+    
+    function calculateLevel() {
+      let level = 1;
+      for (let i = 0; i < LEVEL_THRESHOLDS.length; i++) {
+        if (appState.playerScore >= LEVEL_THRESHOLDS[i]) {
+          level = i + 2;
+        } else {
+          break;
+        }
+      }
+      return level;
+    }
+
+    function addScore(points) {
+      const previousLevel = calculateLevel();
+      appState.playerScore = (appState.playerScore || 0) + points;
+      localStorage.setItem('gamePlayerScore', appState.playerScore);
+      appState.currentLevel = calculateLevel();
+      const newLevel = calculateLevel();
+      if (newLevel > previousLevel) {
+        // Check if reached max level
+        if (newLevel > LEVEL_THRESHOLDS.length) {
+          showCongratulationsScreen();
+        } else {
+          showLevelUpAnimation();
+        }
+      }
+    }
+
+    function showLevelUpAnimation() {
+      const levelDisplay = document.getElementById('stats-level');
+      const homeLevelDisplay = document.getElementById('home-current-level');
+      if (levelDisplay) {
+        const level = calculateLevel();
+        if (level > LEVEL_THRESHOLDS.length) {
+          levelDisplay.textContent = 'شارەزا';
+        } else {
+          levelDisplay.textContent = 'ئاست ' + level;
+        }
+        levelDisplay.classList.add('animate-level-up');
+        soundManager.playSuccess();
+        setTimeout(() => {
+          levelDisplay.classList.remove('animate-level-up');
+        }, 600);
+      }
+      if (homeLevelDisplay) {
+        const level = calculateLevel();
+        if (level > LEVEL_THRESHOLDS.length) {
+          homeLevelDisplay.textContent = 'شارەزا';
+        } else {
+          homeLevelDisplay.textContent = level;
+        }
+      }
+    }
+
+    function showCongratulationsScreen() {
+      soundManager.playSuccess();
+      soundManager.playSuccess();
+      document.getElementById('congratulations-screen').classList.remove('hidden');
+      setTimeout(() => {
+        document.getElementById('congratulations-screen').classList.add('hidden');
+      }, 8000);
+    }
+
+    function getNextLevelThreshold() {
+      const currentLevel = appState.currentLevel;
+      if (currentLevel <= LEVEL_THRESHOLDS.length) {
+        return LEVEL_THRESHOLDS[currentLevel - 1];
+      }
+      return LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
+    }
+
+    function getCurrentLevelThreshold() {
+      const currentLevel = appState.currentLevel;
+      if (currentLevel === 1) return 0;
+      if (currentLevel <= LEVEL_THRESHOLDS.length) {
+        return LEVEL_THRESHOLDS[currentLevel - 2];
+      }
+      return LEVEL_THRESHOLDS[LEVEL_THRESHOLDS.length - 1];
+    }
+
+    const CORRECT_PASSWORD = '69@69';
+    let isAuthenticated = false;
+
+    // ==================== UTILITIES ====================
+    function shuffleArray(array) {
+      const shuffled = [...array];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    function showScreen(screenId) {
+      document.querySelectorAll('[id$="-screen"]').forEach(el => el.classList.add('hidden'));
+      const screen = document.getElementById(screenId);
+      const timerWrapper = document.getElementById('timer-panel-wrapper');
+      
+      if (screen) {
+        screen.classList.remove('hidden');
+        
+        // Show timer only in mod screens
+        const isModScreen = screenId.includes('truthdare') || screenId.includes('dicegame') || 
+                           screenId.includes('wordchallenge') || screenId.includes('sexpositions');
+        
+        if (isModScreen) {
+          timerWrapper.classList.remove('hidden-timer');
+        } else {
+          timerWrapper.classList.add('hidden-timer');
+          // Close timer if it was open
+          if (TimerManager && TimerManager.isOpen) {
+            TimerManager.close();
+          }
+        }
+        
+        // Add pop-in animation for mode screens
+        if (isModScreen) {
+          screen.classList.add('animate-pop-in');
+          setTimeout(() => {
+            screen.classList.remove('animate-pop-in');
+          }, 600);
+        }
+        appState.currentScreen = screenId;
+      }
+      soundManager.playClick();
+    }
+
+    function checkPassword() {
+      const input = document.getElementById('password-input').value;
+      const errorDiv = document.getElementById('password-error');
+      
+      if (input === CORRECT_PASSWORD) {
+        isAuthenticated = true;
+        errorDiv.classList.add('hidden');
+        document.getElementById('password-input').value = '';
+        soundManager.playSuccess();
+        
+        // Auto-start music if enabled
+        soundManager.startMusic();
+        
+        document.getElementById('password-screen').style.animation = 'fade-out 0.4s ease-out forwards';
+        setTimeout(() => {
+          showScreen('home-screen');
+        }, 400);
+      } else {
+        errorDiv.classList.remove('hidden');
+        soundManager.playBuzz();
+      }
+    }
+
+    function logout() {
+      isAuthenticated = false;
+      soundManager.stopMusic();
+      appState = {
+        currentScreen: 'splash',
+        currentMode: null,
+        selectedGender: null,
+        currentIndex: 0,
+        shuffledItems: [],
+        timerInterval: null,
+        timerRemaining: 0,
+        selectedType: null,
+        completedGames: parseInt(localStorage.getItem('gameCompletedGames')) || 0,
+        playerScore: parseInt(localStorage.getItem('gamePlayerScore')) || 0,
+        currentLevel: 1,
+        rollCount: 0,
+        diceRolling: false,
+      };
+      stopTimer();
+      // Clear any leftover animation styles before showing password screen
+      const passwordScreen = document.getElementById('password-screen');
+      passwordScreen.style.animation = '';
+      passwordScreen.style.opacity = '';
+      showScreen('password-screen');
+    }
+
+    function updateProgress() {
+      const total = appState.shuffledItems.length || 1;
+      const current = appState.currentIndex + 1;
+      return `${current} / ${total}`;
+    }
+
+    function updateProgressBar() {
+      const currentThreshold = getCurrentLevelThreshold();
+      const nextThreshold = getNextLevelThreshold();
+      const rangeSize = nextThreshold - currentThreshold;
+      const currentProgress = appState.playerScore - currentThreshold;
+      const percentage = Math.min(100, Math.max(0, (currentProgress / rangeSize) * 100));
+      
+      const barEl = document.getElementById('home-progress-bar');
+      if (barEl) {
+        barEl.style.width = percentage + '%';
+      }
+      
+      const countEl = document.getElementById('home-completed-count');
+      const levelEl = document.getElementById('home-current-level');
+      const nextEl = document.getElementById('home-threshold-next');
+      const level = calculateLevel();
+      
+      if (countEl) countEl.textContent = appState.playerScore;
+      if (levelEl) {
+        if (level > LEVEL_THRESHOLDS.length) {
+          levelEl.textContent = 'شارەزا';
+        } else {
+          levelEl.textContent = level;
+        }
+      }
+      if (nextEl) {
+        if (level > LEVEL_THRESHOLDS.length) {
+          nextEl.textContent = '∞';
+        } else {
+          nextEl.textContent = getNextLevelThreshold();
+        }
+      }
+    }
+
+    function updateHomeProgress() {
+      appState.currentLevel = calculateLevel();
+      updateProgressBar();
+    }
+
+    // ==================== GENDER SELECTION ====================
+    function selectGenderForMode(gender) {
+      appState.selectedGender = gender;
+      soundManager.playClick();
+
+      if (appState.currentMode === 'truthdare') startTruthDare();
+      else if (appState.currentMode === 'dicegame') startDiceGame();
+      else if (appState.currentMode === 'wordchallenge') startWordChallenge();
+      else if (appState.currentMode === 'sexpositions') startSexPositions();
+    }
+
+    // ==================== TRUTH OR DARE MODE ====================
+    function startTruthDare() {
+      appState.currentMode = 'truthdare';
+      appState.selectedType = null;
+      document.getElementById('truthdare-welcome').classList.remove('hidden');
+      document.getElementById('truthdare-game-state').classList.add('hidden');
+      showScreen('truthdare-screen');
+    }
+
+    document.getElementById('truthdare-begin-btn')?.addEventListener('click', () => {
+      document.getElementById('truthdare-welcome').classList.add('hidden');
+      document.getElementById('truthdare-game-state').classList.remove('hidden');
+      soundManager.playClick();
+    });
+
+    function selectTruthOrDare(type) {
+      appState.selectedType = type;
+      const mode = GAME_CONTENT.truthdare;
+      let items = [];
+      
+      items = type === 'truth' ? mode.truths : mode.dares;
+
+      const storageKey = `truthdare_${type}_index`;
+      let savedIndex = parseInt(localStorage.getItem(storageKey)) || 0;
+      
+      // If index is out of bounds, loop back to start
+      if (savedIndex >= items.length) {
+        savedIndex = 0;
+      }
+      
+      appState.shuffledItems = items;
+      appState.currentIndex = savedIndex;
+      
+      const selection = document.getElementById('truthdare-selection');
+      const card = document.getElementById('truthdare-card');
+      const nextBtn = document.getElementById('truthdare-next-round-btn');
+      
+      if (selection) selection.classList.add('hidden');
+      if (card) card.classList.remove('hidden');
+      if (nextBtn) nextBtn.classList.remove('hidden');
+
+      const icon = type === 'truth' ? '😇' : '😈';
+      const bgColor = type === 'truth' ? 'emerald' : 'rose';
+      
+      const iconEl = document.getElementById('truthdare-icon');
+      const typeEl = document.getElementById('truthdare-type');
+      
+      if (iconEl) iconEl.textContent = icon;
+      if (typeEl) typeEl.className = `text-xs ${type === 'truth' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-accent-rose/20 text-accent-rose'} px-3 py-1 rounded-lg font-mono`;
+      
+      showTruthDareCard();
+      soundManager.playClick();
+    }
+
+    function showTruthDareCard() {
+      if (appState.currentIndex >= appState.shuffledItems.length) {
+        appState.currentIndex = 0;
+      }
+
+      const item = appState.shuffledItems[appState.currentIndex];
+      document.getElementById('truthdare-content').textContent = item.content;
+      document.getElementById('truthdare-progress').textContent = `${appState.currentIndex + 1} / ${appState.shuffledItems.length}`;
+    }
+
+    document.getElementById('truthdare-truth-btn')?.addEventListener('click', () => selectTruthOrDare('truth'));
+    document.getElementById('truthdare-dare-btn')?.addEventListener('click', () => selectTruthOrDare('dare'));
+
+    document.getElementById('truthdare-next-round-btn')?.addEventListener('click', () => {
+      appState.completedGames++;
+      localStorage.setItem('gameCompletedGames', appState.completedGames);
+      addScore(5); // Truth/Dare completion
+      
+      // Move to next item sequentially
+      appState.currentIndex++;
+      
+      // Save current index to localStorage
+      const storageKey = `truthdare_${appState.selectedType}_index`;
+      localStorage.setItem(storageKey, appState.currentIndex);
+      
+      // Loop back to start if at the end
+      if (appState.currentIndex >= appState.shuffledItems.length) {
+        appState.currentIndex = 0;
+        localStorage.setItem(storageKey, 0);
+      }
+      
+      // Go back to selection screen
+      const selection = document.getElementById('truthdare-selection');
+      const card = document.getElementById('truthdare-card');
+      const nextBtn = document.getElementById('truthdare-next-round-btn');
+      
+      if (selection) selection.classList.remove('hidden');
+      if (card) card.classList.add('hidden');
+      if (nextBtn) nextBtn.classList.add('hidden');
+      
+      soundManager.playSuccess();
+    });
+
+    document.getElementById('truthdare-back-btn')?.addEventListener('click', () => {
+      stopTimer();
+      showScreen('home-screen');
+    });
+
+    // ==================== DICE GAME MODE ====================
+    let diceGameState = {
+      selectedGender: 'girl',
+      rolling: false,
+      rollCount: 0
+    };
+
+    function initializeDiceFaces() {
+      const mode = GAME_CONTENT.dicegame;
+      const genderData = mode[diceGameState.selectedGender];
+      
+      const dice1 = document.getElementById('dice-1');
+      const dice2 = document.getElementById('dice-2');
+      
+      // Clear existing faces
+      dice1.innerHTML = '';
+      dice2.innerHTML = '';
+      
+      // Create faces for dice 1
+      genderData.dice1.forEach((item, index) => {
+        const face = document.createElement('div');
+        face.className = `dice-face face-${index + 1}`;
+        face.innerHTML = `
+          <div class="dice-face-emoji">${item.icon}</div>
+          <div class="dice-face-label">${item.label}</div>
+        `;
+        dice1.appendChild(face);
+      });
+      
+      // Create faces for dice 2
+      genderData.dice2.forEach((item, index) => {
+        const face = document.createElement('div');
+        face.className = `dice-face face-${index + 1}`;
+        face.innerHTML = `
+          <div class="dice-face-emoji">${item.icon}</div>
+          <div class="dice-face-label">${item.label}</div>
+        `;
+        dice2.appendChild(face);
+      });
+    }
+
+    function startDiceGame() {
+      diceGameState.selectedGender = 'girl';
+      diceGameState.rolling = false;
+      diceGameState.rollCount = 0;
+      
+      document.getElementById('dicegame-progress').textContent = 'خول : 0';
+      document.getElementById('dicegame-welcome').classList.remove('hidden');
+      document.getElementById('dicegame-game-state').classList.add('hidden');
+      
+      showScreen('dicegame-screen');
+    }
+
+    document.getElementById('dicegame-begin-btn')?.addEventListener('click', () => {
+      document.getElementById('dicegame-welcome').classList.add('hidden');
+      document.getElementById('dicegame-game-state').classList.remove('hidden');
+      
+      // Initialize dice with content
+      initializeDiceFaces();
+      
+      // Set initial gender button styling
+      document.querySelectorAll('#dicegame-gender-selector button').forEach(btn => {
+        btn.classList.remove('border-2', 'border-accent-rose', 'border-accent-violet', 'bg-opacity-10');
+      });
+      const girlBtn = document.querySelector('[data-gender="girl"]');
+      if (girlBtn) {
+        girlBtn.classList.add('border-2', 'border-accent-rose', 'bg-opacity-10');
+      }
+      
+      soundManager.playClick();
+    });
+
+    // Gender selection for dice game
+    document.getElementById('dicegame-gender-selector')?.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', function() {
+        diceGameState.selectedGender = this.dataset.gender;
+        
+        // Reinitialize dice with new gender content
+        initializeDiceFaces();
+        
+        // Visual feedback - remove all active states
+        document.querySelectorAll('#dicegame-gender-selector button').forEach(b => {
+          b.classList.remove('border-2', 'border-accent-rose', 'border-accent-violet', 'bg-opacity-10');
+        });
+        
+        // Add active state to clicked button
+        this.classList.add('border-2', 'bg-opacity-10');
+        this.classList.add(diceGameState.selectedGender === 'girl' ? 'border-accent-rose' : 'border-accent-violet');
+        
+        soundManager.playClick();
+      });
+    });
+
+    // Roll dice button
+    document.getElementById('dicegame-roll-btn')?.addEventListener('click', function() {
+      if (diceGameState.rolling) return;
+      if (!diceGameState.selectedGender) {
+        soundManager.playBuzz();
+        return;
+      }
+      
+      rollTheDice();
+    });
+
+    function getRotationForFace(faceIndex) {
+      // Map face index (0-5) to rotation to show that face on front
+      const rotations = [
+        'rotateX(0deg) rotateY(0deg)',        // face-1: front
+        'rotateX(0deg) rotateY(180deg)',      // face-2: back
+        'rotateX(0deg) rotateY(90deg)',       // face-3: right
+        'rotateX(0deg) rotateY(-90deg)',      // face-4: left
+        'rotateX(90deg) rotateY(0deg)',       // face-5: top
+        'rotateX(-90deg) rotateY(0deg)'       // face-6: bottom
+      ];
+      return rotations[faceIndex];
+    }
+
+    function rollTheDice() {
+      diceGameState.rolling = true;
+      soundManager.playClick();
+      
+      const dice1 = document.getElementById('dice-1');
+      const dice2 = document.getElementById('dice-2');
+      const mode = GAME_CONTENT.dicegame;
+      const genderData = mode[diceGameState.selectedGender];
+      
+      // Get random indices (0-5)
+      const randomIndex1 = Math.floor(Math.random() * 6);
+      const randomIndex2 = Math.floor(Math.random() * 6);
+      
+      // Get the results from content (these contain both emoji and label)
+      const result1 = genderData.dice1[randomIndex1];
+      const result2 = genderData.dice2[randomIndex2];
+      
+      // Get the rotations needed to show these faces
+      const rotation1 = getRotationForFace(randomIndex1);
+      const rotation2 = getRotationForFace(randomIndex2);
+      
+      // Reset dice before rolling
+      dice1.style.transform = 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
+      dice2.style.transform = 'rotateX(0deg) rotateY(0deg) rotateZ(0deg)';
+      
+      // Start rolling animation
+      dice1.classList.add('rolling');
+      dice2.classList.add('rolling');
+      
+      // After animation completes, stop rolling and show final position
+      setTimeout(() => {
+        dice1.classList.remove('rolling');
+        dice2.classList.remove('rolling');
+        
+        // Apply final rotation
+        dice1.style.transform = rotation1;
+        dice2.style.transform = rotation2;
+        
+        diceGameState.rollCount++;
+        diceGameState.rolling = false;
+        document.getElementById('dicegame-progress').textContent = `خول : ${diceGameState.rollCount}`;
+        
+        addScore(5); // Dice roll completion
+        soundManager.playSuccess();
+      }, 800);
+    }
+
+    document.getElementById('dicegame-back-btn')?.addEventListener('click', () => {
+      diceGameState.rolling = false;
+      showScreen('home-screen');
+    });
+
+    // ==================== WORD CHALLENGE MODE ====================
+    
+    // Gender-specific messages for Word Challenge
+    const WORD_CHALLENGE_MESSAGES = {
+      girl: [
+        'هاوبەشەکەت با سنگت بلێسێتەوە',
+        'لەسەر دەموچاوی هاوبەشەکەت دانیشە',
+        'هاوبەشەکەت با گۆی مەمکت بمژێ',
+        'بە هاوبەشەکەت بڵێ ئازارمبە',
+        'نامەیەکی وروژێنەر بۆ هاوبەشەکەت بنێرە کاتێک لە هەمان ژوورن',
+        'هاوبەشەکەت با بە زمان ناوت بنوسێ لەسەر ئەندامێکی لەشت بە دڵی خۆت',
+        'بۆ ماوەی 1 خولەک چاوەکانت داخە و با هاوبەشەکەت چی ئەوێت لێت بکات',
+        'نهێنییە سێکسییەکان بە چرپە بە هاوبەشەکەت بڵێ',
+        'یەک خولەک تەرخان بکە بۆ هاوبەشەکەت بۆ گەڕان بە جەستەتدا بە دەست لێدانی سووک',
+        'ماچێکی کێری هاوبەشەکەت بکە',
+        'شێتترین خەیاڵەکانت لە گوێی هاوبەشەکەتدا بڵێ',
+        'بۆ ماوی 1 خولەک کێری هاوبەشەکەت بلێسەرەوە',
+        'با هاوبەشەکەت شتێکی سێکسی لە جەستەت بکات کە پێشتر نەیکردووە',
+        'بۆ ماوی 1 خولەک سەری کێری هاوبەشەکەت بلێسەرەوە',
+        'ئیمۆجییەکی وروژێنەر بۆ هاوبەشەکەت بنێرە',
+        'با هاوبەشەکەت ئەو شێوازە سێکسییەی کە زۆر حەزی لێیە نیشانت بدات',
+        'بە لیک پەنجەیەکت تەڕکە و بە خواستی هاوباشاکەت بیکە بە کونێکتا بەبەرچاویەوە',
+        'بۆ یەک خولەک بە زمانت بە جەستەی هاوبەشەکەتدا بگەڕێ',
+        'بۆ ماوی یەک خولەک بهێڵە هاوبەشەکەت لە هەردوو کونی خوارەوەت بڕوانێت لە نزیکەوە',
+        'نامەیەکی وروژێنەر بۆ هاوبەشەکەت بنووسە',
+        'تەنها سەری کێری کوڕ بکرێتە هەریەک لە کونەکانی کچ بەڵام تەنها سەری کێر و تەنها یەک جاریش',
+        'با هاوبەشەکەت بە شێوەیەکی وروژێنەر دەستت لێ بدات',
+        'زمانێک بهێنە بە ژێری گونەکانی هاوبەشت تا سەری کێری بە بێ بەردان',
+        'وێنەیەکی وروژێنەری جەستەت بنێرە بۆ هاوبەشەکەت',
+        'با هاوبەشەکەت هەموو شتێک بە دڵی خۆی بکات بۆ ماوەی یەک خولەک',
+        'بۆ ماوی 30 چرکە با هاوبەشت لە یەک کاتدا دوو پەنجە بکاتە دەمت و دوو پەنجە قوزت',
+        'بۆ ماوەی ٣٠ چرکە بە شێوەیەکی وروژێنەر لە چاوی هاوبەشەکەت بڕوانە',
+        'هەوڵ بدە هەموو لاشەی کێری هاوبەشت بخەیتە دەم و قورگت تەنها یەک جار',
+        'بەبێ ئەوەی دەست بەکاربهێنیت، پارچەیەک لە جلەکانی هاوبەشەکەت لابدە',
+        'کاتێک کێری کوڕ لە قوزی کچەکەدایە هەوڵ بدەن 360 پلە لە ناویدا بیسوڕێنن بەبێ هێنانە دەرەوە',
+        'سەمایەکی "ستریپەرز" بۆ هاوبەشەکەت بکە تا ئەو کاتەی تەنها جلی ژێرەوەت دەمێنێت',
+        'بۆ ماوی 30 چرکە بەبێ چەورکردن ئەنەل بکەن',
+        'هەوڵ بدەن دوو پەنجەی کوڕەکە بە تەواوی بکرێتە هەردوو کونی خوارەوەی کچەکە تەنها یەک جار و بە بێ جوڵاندن',
+        'خەیاڵێکی سێکسی کە تا ئێستا بە کەست نەوتووە، بۆ هاوبەشەکەت بە چرپە بیڵێ',
+        'بۆ ماوەی یەک خولەک بەردەوام هاوبەشەکەت ماچ بکە (هەموو جێگەیەک جگە لە لێو)',
+        'بۆ ماوی 5 خولەک هەموو جەستەی هاوژینت مەساجکە بە چەورکردنەوە',
+        'با هاوبەشەکەت دۆخێکی سێکسی نوێ تاقی بکاتەوە لەسەرت کە تا ئێستا نەتانکردووە',
+        'بۆ ماوی 1 خولەک سێکسی مەمک بکەن',
+        'دەنگێکی وروژێنەر بۆ هاوبەشەکەت تۆمار بکە و بینێرە بۆی',
+        'لەسەر پشت پاڵکەوە و سەرت لەسەر قەراخی سیسەمەکە شۆڕکەرەوە و هەوڵ بدە تەواوی لاشەی کێری هاوبەشت بخەیتە دەم و قورگت تەنها یەک جار',
+        'قسەیەکی وروژێنەر لە گوێی هاوبەشەکەتدا بڵێ',
+        'چاوی هاوبەشەکەت ببەستە و بۆ ماوەی سێ خولەک بە دەست یان بە لێوت بیوروژێنە',
+        'بۆ ماوی 1 خولەک بکەوە سەر ئەژنۆ با هاوژینت کێر لە دەمووچاوت بخشێنێ',
+        'مەساجێکی وروژێنەر بە ڕۆن بۆ شان و پشتی هاوبەشەکەت بکە',
+        'بۆ ماوی 1 خولەک زمان لە سەری کێری هاوژینت بخشێنە',
+        'ڕۆڵگێڕان ئەنجام بدە بۆ ماوەی یەک خولەک خۆت وەک کەسێکی غەریبە پیشان بدە',
+        'بۆ ماوی 1 خولەک با هاوژینت لەسەرت پاڵکەوێت بە هەربارێکدا کە خۆی بیەوێت بە بێ سێکسکردن',
+        'ئەزموونێکی شەرمهێنەری سێکسی خۆت بە هاوبەشەکەت بڵێ',
+        'خۆت بە شێوەیەکی وروژێنەر بۆ هاوبەشەکەت پیشان بدە',
+        'بۆ ماوی 1 خولەک بە پاڵکەوتووی و لەسەر لا با هاوژینت خۆی بچوککات لە باوەشتا و تۆش ماچی پشتە ملیکە و توند باوەشی پێداکە',
+        'جلی ژێرەوەت لەگەڵ هاوبەشەکەت بگۆڕە بۆ ماوەی یەک خولەک',
+        'بۆ ماوی 1 خولەک پەنجەی هاوبەشت بمژە',
+        'بە زمانت نەخشەیەک لەسەر سکی هاوبەشەکەت بکێشە',
+        'بۆ ماوی 1 خولەک شانی هاوبەشت مەساجکە',
+        'بۆ ماوەی یەک خولەک بەبێ دەنگ و تەنها بە چاو سەیری جەستەی یەکتر بکەن',
+        'بۆ ماوی 1 خولەک بچۆ سەر شانی هاوبەشت و ئەندامی جنس خۆت لە پشت ملی بخشێنە',
+        'گازێک لە هاوبەشەکەت بگرە و نیشانەیەک جێبهێڵە',
+        'بۆ ماوی 1 خولەک بە دانیشتویی لە پشتەوە باوەش بکە بە هاوبەشتا',
+        'بۆ ماوەی دوو خولەک لەسەر قاچی هاوبەشەکەت دانیشە بەبێ ئەوەی سێکس بکەن',
+        'بۆ ماوی یەک خولەک زمان بخە قوڕگی هاوبەشت و بە دەست کێری بوروژێنە',
+        'جلی ژێرەوەی هاوبەشەکەت بە ددانەکانت دابکەنە',
+        'بە هاوبەشەکەت بڵێ چییت لێ دەکات ئەگەر ئێستا لە ژوورێکی چۆڵ بوونایە',
+        'بۆ ماوی 1 خولەک بە شێوازی مقەستی سێکس بکەن',
+        'بۆ ماوەی یەک خولەک هاوبەشەکەت باوەش بکە بەبێ ئەوەی جوڵە بکەن',
+        'سێ جار زلە بکێشە بە دەموچاوی هاوبەشتا و پاشان توند باوەشیکە و ماچی فەڕەنسیکەن',
+        'دەست بدە لە هەموو ئەو شوێنانەی جەستەی هاوبەشەکەت کە حەزی پێ دەکات',
+        'بۆ ماوی 1 خولەک سێکس بکەن تەنها بە بەکارهێنانری سەری کێری کوڕەکە لەناو قوزی کچەکە بەبێ بردنە ناوەوەی لاشەکەی',
+        'لە کاتی سێکسدا داوا لە هاوبەشەکەت بکە کۆنترۆڵی تەواوی جەستەت بکات',
+        'بۆ ماوی 1 خولەک بەپێوە سێکس بکەن',
+        'بۆ ماوەی 1 خولەک بە شێوەیەکی سێکسی لە پێش هاوبەشەکەتدا بڕۆ',
+        'لە هاوبەشەکەت بپرسە کام بەشی جەستەی زۆرترین وروژاندنی پێ دەبەخشێت',
+        'بۆ ماوی 3 خولەک هەموو جەستەی هاوبەشت ماچکە لە پێکانەوە تا سەر',
+        'هیچ قسەیەک نەکەن، تەنها بە ئاماژە داواکارییە سێکسیەکانتان بگەیەنن',
+        'بۆ ماوی 1 خولەک لە کاتی ئەنەلدا دەست بگرە بە هەردوو گوپی قنی هاوبەشت بۆ زەخت کردن',
+        'با هاوبەشەکەت بە ئارەزووی خۆی دەست لە جەستەت بدات بۆ ماوەی دوو خولەک',
+        'وێنەیەکی ڕووتی یان نیمچە ڕووتی خۆت بگرە و بۆ هاوبەشەکەت بینێرە',
+        'بۆ ماوی 3 خولەک سێکس بکەن و هەرچی قسەی سێکسیە بە هاوبەشەکەتی بڵێ بە بێ وەستان',
+        'لە گوێی هاوبەشەکەتدا بە چرپە پێی بڵێ چی لە جەستەی زۆر حەز لێیە',
+        'بۆ ماوی 1 خولەک شەست و نۆ ( 69 ) بکەن بە بێ ئەوەی بگەنە تەواوبوون',
+        'بۆ ماوەی یەک خولەک بە قژت دەست لە جەستەی هاوبەشەکەت بدە',
+        'لە 10 شوێنی جیاوازی لەشی هاوبەشەکەت مووەکانی ڕاکێشە بە بەهێزی',
+        'با هاوبەشەکەت ماچێکی درێژ لە ڕانت بکات',
+        'بۆ ماوی 30 چرکە تویرک بکە لەبەردەم هاوبەشتدا',
+        'بە شێوەیەکی وروژێنەر بە هاوبەشەکەت بڵێ ئێستا چی بکەین؟',
+        'هەموو جلی هاوبەشت دابنێ بەشێوازێ سێکسی',
+        'بە دەنگێکی کەمێک بەرز پێی بڵێ تۆ زۆر سێکسییت',
+        'تامی ئاوی یەکترکەن و بەیەک بڵێن کە تامی چۆنە',
+        'بۆ ماوەی یەک خولەک لەسەر پشتی هاوبەشەکەت دانیشە و مەساجی شانەکانی بۆ بکە',
+        'بۆ ماوی 1 خولەک ناوکی هاوبەشت بلێسەرەوە و بیمژە',
+        'با هاوبەشەکەت ماچێکی توند لەسەر لێوت جێبهێڵێت',
+        'بە هاوبەشەکەت بڵێ یەکێک لە "شێتترین" خەیاڵە سێکسییەکانت چییە و داوای لێ بکە تاقی بکەنەوە',
+        'لە کاتی وروژاندندا، ناوی هاوبەشەکەت بە شێوەیەکی وروژێنەر بانگ بکە',
+        'بۆ ماوەی ١ خولەک با هاوبەشەکەت بە ئارەزووی خۆی دەست لە قوزت بدات',
+        'بۆ ماوی 30 چرکە هاوبەشت هەموو کێری بکاتە دوو کونتەوە بە بێ جوڵاندن و کونەکان بە خواستی هاوبەشت',
+        'لە بەردەم ئاوێنەدا بە شێوەیەکی وروژێنەر خۆت پیشان بدە',
+        'با هاوبەشەکەت بە شێوەیەکی ئەمر "کۆنترۆڵکەر" پێت بڵێت چی بکەیت وەک پاشا',
+        'با هاوبەشەکەت جلی ژێرەوەی خۆی لەبەرچاو تۆ دابکەنێت',
+        'بۆ ماوەی دوو خولەک مەساجێکی وروژێنەر بۆ پێیەکانی هاوبەشەکەت بکە',
+        'بۆ ماوەیەک چاوەکانت داخە و هەست بە لێدانەکانی دڵی هاوبەشەکەت بکە لەسەر سنگی',
+        'بە شێوەیەکی "نەرم" و وروژێنەر ماچێکی درێژ لەسەر گەردنی هاوبەشەکەت بکە',
+        'بە هاوبەشەکەت بڵێ چ کاتێک زیاتر ئارەزووت بۆ سێکس هەیە',
+        'با هاوبەشەکەت بەشێکی جەستەت ماچ بکات کە پێشتر نەی کردووە',
+        'بە شێوەیەکی وروژێنەر پێی بڵێ ئەمشەو تەنها بۆ تۆم',
+        'بۆ ماوەی یەک خولەک بە شێوەیەکی وروژێنەر لەسەر جێگەکە جوڵە بکە',
+        'بە شێوەیەکی سووک دەست لە گوێچکەی هاوبەشەکەت بدە',
+        'بۆ ماوەی دوو خولەک مەساجێکی بەهێز بۆ بەشی خوارەوەی پشتی هاوبەشەکەت بکە',
+        'بە هاوبەشەکەت بڵێ کام دیمەنی سێکسی زیاتر لە خەیاڵتدا دەمێنێتەوە',
+        'بە هاوبەشەکەت بڵێ چی بکەیت کە زیاتر چێژی پێ دەبەخشێت',
+        'پێنج جار بکێشە بە قنی هاوبەشتا بە خواستی خۆت',
+        'بە دەنگێکی نزم پێی بڵێ چەند حەزت لێیە',
+        'با هاوبەشەکەت ماچێکی توند لەسەر پشتت جێبهێڵێت',
+        'بۆ ماوەی یەک خولەک بە شێوەیەکی هێواش دەست لە قژی هاوبەشەکەت بدە',
+        'لە کاتی سێکسدا، بە هاوبەشەکەت بڵێ کام کونەت زیاتر حەزت لێیە',
+        'بۆ ماوەی یەک خولەک بە شێوەیەکی سێکسی لەسەر قاچی هاوبەشەکەت دابنیشە',
+        'بۆ ماوی ٣ خولەک سێکس بکەن لەڕێی قوزەوە',
+        'بۆ ماوەی ١ خولەک بە شێوەیەکی وروژێنەر سەیری جەستەی یەکتر بکەن',
+        'بە مژین یەکەم پیتی ناوت لەسەر جەستەی هاوبەشت دروستکە',
+        'بۆ ماوەی 1 خولەک کاتی سێکسدا، داوا لە هاوبەشەکەت بکە زیاتر لەگەڵت بمێنێتەوە',
+        'بۆ ماوی 5 خولەک هەموو جەستەی هاوژینت مەساجکە بە چەورکردنەوە',
+        'با هاوبەشەکەت ماچێکی توند لەسەر پشتی دەستت جێبهێڵێت',
+        'دە تەکانی بەهێز بۆ خێزانت بکە و لەوکاتەدا با ئەویش بە چنگ سنگت بڕوشێنێ',
+        'لە کاتی سێکسدا، با هاوبەشەکەت دەست لە هەموو ئەو شوێنانەت بدات کە حەزت لێیە',
+        'بۆ ماوەی دوو خولەک بە شێوەیەکی هێواش مەساج بۆ دەستەکانی هاوبەشەکەت بکە',
+        'بە تەنها بە چاوەکانت پەیامی وروژاندن بگەیەنە',
+        'بۆ ماوەی دوو خولەک بە شێوەیەکی هێواش و وروژێنەر دەست لە قاچەکانی هاوبەشەکەت بدە',
+        'بۆ ماوی 1 خولەک بە چەورکردنەوە ئەنەل بکەن',
+        'ماوی 30 چرکە کێری هاوبەشەت بمژە و هەردوو گوپی قنی بە بەهێزی بگرە',
+        'بۆ ماوەی 2 خولەک با هاوبەشەکەت لەسەر پشتت پاڵکەوێت',
+        'بە هاوبەشەکەت بڵێ چەند حەزت لە شێوازی قسەکردنیەتی لە کاتی سێکسدا',
+        'بۆ ماوەی 1 خولەک تەنها بە دەست لێدانی سووک دەست لە ڕووخساری هاوبەشەکەت بدە',
+        'بۆ ماوی 3 خولەک ڕۆلی بەندە بگێڕە و هەموو خواستی هاوبەشت جێ بەجێ کە',
+        'لە کاتی وروژاندندا، با هاوبەشەکەت بە شێوەیەکی هێواش جلی ژێرەوەت دابکەنێت',
+        'بۆ ماوی 1 خولەک کێری کوڕ بە تەڕکراوی لە بەینی قوز و قنی هاوبەشت بخشێنە بە بێ کردنە ناوەوە',
+        'بۆ ماوەی 2 خولەک بە شێوەیەکی هێواش مەساج بۆ ڕانەکانی هاوبەشەکەت بکە'
+      ],
+      boy: [
+        'بە هاوبەشەکەت بڵێ ئازارمبە',
+        'نامەیەکی وروژێنەر بۆ هاوبەشەکەت بنێرە کاتێک لە هەمان ژوورن',
+        'بۆ ماوەی 1 خولەک چاوەکانت داخە و با هاوبەشەکەت چی ئەوێت لێت بکات',
+        'نهێنییە سێکسییەکان بە چرپە بە هاوبەشەکەت بڵێ',
+        'یەک خولەک تەرخان بکە بۆ هاوبەشەکەت بۆ گەڕان بە جەستەتدا بە دەست لێدانی سووک',
+        'ماچێکی قوزی هاوبەشەکەت بکە',
+        'شێتترین خەیاڵەکانت لە گوێی هاوبەشەکەتدا بڵێ',
+        'بۆ ماوی 1 خولەک قوزی هاوبەشەکەت بلێسەرەوە',
+        'با هاوبەشەکەت شتێکی سێکسی لە جەستەت بکات کە پێشتر نەیکردووە',
+        'بۆ ماوی 1 خولەک کونی کۆمی هاوبەشەکەت بلێسەرەوە',
+        'ئیمۆجییەکی وروژێنەر بۆ هاوبەشەکەت بنێرە',
+        'با هاوبەشەکەت ئەو شێوازە سێکسییەی کە زۆر حەزی لێیە نیشانت بدات',
+        'بە لیک کێرت تەڕکە و بە هێواشی دەستی پیابێنە بەبەرچاوی هاوبەشەکەتەوە',
+        'بۆ یەک خولەک بە زمانت بە جەستەی هاوبەشەکەتدا بگەڕێ',
+        'بۆ ماوی یەک خولەک بهێڵە هاوبەشەکەت لە کێر و گونەکانت بڕوانێت لە نزیکەوە',
+        'نامەیەکی وروژێنەر بۆ هاوبەشەکەت بنووسە',
+        'تەنها سەری کێری کوڕ بکرێتە هەریەک لە کونەکانی کچ بەڵام تەنها سەری کێر و تەنها یەک جاریش',
+        'با هاوبەشەکەت بە شێوەیەکی وروژێنەر دەستت لێ بدات',
+        'زمانێک بهێنە بە قوزی هاوبەشەکەت لە کونی دواوە تا سەرەوەی قوزی بە بێ بەردان',
+        'وێنەیەکی وروژێنەری جەستەت بنێرە بۆ هاوبەشەکەت',
+        'با هاوبەشەکەت هەموو شتێک بە دڵی خۆی بکات بۆ ماوەی یەک خولەک',
+        'بۆ ماوی 30 چرکە دوو پەنجە بکە هەرکونێکی هاوبەشت کە پێی خۆشە',
+        'بۆ ماوەی ٣٠ چرکە بە شێوەیەکی وروژێنەر لە چاوی هاوبەشەکەت بڕوانە',
+        'بۆ ماوی یەک خولەک جی سپۆتی هاوبەشت بوروژێنە',
+        'بەبێ ئەوەی دەست بەکاربهێنیت، پارچەیەک لە جلەکانی هاوبەشەکەت لابدە',
+        'کاتێک کێری کوڕ لە قوزی کچەکەدایە هەوڵ بدەن 360 پلە لە ناویدا بیسوڕێنن بەبێ هێنانە دەرەوە',
+        'بۆ ماوی 30 چرکە بەبێ چەورکردن ئەنەل بکەن',
+        'هەوڵ بدەن دوو پەنجەی کوڕەکە بە تەواوی بکرێتە هەردوو کونی خوارەوەی کچەکە تەنها یەک جار و بە بێ جوڵاندن',
+        'خەیاڵێکی سێکسی کە تا ئێستا بە کەست نەوتووە، بۆ هاوبەشەکەت بە چرپە بیڵێ',
+        'بۆ ماوەی یەک خولەک بەردەوام هاوبەشەکەت ماچ بکە (هەموو جێگەیەک جگە لە لێو)',
+        'بۆ ماوی 5 خولەک هەموو جەستەی هاوژینت مەساجکە بە چەورکردنەوە',
+        'با هاوبەشەکەت دۆخێکی سێکسی نوێ تاقی بکاتەوە لەسەرت کە تا ئێستا نەتانکردووە',
+        'بۆ ماوی 1 خولەک سێکسی مەمک بکەن',
+        'دەنگێکی وروژێنەر بۆ هاوبەشەکەت تۆمار بکە و بینێرە بۆی',
+        'بۆ ماوی 30 چرکە سەربکە بەینی مەمکەکانی خێزانت و بیانوروژێنە',
+        'قسەیەکی وروژێنەر لە گوێی هاوبەشەکەتدا بڵێ',
+        'چاوی هاوبەشەکەت ببەستە و بۆ ماوەی سێ خولەک بە دەست یان بە لێوت بیوروژێنە',
+        'بۆ ماوی 1 خولەک بکەوە سەر ئەژنۆ با هاوژینت قوز لە دەمووچاوت بخشێنێ',
+        'مەساجێکی وروژێنەر بە ڕۆن بۆ شان و پشتی هاوبەشەکەت بکە',
+        'بۆ ماوی 1 خولەک زمان لە سەری قوزی هاوژینت بخشێنە',
+        'ڕۆڵگێڕان ئەنجام بدە بۆ ماوەی یەک خولەک خۆت وەک کەسێکی غەریبە پیشان بدە',
+        'بۆ ماوی 1 خولەک با هاوژینت لەسەرت پاڵکەوێت بە هەربارێکدا کە خۆی بیەوێت بە بێ سێکسکردن',
+        'ئەزموونێکی شەرمهێنەری سێکسی خۆت بە هاوبەشەکەت بڵێ',
+        'بۆ ماوی 1 خولەک بە پاڵکەوتووی و لەسەر لا با هاوژینت خۆی بچوککات لە باوەشتا و تۆش ماچی پشتە ملیکە و توند باوەشی پێداکە',
+        'جلی ژێرەوەت لەگەڵ هاوبەشەکەت بگۆڕە بۆ ماوەی یەک خولەک',
+        'بۆ ماوی 1 خولەک مەمکی هاوبەشت بمژە',
+        'بە زمانت نەخشەیەک لەسەر سکی هاوبەشەکەت بکێشە',
+        'بۆ ماوی 1 خولەک ژێرپێی هاوبەشت مەساجکە',
+        'بۆ ماوەی یەک خولەک بەبێ دەنگ و تەنها بە چاو سەیری جەستەی یەکتر بکەن',
+        'بۆ ماوی 1 خولەک بچۆ سەر شانی هاوبەشت و ئەندامی جنس خۆت لە پشت ملی بخشێنە',
+        'گازێک لە هاوبەشەکەت بگرە و نیشانەیەک جێبهێڵە',
+        'بۆ ماوی 1 خولەک بە دانیشتویی لە پشتەوە باوەش بکە بە هاوبەشتا',
+        'بۆ ماوەی دوو خولەک لەسەر قاچی هاوبەشەکەت دانیشە بەبێ ئەوەی سێکس بکەن',
+        'بۆ ماوی یەک خولەک زمان بخە قوڕگی هاوبەشت و بە دەست قوزی یا قنی بوروژێنە',
+        'جلی ژێرەوەی هاوبەشەکەت بە ددانەکانت دابکەنە',
+        'بە هاوبەشەکەت بڵێ چییت لێ دەکات ئەگەر ئێستا لە ژوورێکی چۆڵ بوونایە',
+        'بۆ ماوی 1 خولەک بە شێوازی مقەستی سێکس بکەن',
+        'بۆ ماوەی یەک خولەک هاوبەشەکەت باوەش بکە بەبێ ئەوەی جوڵە بکەن',
+        'سێ جار زلە بکێشە بە دەموچاوی هاوبەشتا و پاشان توند باوەشیکە و ماچی فەڕەنسیکەن',
+        'دەست بدە لە هەموو ئەو شوێنانەی جەستەی هاوبەشەکەت کە حەزی پێ دەکات',
+        'بۆ ماوی 1 خولەک سێکس بکەن تەنها بە بەکارهێنانری سەری کێری کوڕەکە لەناو قوزی کچەکە بەبێ بردنە ناوەوەی لاشەکەی',
+        'لە کاتی سێکسدا داوا لە هاوبەشەکەت بکە کۆنترۆڵی تەواوی جەستەت بکات',
+        'بۆ ماوی 1 خولەک بەپێوە سێکس بکەن',
+        'بۆ ماوەی 1 خولەک بە شێوەیەکی سێکسی لە پێش هاوبەشەکەتدا بڕۆ',
+        'لە هاوبەشەکەت بپرسە کام بەشی جەستەی زۆرترین وروژاندنی پێ دەبەخشێت',
+        'بۆ ماوی 3 خولەک هەموو جەستەی هاوبەشت ماچکە لە پێکانەوە تا سەر',
+        'هیچ قسەیەک نەکەن، تەنها بە ئاماژە داواکارییە سێکسیەکانتان بگەیەنن',
+        'بۆ ماوی 1 خولەک لە کاتی ئەنەلدا دەست بگرە بە مەمکی هاوبەشت بۆ زەخت کردن',
+        'با هاوبەشەکەت بە ئارەزووی خۆی دەست لە جەستەت بدات بۆ ماوەی دوو خولەک',
+        'وێنەیەکی ڕووتی یان نیمچە ڕووتی خۆت بگرە و بۆ هاوبەشەکەت بینێرە',
+        'بۆ ماوی 3 خولەک سێکس بکەن و هەرچی قسەی سێکسیە بە هاوبەشەکەتی بڵێ بە بێ وەستان',
+        'لە گوێی هاوبەشەکەتدا بە چرپە پێی بڵێ چی لە جەستەی زۆر حەز لێیە',
+        'بۆ ماوی 1 خولەک شەست و نۆ ( 69 ) بکەن بە بێ ئەوەی بگەنە تەواوبوون',
+        'هاوبەشەکەت بخە سەر ئەژنۆت بە پاڵکەوتووی و 10 جار لە قنی بدە بە بەهێزی',
+        'با هاوبەشەکەت ماچێکی درێژ لە ڕانت بکات',
+        'بۆ ماوی 30 چرکە کێرت ڕاوەشێنە لەبەردەم هاوبەشەکەتدا',
+        'بە شێوەیەکی وروژێنەر بە هاوبەشەکەت بڵێ ئێستا چی بکەین؟',
+        'هەموو جلی هاوبەشت دابنێ بەشێوازێ سێکسی',
+        'بە دەنگێکی کەمێک بەرز پێی بڵێ تۆ زۆر سێکسییت',
+        'تامی ئاوی یەکترکەن و بەیەک بڵێن کە تامی چۆنە',
+        'بۆ ماوەی یەک خولەک لەسەر پشتی هاوبەشەکەت دانیشە و مەساجی شانەکانی بۆ بکە',
+        'بۆ ماوی 1 خولەک ناوکی هاوبەشت بلێسەرەوە و بیمژە',
+        'با هاوبەشەکەت ماچێکی توند لەسەر لێوت جێبهێڵێت',
+        'بە هاوبەشەکەت بڵێ یەکێک لە "شێتترین" خەیاڵە سێکسییەکانت چییە و داوای لێ بکە تاقی بکەنەوە',
+        'لە کاتی وروژاندندا، ناوی هاوبەشەکەت بە شێوەیەکی وروژێنەر بانگ بکە',
+        'بۆ ماوەی ١ خولەک با هاوبەشەکەت بە ئارەزووی خۆی دەست لە کێرت بدات',
+        'بۆ ماوی 30 چرکە هەموو کێرت بکەرە دوو کونی هاوبەشت بە بێ جوڵاندن و کونەکان بە خواستی هاوبەشت',
+        'لە بەردەم ئاوێنەدا بە شێوەیەکی وروژێنەر خۆت پیشان بدە',
+        'با هاوبەشەکەت بە شێوەیەکی ئەمر "کۆنترۆڵکەر" پێت بڵێت چی بکەیت وەک پاشا',
+        'با هاوبەشەکەت جلی ژێرەوەی خۆی لەبەرچاو تۆ دابکەنێت',
+        'بۆ ماوەی دوو خولەک مەساجێکی وروژێنەر بۆ پێیەکانی هاوبەشەکەت بکە',
+        'بۆ ماوەیەک چاوەکانت داخە و هەست بە لێدانەکانی دڵی هاوبەشەکەت بکە لەسەر سنگی',
+        'بە شێوەیەکی "نەرم" و وروژێنەر ماچێکی درێژ لەسەر گەردنی هاوبەشەکەت بکە',
+        'بە هاوبەشەکەت بڵێ چ کاتێک زیاتر ئارەزووت بۆ سێکس هەیە',
+        'با هاوبەشەکەت بەشێکی جەستەت ماچ بکات کە پێشتر نەی کردووە',
+        'بە شێوەیەکی وروژێنەر پێی بڵێ ئەمشەو تەنها بۆ تۆم',
+        'بۆ ماوەی یەک خولەک بە شێوەیەکی وروژێنەر لەسەر جێگەکە جوڵە بکە',
+        'بە شێوەیەکی سووک دەست لە گوێچکەی هاوبەشەکەت بدە',
+        'بۆ ماوەی دوو خولەک مەساجێکی بەهێز بۆ بەشی خوارەوەی پشتی هاوبەشەکەت بکە',
+        'بە هاوبەشەکەت بڵێ کام دیمەنی سێکسی زیاتر لە خەیاڵتدا دەمێنێتەوە',
+        'بە هاوبەشەکەت بڵێ چی بکەیت کە زیاتر چێژی پێ دەبەخشێت',
+        'پێنج جار بکێشە بە قنی هاوبەشتا بە خواستی خۆت',
+        'بە دەنگێکی نزم پێی بڵێ چەند حەزت لێیە',
+        'با هاوبەشەکەت ماچێکی توند لەسەر پشتت جێبهێڵێت',
+        'بۆ ماوەی یەک خولەک بە شێوەیەکی هێواش دەست لە قژی هاوبەشەکەت بدە',
+        'لە کاتی سێکسدا، بە هاوبەشەکەت بڵێ کام کونەت زیاتر حەزت لێیە',
+        'بۆ ماوەی یەک خولەک بە شێوەیەکی سێکسی لەسەر قاچی هاوبەشەکەت دابنیشە',
+        'بۆ ماوی ٣ خولەک سێکس بکەن لەڕێی قوزەوە',
+        'بۆ ماوەی ١ خولەک بە شێوەیەکی وروژێنەر سەیری جەستەی یەکتر بکەن',
+        'بە مژین یەکەم پیتی ناوت لەسەر جەستەی هاوبەشت دروستکە',
+        'بۆ ماوەی 1 خولەک کاتی سێکسدا، داوا لە هاوبەشەکەت بکە زیاتر لەگەڵت بمێنێتەوە',
+        'بۆ ماوی 5 خولەک هەموو جەستەی هاوژینت مەساجکە بە چەورکردنەوە',
+        'با هاوبەشەکەت ماچێکی توند لەسەر پشتی دەستت جێبهێڵێت',
+        'دە تەکانی بەهێز بۆ خێزانت بکە و لەوکاتەدا با ئەویش بە چنگ سنگت بڕوشێنێ',
+        'لە کاتی سێکسدا، با هاوبەشەکەت دەست لە هەموو ئەو شوێنانەت بدات کە حەزت لێیە',
+        'بۆ ماوەی دوو خولەک بە شێوەیەکی هێواش مەساج بۆ دەستەکانی هاوبەشەکەت بکە',
+        'بە تەنها بە چاوەکانت پەیامی وروژاندن بگەیەنە',
+        'بۆ ماوەی دوو خولەک بە شێوەیەکی هێواش و وروژێنەر دەست لە قاچەکانی هاوبەشەکەت بدە',
+        'بۆ ماوی 1 خولەک بە چەورکردنەوە ئەنەل بکەن',
+        'بۆ ماوی 1 خولەک سێکس بکە لەگەڵ هاوبەشەکەت و هەردوو مەمکی یا گوپی قنی بە بەهێزی بگرە',
+        'بۆ ماوەی 2 خولەک با هاوبەشەکەت لەسەر پشتت پاڵکەوێت',
+        'بە هاوبەشەکەت بڵێ چەند حەزت لە شێوازی قسەکردنیەتی لە کاتی سێکسدا',
+        'بۆ ماوی 30 چرکە سەربکە بەینی مەمکەکانی خێزانت و بیانوروژێنە',
+        'بۆ ماوەی 1 خولەک تەنها بە دەست لێدانی سووک دەست لە ڕووخساری هاوبەشەکەت بدە',
+        'بۆ ماوی 3 خولەک ڕۆلی بەندە بگێڕە و هەموو خواستی هاوبەشت جێ بەجێ کە',
+        'بۆ ماوی 1 خولەک کونی کۆمی هاوبەشەکەت بلێسەرەوە',
+        'بۆ ماوی 1 خولەک شەست و نۆ ( 69 ) بکەن بە بێ ئەوەی بگەنە تەواوبوون',
+        'لە کاتی وروژاندندا، با هاوبەشەکەت بە شێوەیەکی هێواش جلی ژێرەوەت دابکەنێت',
+        'بۆ ماوی 1 خولەک کێری کوڕ بە تەڕکراوی لە بەینی قوز و قنی هاوبەشت بخشێنە بە بێ کردنە ناوەوە',
+        'بۆ ماوەی 2 خولەک بە شێوەیەکی هێواش مەساج بۆ ڕانەکانی هاوبەشەکەت بکە'
+      ]
+    };
+
+    function startWordChallenge() {
+      appState.currentMode = 'wordchallenge';
+      appState.selectedGender = null;
+      
+      // Load saved round count
+      const roundKey = `wordchallenge_round_count`;
+      wordChallengeRound = parseInt(localStorage.getItem(roundKey)) || 0;
+      
+      appState.timerRemaining = 0;
+      
+      document.getElementById('wordchallenge-start-state').classList.remove('hidden');
+      document.getElementById('wordchallenge-round-state').classList.add('hidden');
+      document.getElementById('wordchallenge-gender-buttons').classList.add('hidden');
+      document.getElementById('wordchallenge-result-state').classList.add('hidden');
+      
+      showScreen('wordchallenge-screen');
+    }
+
+    function beginNewRound() {
+      appState.timerRemaining = 10;
+      wordChallengeRound++;
+      
+      document.getElementById('wordchallenge-start-state').classList.add('hidden');
+      document.getElementById('wordchallenge-round-state').classList.remove('hidden');
+      document.getElementById('wordchallenge-gender-buttons').classList.add('hidden');
+      document.getElementById('wordchallenge-gender-buttons').style.display = 'none';
+      document.getElementById('wordchallenge-next-round-btn').classList.add('hidden');
+      document.getElementById('wordchallenge-next-round-btn').style.display = 'none';
+      document.getElementById('wordchallenge-result-state').classList.add('hidden');
+      document.getElementById('wordchallenge-progress').textContent = `خول : ${wordChallengeRound}`;
+      
+      generateRandomLetters();
+      startWordChallengeTimer();
+      soundManager.playClick();
+    }
+
+    function generateRandomLetters() {
+      const mode = GAME_CONTENT.wordchallenge;
+      const letters = mode.letters;
+      appState.selectedLetter1 = letters[Math.floor(Math.random() * letters.length)];
+      appState.selectedLetter2 = letters[Math.floor(Math.random() * letters.length)];
+      
+      document.getElementById('wordchallenge-letter1').textContent = appState.selectedLetter1;
+      document.getElementById('wordchallenge-letter2').textContent = appState.selectedLetter2;
+    }
+
+    function startWordChallengeTimer() {
+      appState.timerRemaining = 10;
+      document.getElementById('wordchallenge-timer-text').textContent = '10';
+      
+      if (appState.timerInterval) clearInterval(appState.timerInterval);
+      
+      appState.timerInterval = setInterval(() => {
+        appState.timerRemaining--;
+        document.getElementById('wordchallenge-timer-text').textContent = appState.timerRemaining;
+
+        if (appState.timerRemaining <= 0) {
+          clearInterval(appState.timerInterval);
+          onTimerEnd();
+        }
+      }, 1000);
+    }
+
+    function onTimerEnd() {
+      soundManager.playSuccess();
+      document.getElementById('wordchallenge-gender-buttons').classList.remove('hidden');
+      document.getElementById('wordchallenge-gender-buttons').style.display = 'flex';
+      document.getElementById('wordchallenge-next-round-btn').classList.remove('hidden');
+      document.getElementById('wordchallenge-next-round-btn').style.display = 'block';
+      document.getElementById('wordchallenge-timer-text').parentElement.style.display = 'none';
+    }
+
+    document.getElementById('wordchallenge-new-round-btn')?.addEventListener('click', beginNewRound);
+
+    document.getElementById('wordchallenge-gender-girl-btn')?.addEventListener('click', () => {
+      selectGenderMessage('girl');
+    });
+
+    document.getElementById('wordchallenge-gender-boy-btn')?.addEventListener('click', () => {
+      selectGenderMessage('boy');
+    });
+
+    function selectGenderMessage(gender) {
+      const messages = WORD_CHALLENGE_MESSAGES[gender];
+      
+      // Get sequential message index (not random)
+      const messageKey = `wordchallenge_${gender}_message_index`;
+      let messageIndex = parseInt(localStorage.getItem(messageKey)) || 0;
+      
+      const sequentialMessage = messages[messageIndex % messages.length];
+      
+      // Update index for next time
+      const nextIndex = (messageIndex + 1) % messages.length;
+      localStorage.setItem(messageKey, nextIndex);
+      
+      const messageEl = document.getElementById('wordchallenge-message');
+      const resultEl = document.getElementById('wordchallenge-result-state');
+      
+      messageEl.textContent = sequentialMessage;
+      document.getElementById('wordchallenge-gender-buttons').style.display = 'none';
+      document.getElementById('wordchallenge-next-round-btn').style.display = 'block';
+      
+      resultEl.classList.remove('hidden');
+      
+      appState.completedGames++;
+      localStorage.setItem('gameCompletedGames', appState.completedGames);
+      addScore(10); // Word Challenge completion
+      soundManager.playSuccess();
+    }
+
+    document.getElementById('wordchallenge-next-round-btn')?.addEventListener('click', () => {
+      document.getElementById('wordchallenge-result-state').classList.add('hidden');
+      document.getElementById('wordchallenge-next-round-btn').classList.add('hidden');
+      document.getElementById('wordchallenge-timer-text').parentElement.style.display = 'block';
+      beginNewRound();
+    });
+
+    document.getElementById('wordchallenge-back-btn')?.addEventListener('click', () => {
+      stopTimer();
+      showScreen('home-screen');
+    });
+
+    function stopTimer() {
+      if (appState.timerInterval) {
+        clearInterval(appState.timerInterval);
+        appState.timerInterval = null;
+      }
+    }
+
+    // ==================== SEX POSITIONS MODE ====================
+    function startSexPositions() {
+      appState.currentMode = 'sexpositions';
+      
+      // Load saved position index
+      const storageKey = `sexpositions_current_index`;
+      appState.currentIndex = parseInt(localStorage.getItem(storageKey)) || 0;
+      
+      const mode = GAME_CONTENT.sexpositions;
+      // Don't shuffle - use sequential order
+      appState.shuffledItems = [...mode.positions];
+      
+      // Ensure index is within bounds
+      if (appState.currentIndex >= appState.shuffledItems.length) {
+        appState.currentIndex = 0;
+        localStorage.setItem(storageKey, 0);
+      }
+      
+      document.getElementById('sexpositions-welcome').classList.remove('hidden');
+      document.getElementById('sexpositions-card-state').classList.add('hidden');
+      document.getElementById('sexpositions-gender-selector').classList.add('hidden');
+      document.getElementById('sexpositions-next-btn').classList.remove('hidden');
+      
+      showScreen('sexpositions-screen');
+    }
+
+    document.getElementById('sexpositions-begin-btn')?.addEventListener('click', () => {
+      document.getElementById('sexpositions-welcome').classList.add('hidden');
+      document.getElementById('sexpositions-card-state').classList.remove('hidden');
+      showSexPositionCard();
+      soundManager.playClick();
+    });
+
+    document.getElementById('sexpositions-next-btn')?.addEventListener('click', () => {
+      if (!appState.shuffledItems.length) return;
+      
+      // Move to next position sequentially
+      appState.currentIndex++;
+      if (appState.currentIndex >= appState.shuffledItems.length) {
+        appState.currentIndex = 0;
+      }
+      
+      // Save current index
+      const storageKey = `sexpositions_current_index`;
+      localStorage.setItem(storageKey, appState.currentIndex);
+      
+      const imageDiv = document.getElementById('sexpositions-image');
+      imageDiv.style.animation = 'none';
+      setTimeout(() => {
+        imageDiv.style.animation = 'bounce-scale 0.6s ease-out';
+        showSexPositionCard();
+      }, 10);
+      
+      addScore(15); // Sex Position view
+      soundManager.playSuccess();
+    });
+
+    function showSexPositionCard() {
+      if (!appState.shuffledItems.length) return;
+      
+      const item = appState.shuffledItems[appState.currentIndex];
+      document.getElementById('sexpositions-title').textContent = item.name;
+      document.getElementById('sexpositions-desc').textContent = item.description;
+      document.getElementById('sexpositions-image').innerHTML = `<img src="${item.image}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: contain;">`;
+      document.getElementById('sexpositions-progress').textContent = `${appState.currentIndex + 1} / ${appState.shuffledItems.length}`;
+    }
+
+    document.getElementById('sexpositions-back-btn')?.addEventListener('click', () => {
+      stopTimer();
+      showScreen('home-screen');
+    });
+
+    // ==================== TIMER PANEL SYSTEM ====================
+    const TimerManager = {
+      isOpen: false,
+      isRunning: false,
+      totalSeconds: 60,
+      remainingSeconds: 60,
+      timerInterval: null,
+      isDragging: false,
+      dragStartY: 0,
+      dragStartTop: 0,
+
+      init() {
+        this.setupEventListeners();
+        this.updateDisplay();
+      },
+
+      setupEventListeners() {
+        const button = document.getElementById('timer-toggle-btn');
+        const panel = document.getElementById('timer-panel');
+        const wrapper = document.getElementById('timer-panel-wrapper');
+
+        // Toggle button
+        button.addEventListener('click', (e) => {
+          // Only toggle if button wasn't dragged (no movement)
+          if (!this.isDragging && !this.wasDragged) {
+            this.toggle();
+          }
+          // Reset drag flag after click
+          this.wasDragged = false;
+        });
+
+        // Button dragging - Mouse events
+        button.addEventListener('mousedown', (e) => {
+          this.isDragging = true;
+          this.wasDragged = false;
+          this.dragStartY = e.clientY;
+          this.dragStartTop = button.offsetTop;
+          button.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+          if (this.isDragging) {
+            const diff = e.clientY - this.dragStartY;
+            // If mouse moved more than 5px, mark as dragged
+            if (Math.abs(diff) > 5) {
+              this.wasDragged = true;
+            }
+            let newTop = this.dragStartTop + diff;
+            const maxTop = window.innerHeight - button.offsetHeight;
+            newTop = Math.max(0, Math.min(newTop, maxTop));
+            button.style.top = newTop + 'px';
+          }
+        });
+
+        document.addEventListener('mouseup', () => {
+          this.isDragging = false;
+          button.style.cursor = 'grab';
+        });
+
+        // Button dragging - Touch events for mobile
+        button.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          this.isDragging = true;
+          this.wasDragged = false;
+          const touch = e.touches[0];
+          this.dragStartY = touch.clientY;
+          this.dragStartTop = button.offsetTop;
+          button.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('touchmove', (e) => {
+          if (this.isDragging) {
+            const touch = e.touches[0];
+            const diff = touch.clientY - this.dragStartY;
+            // If touch moved more than 5px, mark as dragged
+            if (Math.abs(diff) > 5) {
+              this.wasDragged = true;
+            }
+            let newTop = this.dragStartTop + diff;
+            const maxTop = window.innerHeight - button.offsetHeight;
+            newTop = Math.max(0, Math.min(newTop, maxTop));
+            button.style.top = newTop + 'px';
+          }
+        }, { passive: false });
+
+        document.addEventListener('touchend', () => {
+          if (this.isDragging && !this.wasDragged) {
+            // This was a tap, not a drag - toggle the panel
+            this.toggle();
+          }
+          this.isDragging = false;
+          this.wasDragged = false;
+          button.style.cursor = 'grab';
+        });
+
+        // Close button removed - click outside to close
+        
+        // Click outside to close
+        wrapper.addEventListener('click', (e) => {
+          if (e.target === wrapper && this.isOpen) {
+            this.close();
+          }
+        });
+
+        // Start button
+        document.getElementById('timer-start-btn').addEventListener('click', () => {
+          this.start();
+        });
+
+        // Stop button
+        document.getElementById('timer-stop-btn').addEventListener('click', () => {
+          this.stop();
+        });
+
+        // Reset button
+        document.getElementById('timer-reset-btn').addEventListener('click', () => {
+          this.reset();
+        });
+
+        // Input field
+        document.getElementById('timer-input').addEventListener('change', (e) => {
+          const newTime = parseInt(e.target.value) || 60;
+          if (newTime > 0 && newTime <= 3600) {
+            this.totalSeconds = newTime;
+            this.remainingSeconds = newTime;
+            this.updateDisplay();
+          }
+        });
+
+        // Preset buttons
+        document.querySelectorAll('.timer-preset').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const time = parseInt(e.target.dataset.time);
+            this.totalSeconds = time;
+            this.remainingSeconds = time;
+            document.getElementById('timer-input').value = time;
+            this.updateDisplay();
+            soundManager.playClick();
+          });
+        });
+      },
+
+      toggle() {
+        if (this.isOpen) {
+          this.close();
+        } else {
+          this.open();
+        }
+      },
+
+      open() {
+        if (this.isOpen) return;
+        this.isOpen = true;
+
+        const panel = document.getElementById('timer-panel');
+        const button = document.getElementById('timer-toggle-btn');
+        const wrapper = document.getElementById('timer-panel-wrapper');
+
+        panel.classList.remove('panel-closed');
+        panel.classList.add('panel-open');
+
+        button.classList.remove('button-normal');
+        button.classList.add('button-shifted');
+
+        // Allow interaction when panel is open
+        wrapper.style.pointerEvents = 'auto';
+
+        soundManager.playClick();
+      },
+
+      close() {
+        if (!this.isOpen) return;
+        this.isOpen = false;
+
+        const panel = document.getElementById('timer-panel');
+        const button = document.getElementById('timer-toggle-btn');
+        const wrapper = document.getElementById('timer-panel-wrapper');
+
+        panel.classList.remove('panel-open');
+        panel.classList.add('panel-closed');
+
+        button.classList.remove('button-shifted');
+        button.classList.add('button-normal');
+
+        // Prevent interaction when panel is closed
+        setTimeout(() => {
+          if (!this.isOpen) {
+            wrapper.style.pointerEvents = 'none';
+          }
+        }, 500);
+
+        soundManager.playClick();
+      },
+
+      start() {
+        if (this.isRunning || this.remainingSeconds <= 0) return;
+        this.isRunning = true;
+
+        document.getElementById('timer-start-btn').disabled = true;
+        document.getElementById('timer-input').disabled = true;
+
+        this.timerInterval = setInterval(() => {
+          this.remainingSeconds--;
+          this.updateDisplay();
+
+          if (this.remainingSeconds <= 0) {
+            this.stop();
+            soundManager.playBuzz();
+          }
+        }, 1000);
+
+        soundManager.playClick();
+      },
+
+      stop() {
+        if (!this.isRunning) return;
+        this.isRunning = false;
+
+        if (this.timerInterval) {
+          clearInterval(this.timerInterval);
+          this.timerInterval = null;
+        }
+
+        document.getElementById('timer-start-btn').disabled = false;
+        document.getElementById('timer-input').disabled = false;
+
+        soundManager.playClick();
+      },
+
+      reset() {
+        this.stop();
+        this.remainingSeconds = this.totalSeconds;
+        document.getElementById('timer-input').value = this.totalSeconds;
+        this.updateDisplay();
+        soundManager.playClick();
+      },
+
+      updateDisplay() {
+        const minutes = Math.floor(this.remainingSeconds / 60);
+        const seconds = this.remainingSeconds % 60;
+        const timeString = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        document.getElementById('timer-display').textContent = timeString;
+      }
+    };
+
+    // ==================== HOME & SETTINGS ====================
+    let wordChallengeRound = 0;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize word challenge round from localStorage
+      const roundKey = `wordchallenge_round_count`;
+      wordChallengeRound = parseInt(localStorage.getItem(roundKey)) || 0;
+      
+      // Initialize theme
+      ThemeManager.init();
+      
+      // Initialize timer
+      TimerManager.init();
+
+      document.getElementById('enter-btn').addEventListener('click', checkPassword);
+      document.getElementById('password-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') checkPassword();
+      });
+
+      // Congratulations screen button
+      document.getElementById('congratulations-continue-btn').addEventListener('click', () => {
+        document.getElementById('congratulations-screen').classList.add('hidden');
+        showScreen('home-screen');
+        soundManager.playClick();
+      });
+
+      document.getElementById('settings-btn').addEventListener('click', () => {
+        soundManager.playClick();
+        showScreen('settings-screen');
+      });
+
+      document.getElementById('settings-back-btn').addEventListener('click', () => {
+        soundManager.playClick();
+        showScreen('home-screen');
+      });
+
+      // Initialize sound toggle
+      const soundToggle = document.getElementById('sound-toggle');
+      const soundThumb = soundToggle.querySelector('div');
+      if (soundManager.enabled) {
+        soundThumb.style.left = '20px';
+        soundToggle.classList.add('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+        soundToggle.classList.remove('bg-gray-600');
+      } else {
+        soundThumb.style.left = '3px';
+        soundToggle.classList.remove('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+        soundToggle.classList.add('bg-gray-600');
+      }
+
+      document.getElementById('sound-toggle').addEventListener('click', () => {
+        soundManager.toggle();
+        const toggle = document.getElementById('sound-toggle');
+        const thumb = toggle.querySelector('div');
+        if (soundManager.enabled) {
+          thumb.style.left = '20px';
+          toggle.classList.add('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+          toggle.classList.remove('bg-gray-600');
+        } else {
+          thumb.style.left = '3px';
+          toggle.classList.remove('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+          toggle.classList.add('bg-gray-600');
+        }
+      });
+
+      // Initialize music toggle
+      const musicToggle = document.getElementById('music-toggle');
+      const musicThumb = musicToggle.querySelector('div');
+      if (soundManager.musicEnabled) {
+        musicThumb.style.left = '20px';
+        musicToggle.classList.add('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+        musicToggle.classList.remove('bg-gray-600');
+      } else {
+        musicThumb.style.left = '0px';
+        musicToggle.classList.remove('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+        musicToggle.classList.add('bg-gray-600');
+      }
+
+      document.getElementById('music-toggle').addEventListener('click', () => {
+        soundManager.toggleMusic();
+        const toggle = document.getElementById('music-toggle');
+        const thumb = toggle.querySelector('div');
+        if (soundManager.musicEnabled) {
+          thumb.style.left = '20px';
+          toggle.classList.add('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+          toggle.classList.remove('bg-gray-600');
+        } else {
+          thumb.style.left = '0px';
+          toggle.classList.remove('bg-gradient-to-r', 'from-accent-rose', 'to-accent-violet');
+          toggle.classList.add('bg-gray-600');
+        }
+      });
+
+      // Music file selection buttons
+      const file1Btn = document.getElementById('music-select-file1');
+      const file2Btn = document.getElementById('music-select-file2');
+      
+      function updateMusicSelectionUI() {
+        if (file1Btn && file2Btn) {
+          if (soundManager.selectedMusic === 'music.mp3') {
+            file1Btn.classList.add('bg-accent-rose/20', 'text-accent-rose', 'border-accent-rose/50');
+            file1Btn.classList.remove('text-gray-400', 'border-gray-600');
+            file2Btn.classList.remove('bg-accent-rose/20', 'text-accent-rose', 'border-accent-rose/50');
+            file2Btn.classList.add('text-gray-400', 'border-gray-600');
+          } else {
+            file1Btn.classList.remove('bg-accent-rose/20', 'text-accent-rose', 'border-accent-rose/50');
+            file1Btn.classList.add('text-gray-400', 'border-gray-600');
+            file2Btn.classList.add('bg-accent-rose/20','text-accent-rose', 'border-accent-rose/50');
+            file2Btn.classList.remove('text-gray-400', 'border-gray-600');
+          }
+        }
+      }
+      
+      if (file1Btn) {
+        file1Btn.addEventListener('click', () => {
+          soundManager.selectMusic('music.mp3');
+          updateMusicSelectionUI();
+          soundManager.playClick();
+        });
+      }
+      
+      if (file2Btn) {
+        file2Btn.addEventListener('click', () => {
+          soundManager.selectMusic('music2.mp3');
+          updateMusicSelectionUI();
+          soundManager.playClick();
+        });
+      }
+      
+      updateMusicSelectionUI();
+
+      // Initialize volume slider
+      const volumeSlider = document.getElementById('music-volume-slider');
+      const volumeDisplay = document.getElementById('volume-display');
+      
+      if (volumeSlider) {
+        volumeSlider.value = Math.round(soundManager.musicVolume * 100);
+        volumeDisplay.textContent = `ئاستی دەنگ: ${Math.round(soundManager.musicVolume * 100)}%`;
+        
+        volumeSlider.addEventListener('input', (e) => {
+          const volume = parseInt(e.target.value) / 100;
+          soundManager.setMusicVolume(volume);
+          volumeDisplay.textContent = `ئاستی دەنگ: ${e.target.value}%`;
+        });
+      }
+
+      document.getElementById('logout-btn').addEventListener('click', logout);
+
+      // Theme button handlers
+      document.querySelectorAll('.theme-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const theme = btn.dataset.theme;
+          ThemeManager.setTheme(theme);
+          
+          // Update visual state of theme buttons
+          document.querySelectorAll('.theme-btn').forEach(b => {
+            b.classList.remove('border-2', 'border-accent-rose', 'shadow-lg');
+          });
+          btn.classList.add('border-2', 'border-accent-rose', 'shadow-lg');
+          
+          soundManager.playClick();
+        });
+      });
+      
+      // Highlight current theme button
+      const currentThemeBtn = document.querySelector(`[data-theme="${ThemeManager.currentTheme}"]`);
+      if (currentThemeBtn) {
+        currentThemeBtn.classList.add('border-2', 'border-accent-rose', 'shadow-lg');
+      }
+
+      document.querySelectorAll('.mode-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const mode = card.dataset.mode;
+          soundManager.playClick();
+          
+          appState.currentMode = mode;
+          appState.selectedGender = 'girl';
+          
+          if (mode === 'truthdare') startTruthDare();
+          else if (mode === 'dicegame') startDiceGame();
+          else if (mode === 'wordchallenge') startWordChallenge();
+          else if (mode === 'sexpositions') startSexPositions();
+        });
+      });
+
+      updateHomeProgress();
+      setInterval(updateHomeProgress, 1000);
+
+      document.getElementById('stats-completed').textContent = appState.playerScore;
+      if (document.getElementById('stats-level')) {
+        const level = calculateLevel();
+        if (level > LEVEL_THRESHOLDS.length) {
+          document.getElementById('stats-level').textContent = 'شارەزا';
+        } else {
+          document.getElementById('stats-level').textContent = 'ئاست ' + level;
+        }
+      }
+      setInterval(() => {
+        document.getElementById('stats-completed').textContent = appState.playerScore;
+        if (document.getElementById('stats-level')) {
+          const level = calculateLevel();
+          if (level > LEVEL_THRESHOLDS.length) {
+            document.getElementById('stats-level').textContent = 'شارەزا';
+          } else {
+            document.getElementById('stats-level').textContent = 'ئاست ' + level;
+          }
+        }
+      }, 500);
+
+      showScreen('password-screen');
+    });
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9d93fda98776f75e',t:'MTc3Mjk5NTQ2Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
