@@ -3139,8 +3139,8 @@
         finalScores: "خاڵی کۆتایی",
         continue: "بەردەوامبوون",
         adTitle: "کوردی ئیمپۆستەری نوێ",
-        adDescription: "نوێکاریەکی تازە بەردەستە دەست بنێ بەو دوگمەیەی خوارەوە بۆ دەستگەیشتن بە تازەترین نوێکاری یاریەکە",
-        adUpdate: "نوێکاری"
+        adDescription: "نوێکاریەکی تازە بەردەستە، دەست بنێ بەو دوگمەیەی خوارەوە بۆ لەبەرگرتنەوەی بەستەری تازەترین نوێکاری یاریەکە و لە بڕاوسەری مۆبایلەکەت دایبنێرەوە",
+        adUpdate: "بەستەری نوێکاری"
       }
     };
 
@@ -3191,7 +3191,12 @@
     }
 
     function goToUpdate() {
-      window.open('https://didar122.github.io/Kurdish-Imposter-New/', '_blank', 'noopener,noreferrer');
+      const url = 'https://didar122.github.io/Kurdish-Imposter-New/';
+      navigator.clipboard.writeText(url).then(() => {
+        alert('لینکەکە کۆپی کرا !');
+      }).catch(() => {
+        alert('Link: https://didar122.github.io/Kurdish-Imposter-New/');
+      });
     }
 
     function init() {
