@@ -1599,6 +1599,166 @@
         height: 220px;
       }
     }
+
+    /* Ad Notification Styles */
+    .ad-notification-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 3000;
+      padding: 20px;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .ad-notification-overlay.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .ad-notification-box {
+      background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+      border-radius: var(--border-radius);
+      padding: 30px;
+      max-width: 450px;
+      width: 100%;
+      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      border: 2px solid rgba(212, 175, 55, 0.3);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .ad-close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(231, 76, 60, 0.3);
+      border: 2px solid rgba(231, 76, 60, 0.6);
+      color: var(--text-primary);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition);
+      font-weight: bold;
+      padding: 0;
+    }
+
+    .ad-close-btn:hover {
+      background: rgba(231, 76, 60, 0.6);
+      border-color: rgba(231, 76, 60, 1);
+      transform: scale(1.1);
+    }
+
+    .ad-image {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1;
+      border-radius: 12px;
+      object-fit: contain;
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .ad-content {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding-top: 20px;
+    }
+
+    .ad-title {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+      text-align: center;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .ad-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .ad-button-container {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .ad-update-btn {
+      flex: 1;
+      padding: 15px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), #b8941f);
+      color: var(--bg-primary);
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+      font-family: inherit;
+    }
+
+    .ad-update-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+      background: linear-gradient(135deg, #b8941f, var(--primary));
+    }
+
+    .ad-update-btn:active {
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 480px) {
+      .ad-notification-box {
+        padding: 20px;
+        gap: 15px;
+      }
+
+      .ad-title {
+        font-size: 1.5rem;
+      }
+
+      .ad-text {
+        font-size: 0.95rem;
+      }
+
+      .ad-update-btn {
+        padding: 12px 20px;
+        font-size: 1rem;
+      }
+    }
   </style>
   <style>@view-transition { navigation: auto; }</style>
   <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
@@ -1611,6 +1771,19 @@
      <div class="ticker-content" id="ticker-content">
       • بەخێربێن بۆ نوێترین ئەپدەیتی یاری کوردش ئیمپۆستەر ! ................... ئەم ئەپدەیتە زۆرترین گۆڕانکاری لەخۆدەگێت ! .................. استخفر الله ,سبحان الله، والحمد لله، و لا إله إلا الله والله أكبر, وحده لا شريك له، له الملك، وله الحمد، وهو على كل شيء قدير
      </div>
+    </div>
+   </div><!-- Ad Notification Modal -->
+   <div class="ad-notification-overlay" id="ad-notification">
+    <div class="ad-notification-box">
+      <button class="ad-close-btn" onclick="closeAdNotification()">✕</button>
+      <img src="ad.png" alt="New Kurdish Imposter" class="ad-image" onerror="this.style.display='none'">
+      <div class="ad-content">
+        <h2 class="ad-title" data-i18n="adTitle">New Kurdish Imposter</h2>
+        <p class="ad-text" data-i18n="adDescription">New update is available<br>Click the button below to get the new update</p>
+        <div class="ad-button-container">
+          <button class="ad-update-btn" onclick="goToUpdate()" data-i18n="adUpdate">Update</button>
+        </div>
+      </div>
     </div>
    </div><!-- Splash Screen -->
    <div class="screen active" id="splash-screen">
@@ -2904,7 +3077,10 @@
         tickerInfo: "Information",
         winner: "Winner!",
         finalScores: "Final Scores",
-        continue: "Continue"
+        continue: "Continue",
+        adTitle: "New Kurdish Imposter",
+        adDescription: "New update is available\nClick the button below to get the new update",
+        adUpdate: "Update"
       },
       ku: {
         startGame: "یاری کردن",
@@ -2961,7 +3137,10 @@
         tickerInfo: "زانیاری",
         winner: "براوە!",
         finalScores: "خاڵی کۆتایی",
-        continue: "بەردەوامبوون"
+        continue: "بەردەوامبوون",
+        adTitle: "کوردی ئیمپۆستەری نوێ",
+        adDescription: "نوێکاریەکی تازا بەردەستە دەست بنێ بەو دوگمەیەی خوارەوە بۆ دەستگایشتن بە تازاترین نووێکاری یاریەکە",
+        adUpdate: "نوێکاری"
       }
     };
 
@@ -2986,9 +3165,43 @@
     };
 
     // Initialize
+    // Ad Notification Functions
+    function showAdNotification() {
+      const adElement = document.getElementById('ad-notification');
+      if (adElement) {
+        // Update ad text with current language
+        const t = translations[gameState.language];
+        const titleEl = adElement.querySelector('.ad-title');
+        const textEl = adElement.querySelector('.ad-text');
+        const btnEl = adElement.querySelector('.ad-update-btn');
+        
+        if (titleEl) titleEl.textContent = t.adTitle;
+        if (textEl) textEl.textContent = t.adDescription;
+        if (btnEl) btnEl.textContent = t.adUpdate;
+        
+        adElement.classList.add('active');
+      }
+    }
+
+    function closeAdNotification() {
+      const adElement = document.getElementById('ad-notification');
+      if (adElement) {
+        adElement.classList.remove('active');
+      }
+    }
+
+    function goToUpdate() {
+      window.open('https://didar122.github.io/Kurdish-Imposter-New/', '_blank', 'noopener,noreferrer');
+    }
+
     function init() {
       loadSettings();
       updatePlayerList();
+      
+      // Show ad notification after 5 seconds (before showing menu)
+      setTimeout(() => {
+        showAdNotification();
+      }, 5000);
       
       setTimeout(() => {
         showScreen('menu-screen');
