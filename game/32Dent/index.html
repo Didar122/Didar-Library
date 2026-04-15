@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#1a6e6d">
+  <meta name="description" content="32 DENT - Professional Clinic Management System">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/mainicon.png">
+  <link rel="shortcut icon" href="assets/mainicon.png">
+  
+  <!-- Apple Touch Icon -->
+  <link rel="apple-touch-icon" href="assets/mainicon.png">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- PDF Export Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  
+  <!-- Firebase SDK for Firestore Database -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-analytics.js";
+    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore.js";
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyB6ZSn3h02CNrr-Q1zhtdOiVr44s5vo1Dk",
+      authDomain: "dent-48277.firebaseapp.com",
+      projectId: "dent-48277",
+      storageBucket: "dent-48277.firebasestorage.app",
+      messagingSenderId: "787848689987",
+      appId: "1:787848689987:web:f723618ee0fbea693c57f6",
+      measurementId: "G-PMVJPRM6WQ"
+    };
+    
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+    
+    // Make these globally available
+    window.firebaseApp = app;
+    window.firebaseDB = db;
+    window.firebaseReady = true;
+    
+    console.log('Firebase initialized successfully');
+  </script>
+  
+  <title>32 DENT - Clinic Management</title>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="logo-circle"></div>
+    <div class="loading-text" data-i18n="loading">Loading...</div>
+    <div class="loading-bar">
+      <div class="loading-bar-fill"></div>
+    </div>
+    <div class="loading-subtitle">Clinic Management System</div>
+  </div>
+
+  <!-- Login Screen -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-container">
+      <div class="logo-circle" style="margin-bottom: 2rem;">
+        <img src="assets/icon.png?v=1" alt="32 DENT Logo" style="width: 85%; height: 85%; object-fit: contain;">
+      </div>
+      <h1 style="color: var(--primary-teal); margin-bottom: 0.5rem; text-align: center; direction: ltr;">32 DENT</h1>
+      <p style="color: var(--text-muted); text-align: center; margin-bottom: 2rem; direction: ltr;">Clinic Management System</p>
+      
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label" data-i18n="email">Email</label>
+          <input type="email" class="form-input" id="loginEmail" placeholder="staff@clinic.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="password">Password</label>
+          <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">
+          <i class="fas fa-sign-in-alt"></i>
+          <span data-i18n="login">Login</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-branding">
+          <img src="assets/icon.png" alt="32 Dent Logo" class="sidebar-logo">
+          <span>32 Dent</span>
+        </div>
+        <button class="btn-icon-close" onclick="toggleSidebar()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="sidebar-item sidebar-profile-btn" onclick="openProfileModal()">
+          <div class="profile-pic-container"></div>
+          <span data-i18n="profile">Profile</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('allStaff'); closeSidebar();">
+          <i class="fas fa-users"></i>
+          <span data-i18n="allStaff">All Staff</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('doctors'); closeSidebar();">
+          <i class="fas fa-user-md"></i>
+          <span data-i18n="doctors">Doctors</span>
+        </button>
+        <button class="sidebar-item" onclick="navigateTo('shopping'); closeSidebar();">
+          <i class="fas fa-shopping-cart"></i>
+          <span data-i18n="shoppingList">Shopping List</span>
+        </button>
+        <button class="sidebar-item" onclick="openSettingsModal()">
+          <i class="fas fa-cog"></i>
+          <span data-i18n="settings">Settings</span>
+        </button>
+        <button class="sidebar-item" onclick="openAboutModal()">
+          <i class="fas fa-info-circle"></i>
+          <span data-i18n="about">About</span>
+        </button>
+        <button class="sidebar-item logout-btn" onclick="handleLogout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span data-i18n="logout">Logout</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Sidebar overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <div class="header-title">
+          <div class="header-logo" id="headerLogo">
+            <img src="assets/icon.png?v=1" alt="32 DENT Logo" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <span>32 Dent Clinic</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Loading Section -->
+      <section class="section active" id="loadingSection">
+        <h2 data-i18n="loading">Loading...</h2>
+      </section>
+
+      <!-- Dashboard Section -->
+      <section class="section" id="dashboardSection">
+        <h2 data-i18n="dashboard">Dashboard</h2>
+        
+        <!-- Stats Grid -->
+        <div class="dashboard-grid">
+          <div class="stat-card" onclick="navigateTo('patients')">
+            <div class="stat-card-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-card-label" data-i18n="totalPatients">Total Patients</div>
+            <div class="stat-card-value" id="totalPatientsCount">0</div>
+          </div>
+
+          <div class="stat-card" onclick="navigateTo('appointments')">
+            <div class="stat-card-icon">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="stat-card-label" data-i18n="todayAppointments">Today's Appointments</div>
+            <div class="stat-card-value" id="todayAppointmentsCount">0</div>
+          </div>
+        </div>
+
+        <!-- Whiteboard Section -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-sticky-note"></i> <span data-i18n="toDoWhiteboard">To-Do Whiteboard</span></h3>
+          </div>
+          <div style="padding: 1.5rem;">
+            <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+              <input type="text" id="whiteboardInput" placeholder="Add a to-do item..." class="form-input" style="flex: 1;" data-placeholder="addTodoItem">
+              <button class="btn btn-primary" onclick="addWhiteboardItem()" style="padding: 0.75rem 1.5rem;" data-i18n="addToDo">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <div style="background: linear-gradient(135deg, #fff9e6 0%, #fffbf0 100%); border-radius: 0.75rem; padding: 1rem; min-height: 200px; max-height: 300px; overflow-y: auto;" id="whiteboardList"></div>
+          </div>
+        </div>
+
+        <!-- Shopping List Section (Read-only on Dashboard) -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-shopping-bag"></i> <span data-i18n="shoppingList">Shopping List</span></h3>
+          </div>
+          <div style="padding: 1.5rem;">
+            <div id="dashboardShoppingList" style="background: #f8f8f8; border-radius: 0.75rem; padding: 1rem; min-height: 150px; max-height: 250px; overflow-y: auto;"></div>
+            <button class="btn btn-secondary" onclick="navigateTo('shopping')" style="margin-top: 1rem; width: 100%;" data-i18n="manageShoppingList">
+              <i class="fas fa-edit"></i> Manage Shopping List
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Patients (moved to end) -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title" data-i18n="recentPatients">Recent Patients</h3>
+          </div>
+          <div id="recentPatientsList"></div>
+        </div>
+      </section>
+
+      <!-- Patient Management Section -->
+      <section class="section" id="patientsSection">
+        <h2 data-i18n="patients">Patients</h2>
+        <button class="btn btn-primary" onclick="openAddPatientModal()">
+          <i class="fas fa-plus"></i>
+          <span data-i18n="addPatient">Add Patient</span>
+        </button>
+
+        <div style="margin-top: 1.5rem; display: flex; align-items: center; background: white; border: 2px solid #e5e5e5; border-radius: 0.5rem; padding: 0; overflow: hidden; transition: all 0.3s ease;" id="patientsSearchContainer">
+          <i class="fas fa-search" style="padding: 0.75rem; color: var(--primary-green); font-size: 1rem;"></i>
+          <input type="text" id="patientsSearchInput" placeholder="Search by name or phone..." style="flex: 1; border: none; padding: 0.75rem; font-size: 0.95rem; outline: none;" onkeyup="searchPatients()" data-placeholder="searchByNamePhone">
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th data-i18n="patientName">Name</th>
+                  <th data-i18n="patientPhone">Phone</th>
+                </tr>
+              </thead>
+              <tbody id="patientsList"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="patientsPagination"></div>
+      </section>
+
+      <!-- Appointments Section -->
+      <section class="section" id="appointmentsSection">
+        <h2 data-i18n="appointments">Appointments</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
+          <button class="btn btn-primary" onclick="openAddAppointmentModal()">
+            <i class="fas fa-plus"></i>
+            <span data-i18n="scheduleAppointment">Schedule Appointment</span>
+          </button>
+          <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; flex: 1; min-width: 250px;">
+            <div style="display: flex; align-items: center; background: white; border: 2px solid #e5e5e5; border-radius: 0.5rem; padding: 0; overflow: hidden; transition: all 0.3s ease; flex: 1;" id="appointmentsSearchContainer">
+              <i class="fas fa-search" style="padding: 0.75rem; color: var(--primary-green); font-size: 1rem;"></i>
+              <input type="text" id="appointmentsSearchInput" placeholder="Search by patient name..." style="flex: 1; border: none; padding: 0.75rem; font-size: 0.95rem; outline: none;" onkeyup="searchAppointments()" data-placeholder="searchByPatientAppointment">
+            </div>
+          </div>
+          <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; white-space: nowrap;">
+              <input type="checkbox" id="toggleCompletedAppointments" checked onchange="loadAppointmentsTable()">
+              <span style="color: var(--dark-gray); font-size: 0.9rem;" data-i18n="hideCompleted">Hide Completed</span>
+            </label>
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; white-space: nowrap;">
+              <input type="checkbox" id="toggleOnlyToday" onchange="loadAppointmentsTable()">
+              <span style="color: var(--dark-gray); font-size: 0.9rem;" data-i18n="onlyToday">Only Today</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="table-wrapper">
+            <table class="table" style="width: 100%;">
+              <thead>
+                <tr>
+                  <th data-i18n="patientName" style="min-width: 120px;">Patient Name</th>
+                  <th data-i18n="appointmentTime" style="min-width: 100px;">Time</th>
+                  <th style="min-width: 80px;">Status</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsList"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="appointmentsPagination"></div>
+        
+        <!-- Appointment Status Legend -->
+        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--light-gray); border-radius: var(--radius-md); display: block;" id="appointmentLegend">
+          <h4 style="color: var(--primary-teal); margin-bottom: 1rem;" data-i18n="statusLegend">Appointment Status Legend</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-clock" style="color: #ffc107; font-size: 1.2rem;"></i>
+              <span data-i18n="scheduled">Scheduled</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-check" style="color: #28a745; font-size: 1.2rem;"></i>
+              <span data-i18n="completed">Completed</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <i class="fas fa-exclamation-circle" style="color: #dc3545; font-size: 1.2rem;"></i>
+              <span data-i18n="outdated">Outdated</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Financial Section -->
+      <section class="section" id="financialSection">
+        <h2 data-i18n="financial">Financial</h2>
+        <button class="btn btn-primary" onclick="openAddPaymentModal()" style="margin-bottom: 1rem;">
+          <i class="fas fa-plus"></i>
+          <span data-i18n="addPayment">Add Payment</span>
+        </button>
+        <div style="display: flex; align-items: center; background: white; border: 2px solid #e5e5e5; border-radius: 0.5rem; padding: 0; overflow: hidden; transition: all 0.3s ease; margin-bottom: 1.5rem;" id="transactionsSearchContainer">
+          <i class="fas fa-search" style="padding: 0.75rem; color: var(--primary-green); font-size: 1rem;"></i>
+          <input type="text" id="transactionsSearchInput" placeholder="Search by patient name..." style="flex: 1; border: none; padding: 0.75rem; font-size: 0.95rem; outline: none;" onkeyup="searchTransactions()" data-placeholder="searchByPatientTransaction">
+        </div>
+
+        <div class="dashboard-grid" style="margin-top: 1.5rem;">
+          <div class="stat-card">
+            <div class="stat-card-icon">
+              <i class="fas fa-chart-pie"></i>
+            </div>
+            <div class="stat-card-label" data-i18n="totalRevenue">Total Revenue</div>
+            <div class="stat-card-value" id="financialTotalRevenue">0</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-card-icon">
+              <i class="fas fa-list-check"></i>
+            </div>
+            <div class="stat-card-label" data-i18n="remainingAmounts">Remaining Amounts</div>
+            <div class="stat-card-value" id="financialRemainingAmounts">0</div>
+          </div>
+        </div>
+
+        <!-- Patient Remaining Amounts -->
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title" data-i18n="patientsRemainingAmounts">Patients Remaining Amounts</h3>
+          </div>
+          <div id="patientRemainingAmountsSection" style="padding: 1.5rem;">
+            <div id="patientRemainingAmountsList"></div>
+            <div id="remainingAmountsPagination" style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap;"></div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title" data-i18n="transactions">Transactions</h3>
+          </div>
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th data-i18n="patientName">Patient Name</th>
+                  <th data-i18n="amount">Amount</th>
+                  <th data-i18n="date">Date</th>
+                  <th data-i18n="status">Status</th>
+                </tr>
+              </thead>
+              <tbody id="transactionsList"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="transactionsPagination"></div>
+      </section>
+
+      <!-- Doctor Management Section -->
+      <section class="section" id="doctorsSection">
+        <h2 data-i18n="doctors">Doctors</h2>
+        <button class="btn btn-primary" onclick="openAddDoctorModal()">
+          <i class="fas fa-plus"></i>
+          <span data-i18n="addDoctor">Add Doctor</span>
+        </button>
+
+        <div style="margin-top: 1.5rem; display: flex; align-items: center; background: white; border: 2px solid #e5e5e5; border-radius: 0.5rem; padding: 0; overflow: hidden; transition: all 0.3s ease;" id="doctorsSearchContainer">
+          <i class="fas fa-search" style="padding: 0.75rem; color: var(--primary-green); font-size: 1rem;"></i>
+          <input type="text" id="doctorsSearchInput" placeholder="Search doctor..." style="flex: 1; border: none; padding: 0.75rem; font-size: 0.95rem; outline: none;" onkeyup="searchDoctors()" data-placeholder="searchByNameDoctor">
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th data-i18n="doctorName">Doctor Name</th>
+                  <th data-i18n="docPhone">Phone</th>
+                </tr>
+              </thead>
+              <tbody id="doctorsList"></tbody>
+            </table>
+          </div>
+        </div>
+        <div id="doctorsPagination"></div>
+      </section>
+
+      <!-- All Staff Section -->
+      <section class="section" id="allStaffSection">
+        <h2 data-i18n="allStaff">All Staff</h2>
+        <div class="card" style="margin-top: 1.5rem;">
+          <div id="allStaffList" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1.5rem; padding: 1rem;"></div>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section class="section" id="settingsSection">
+        <h2 data-i18n="settings">Settings</h2>
+        
+        <!-- Theme Selection Card -->
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-palette"></i> <span data-i18n="themeSelection">Theme</span></h3>
+          </div>
+          
+          <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1rem;">
+              <!-- Light Theme Option -->
+              <div class="theme-card" id="themeCardLight" onclick="setTheme('light')" style="cursor: pointer; padding: 1rem; border-radius: var(--radius-md); border: 2px solid #1a6e6d; background: #fff; text-align: center; box-shadow: 0 0 0 3px rgba(26, 110, 109, 0.15); display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <div style="font-size: 2.5rem;">☀️</div>
+                <span style="color: #333; font-weight: 600;" data-i18n="lightTheme">Light Green</span>
+              </div>
+              
+              <!-- Dark Theme Option -->
+              <div class="theme-card" id="themeCardDark" onclick="setTheme('dark')" style="cursor: pointer; padding: 1rem; border-radius: var(--radius-md); border: 2px solid #555; background: #1f1f1f; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                <div style="font-size: 2.5rem;">🌙</div>
+                <span style="color: #e0e0e0; font-weight: 600;" data-i18n="darkTheme">Dark Gold</span>
+              </div>
+            </div>
+            
+            <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--primary-teal);">
+              <div style="font-size: 0.9rem; color: var(--text-muted);">
+                <i class="fas fa-info-circle" style="margin-right: 0.5rem; color: var(--primary-teal);"></i>
+                <span data-i18n="themeInfo">Your theme preference is saved automatically.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Language Card -->
+        <div class="card" style="margin-top: 2rem;">
+          <div class="card-header">
+            <h3 class="card-title" data-i18n="language">Language</h3>
+          </div>
+          
+          <div style="padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
+            <div>
+              <label class="form-label" data-i18n="selectLanguage">Select Language</label>
+              <select class="form-select" id="languageSelect" onchange="handleLanguageChange(this.value)">
+                <option value="en">English</option>
+                <option value="ku">كوردی (Kurdish)</option>
+              </select>
+            </div>
+            
+            <div style="background: var(--light-gray); padding: 1rem; border-radius: var(--radius-md); border-left: 4px solid var(--primary-teal);">
+              <div style="font-size: 0.9rem; color: var(--text-muted);">
+                <i class="fas fa-info-circle" style="margin-right: 0.5rem; color: var(--primary-teal);"></i>
+                <span data-i18n="languageInfo">The interface will change to the selected language immediately.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Management Card -->
+        <div class="card" style="margin-top: 2rem; border-left: 4px solid #dc3545;">
+          <div class="card-header">
+            <h3 class="card-title">
+              <i class="fas fa-trash"></i> <span data-i18n="dataManagement">Data Management</span>
+            </h3>
+          </div>
+          <div style="padding: 1.5rem;">
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;" data-i18n="deleteDataWarning">Delete data with optional date range filtering. This action cannot be undone.</p>
+            <button class="btn btn-primary" onclick="openClearDataModal()" style="background-color: #dc3545; border: none; width: 100%;">
+              <i class="fas fa-trash"></i> <span data-i18n="clearData">Open Data Clear Tool</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Shopping List Management Section -->
+      <section class="section" id="shoppingSection">
+        <h2>
+          <i class="fas fa-shopping-cart"></i> <span data-i18n="shoppingList">Shopping List</span>
+        </h2>
+        
+        <div style="margin-top: 1.5rem;">
+          <button class="btn btn-primary" onclick="openAddShoppingItemModal()" data-i18n="addItem">
+            <i class="fas fa-plus"></i> Add Item
+          </button>
+        </div>
+
+        <div class="card" style="margin-top: 1.5rem;">
+          <div class="card-header">
+            <h3 class="card-title" data-i18n="itemsToBuy">Items to Buy</h3>
+          </div>
+          <div id="shoppingItemsList"></div>
+        </div>
+      </section>
+
+      <!-- Shopping Item Modal -->
+      <div class="modal" id="addShoppingItemModal">
+        <div class="modal-content" style="max-width: 500px;">
+          <div class="modal-header">
+            <h3 id="shoppingModalTitle" style="margin: 0;" data-i18n="addShoppingItem">Add Shopping Item</h3>
+            <button type="button" class="btn btn-secondary" onclick="closeModal('addShoppingItemModal')" style="padding: 0.4rem 0.8rem;">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <form id="addShoppingItemForm" onsubmit="saveShoppingItem(event)" style="padding: 1.5rem;">
+            <div class="form-group">
+              <label class="form-label" data-i18n="addItem">Item Name</label>
+              <input type="text" id="shoppingItemName" class="form-input" placeholder="e.g., Milk" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="quantity">Quantity</label>
+              <input type="text" id="shoppingItemQuantity" class="form-input" placeholder="e.g., 2 liters">
+            </div>
+            <div class="form-group">
+              <label class="form-label" data-i18n="note">Note (Optional)</label>
+              <textarea id="shoppingItemNote" class="form-input" placeholder="Add any notes..." style="resize: vertical; min-height: 80px;"></textarea>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button type="submit" class="btn btn-primary" style="flex: 1;">
+                <i class="fas fa-save"></i> <span data-i18n="save">Save</span>
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="closeModal('addShoppingItemModal')" style="flex: 1;">
+                <i class="fas fa-times"></i> <span data-i18n="cancel">Cancel</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="navigateTo('dashboard')" data-nav="dashboard">
+        <div class="nav-item-icon"><i class="fas fa-home"></i></div>
+        <div data-i18n="dashboard">Dashboard</div>
+      </button>
+      <button class="nav-item" onclick="navigateTo('patients')" data-nav="patients">
+        <div class="nav-item-icon"><i class="fas fa-users"></i></div>
+        <div data-i18n="patients">Patients</div>
+      </button>
+      <button class="nav-item" onclick="navigateTo('appointments')" data-nav="appointments">
+        <div class="nav-item-icon"><i class="fas fa-calendar"></i></div>
+        <div data-i18n="appointments">Appointments</div>
+      </button>
+      <button class="nav-item" onclick="navigateTo('financial')" data-nav="financial">
+        <div class="nav-item-icon"><i class="fas fa-credit-card"></i></div>
+        <div data-i18n="financial">Financial</div>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Add Patient Modal -->
+  <div class="modal" id="addPatientModal">
+    <div class="modal-content">
+      <div class="modal-header" data-i18n="addPatient">Add Patient</div>
+      <form id="addPatientForm" onsubmit="savePatient(event)">
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientName">Patient Name</label>
+          <input type="text" class="form-input" id="patientNameInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientPhone">Patient Phone</label>
+          <input type="tel" class="form-input" id="patientPhoneInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientAge">Age</label>
+          <input type="number" class="form-input" id="patientAgeInput" min="1" max="150">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientAddress">Address</label>
+          <textarea class="form-textarea" id="patientAddressInput" style="min-height: 80px; resize: vertical;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="illness">Illness/Medical History</label>
+          <textarea class="form-textarea" id="patientIllnessInput" placeholder="Any allergies, chronic conditions, or medical history..." style="min-height: 80px; resize: vertical;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="notes">Notes</label>
+          <textarea class="form-textarea" id="patientNotesInput" placeholder="Any other notes about the patient..." style="min-height: 80px; resize: vertical;"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addPatientModal')" data-i18n="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Appointment Modal -->
+  <div class="modal" id="addAppointmentModal">
+    <div class="modal-content" style="max-width: 600px;">
+      <div class="modal-header" data-i18n="scheduleAppointment">Schedule Appointment</div>
+      <form id="addAppointmentForm" onsubmit="saveAppointment(event)">
+        <div class="form-group">
+          <label class="form-label" data-i18n="selectPatient">Select Patient</label>
+          <div style="display: flex; align-items: center; background: white; border: 1px solid #e5e5e5; border-radius: 0.375rem; padding: 0; margin-bottom: 0.5rem;">
+            <i class="fas fa-search" style="padding: 0.5rem; color: #999; font-size: 0.9rem;"></i>
+            <input type="text" id="appointmentPatientSearch" placeholder="Search patient by name or phone..." data-placeholder="searchByNamePhone" style="flex: 1; border: none; padding: 0.5rem; font-size: 0.9rem; outline: none;" onkeyup="filterPatientDropdown()" oninput="filterPatientDropdown()" onchange="filterPatientDropdown()">
+          </div>
+          <select class="form-select" id="appointmentPatientSelect" required onchange="showAppointmentPatientInfo()"></select>
+        </div>
+
+        <!-- Patient Information Display (only when patient selected) -->
+        <div id="appointmentPatientInfoBox" style="background: var(--light-gray); padding: 1rem; border-radius: 0.375rem; margin-bottom: 1rem; display: none;">
+          <h4 style="color: var(--primary-teal); margin-bottom: 0.5rem; font-size: 0.95rem;" data-i18n="patientInformation">Patient Information</h4>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; font-size: 0.9rem;">
+            <div><strong data-i18n="patientName">Name</strong>: <span id="appointmentPatientName">-</span></div>
+            <div><strong data-i18n="phone">Phone</strong>: <span id="appointmentPatientPhone">-</span></div>
+            <div><strong data-i18n="patientAge">Age</strong>: <span id="appointmentPatientAge">-</span></div>
+            <div><strong data-i18n="patientAddress">Address</strong>: <span id="appointmentPatientAddress">-</span></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="appointmentDate">Appointment Date</label>
+          <input type="date" class="form-input" id="appointmentDateInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="appointmentTime">Appointment Time</label>
+          <input type="time" class="form-input" id="appointmentTimeInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="doctor">Doctor</label>
+          <select class="form-select" id="appointmentDoctorSelect" required>
+            <option value="" data-i18n="selectDoctor">Select a Doctor</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="notes">Notes</label>
+          <textarea class="form-textarea" id="appointmentNoteInput" placeholder="Add any notes about this appointment..." data-placeholder="addAppointmentNotes"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addAppointmentModal')" data-i18n="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Payment Modal -->
+  <div class="modal" id="addPaymentModal">
+    <div class="modal-content">
+      <div class="modal-header" data-i18n="addPayment">Add Payment</div>
+      <form id="addPaymentForm" onsubmit="savePayment(event)">
+        <div class="form-group">
+          <label class="form-label" data-i18n="searchPatient">Search Patient</label>
+          <input type="text" class="form-input" id="paymentPatientFilter" placeholder="Search by name or phone" data-placeholder="searchByNamePhone" oninput="filterPaymentPatients()" onchange="filterPaymentPatients()" onkeyup="filterPaymentPatients()">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientName">Patient Name</label>
+          <select class="form-select" id="paymentPatientSelect" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount</label>
+          <input type="number" class="form-input" id="paymentAmountInput" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select class="form-select" id="paymentMethodSelect" required>
+            <option value="">Select Method</option>
+            <option value="cash">Cash</option>
+            <option value="card">Credit Card</option>
+            <option value="transfer">Bank Transfer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="paymentDateInput" required>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addPaymentModal')" data-i18n="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add Doctor Modal -->
+  <div class="modal" id="addDoctorModal">
+    <div class="modal-content">
+      <div class="modal-header" data-i18n="addDoctor">Add Doctor</div>
+      <form id="addDoctorForm" onsubmit="saveDoctor(event)">
+        <input type="hidden" id="editingDoctorId">
+        <div class="form-group">
+          <label class="form-label" data-i18n="doctorName">Doctor Name</label>
+          <input type="text" class="form-input" id="doctorNameInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="docSpecialty">Specialty</label>
+          <input type="text" class="form-input" id="doctorSpecialtyInput" placeholder="e.g., Dentist, Orthodontist" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="docPhone">Phone</label>
+          <input type="tel" class="form-input" id="doctorPhoneInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="docEmail">Email</label>
+          <input type="email" class="form-input" id="doctorEmailInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="licenseNumber">License Number</label>
+          <input type="text" class="form-input" id="doctorLicenseInput">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addDoctorModal')" data-i18n="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Patient Profile Modal (History) -->
+  <div class="modal" id="patientProfileModal">
+    <div class="modal-content" style="max-width: 700px;">
+      <div class="modal-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span data-i18n="patientProfile">Patient Profile</span>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('patientProfileModal')" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Patient Details -->
+      <div id="patientProfileDetails" style="margin-bottom: 2rem;"></div>
+      
+      <!-- Edit and Delete Buttons -->
+      <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;" id="patientEditDeleteButtons"></div>
+
+      <!-- Export PDF Button -->
+      <div style="margin-bottom: 1.5rem;">
+        <button class="btn btn-primary" onclick="exportPatientPDF()" style="width: 100%; background: linear-gradient(135deg, var(--primary-teal), var(--primary-green)); border: none;">
+          <i class="fas fa-file-pdf"></i>
+          <span data-i18n="exportPDF">Download Patient Information (PDF)</span>
+        </button>
+      </div>
+      
+      <!-- Visit History -->
+      <div style="border-top: 1px solid #e5e5e5; padding-top: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="card-title" data-i18n="visitHistory">Visit History</h3>
+          <button class="btn btn-secondary" onclick="toggleVisitHistory()" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+            <i class="fas fa-chevron-down" id="visitHistoryIcon"></i>
+          </button>
+        </div>
+        <div id="patientVisitHistory" style="margin-top: 1rem; display: none;"></div>
+      </div>
+
+      <!-- Treatment Records -->
+      <div style="border-top: 1px solid #e5e5e5; padding-top: 1.5rem; margin-top: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <h3 class="card-title" data-i18n="treatments">Treatments</h3>
+          <button class="btn btn-secondary" onclick="toggleTreatments()" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+            <i class="fas fa-chevron-down" id="treatmentsIcon"></i>
+          </button>
+        </div>
+        <button class="btn btn-primary" onclick="openAddTreatmentModal()" style="margin-top: 0.5rem; font-size: 0.9rem; padding: 0.5rem 1rem; display: none;" id="addTreatmentBtn">
+          <i class="fas fa-plus"></i>
+          <span data-i18n="addTreatment">Add Treatment</span>
+        </button>
+        <div id="patientTreatments" style="margin-top: 1rem; display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Treatment Modal -->
+  <div class="modal" id="addTreatmentModal">
+    <div class="modal-content">
+      <div class="modal-header" data-i18n="addTreatment">Add Treatment</div>
+      <form id="addTreatmentForm" onsubmit="saveTreatment(event)">
+        <div class="form-group">
+          <label class="form-label" data-i18n="docSpecialty">Treatment Type</label>
+          <input type="text" class="form-input" id="treatmentTypeInput" placeholder="e.g., Cleaning, Filling, Root Canal" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="doctor">Doctor</label>
+          <select class="form-select" id="treatmentDoctorSelect" required>
+            <option value="">Select Doctor</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Date</label>
+          <input type="date" class="form-input" id="treatmentDateInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <textarea class="form-textarea" id="treatmentNotesInput" placeholder="Add any notes about the treatment"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Cost</label>
+          <input type="number" class="form-input" id="treatmentCostInput" step="0.01" min="0">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('addTreatmentModal')" data-i18n="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Patient Modal -->
+  <div class="modal" id="editPatientModal">
+    <div class="modal-content">
+      <div class="modal-header" data-i18n="editPatient">Edit Patient</div>
+      <form id="editPatientForm" onsubmit="saveEditPatient(event)">
+        <input type="hidden" id="editPatientId">
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientName">Patient Name</label>
+          <input type="text" class="form-input" id="editPatientNameInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientPhone">Patient Phone</label>
+          <input type="tel" class="form-input" id="editPatientPhoneInput" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientAge">Age</label>
+          <input type="number" class="form-input" id="editPatientAgeInput" min="1" max="150">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="patientAddress">Address</label>
+          <textarea class="form-textarea" id="editPatientAddressInput" style="min-height: 80px; resize: vertical;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="illness">Illness/Medical History</label>
+          <textarea class="form-textarea" id="editPatientIllnessInput" placeholder="Any allergies, chronic conditions, or medical history..." style="min-height: 80px; resize: vertical;"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="notes">Notes</label>
+          <textarea class="form-textarea" id="editPatientNotesInput" placeholder="Any other notes about the patient..." style="min-height: 80px; resize: vertical;"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('editPatientModal')" data-i18n="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Done Appointment Modal -->
+  <div class="modal" id="doneAppointmentModal">
+    <div class="modal-content">
+      <div class="modal-header" data-i18n="markAppointmentAsDone">Mark Appointment as Done</div>
+      <form id="doneAppointmentForm" onsubmit="saveDoneAppointment(event)">
+        <input type="hidden" id="doneAppointmentId">
+        <div class="form-group">
+          <label class="form-label" data-i18n="treatmentProvided">Treatment Provided</label>
+          <input type="text" class="form-input" id="doneAppointmentTreatment" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="amountPaid">Amount Paid</label>
+          <input type="number" class="form-input" id="doneAppointmentAmountPaid" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="remainingAmount">Remaining Amount</label>
+          <input type="number" class="form-input" id="doneAppointmentRemaining" step="0.01" min="0" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="remainingTreatmentSessions">Remaining Treatment Sessions</label>
+          <input type="number" class="form-input" id="doneAppointmentRemainingSessions" min="0">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="notes">Notes</label>
+          <textarea class="form-textarea" id="doneAppointmentNotes" placeholder="Add notes about the treatment"></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeModal('doneAppointmentModal')" data-i18n="cancel">Cancel</button>
+          <button type="submit" class="btn btn-primary" data-i18n="save">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div class="modal" id="profileModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span data-i18n="profile">Profile</span>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('profileModal')" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div id="profileContent"></div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span data-i18n="settings">Settings</span>
+          <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').classList.remove('active')" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div style="padding: 1rem;">
+        <h3 style="color: var(--primary-teal); margin-bottom: 1rem;" data-i18n="clearData">
+          <i class="fas fa-trash"></i> Clear Data
+        </h3>
+        <p style="color: var(--text-muted); margin-bottom: 1rem;" data-i18n="clearDataDescription">Select data to permanently delete with optional date range filtering.</p>
+        
+        <div class="form-group">
+          <label class="form-label" data-i18n="selectSectionToClear">Select Section to Clear:</label>
+          <select id="clearDataSection" class="form-input">
+            <option value="" data-i18n="chooseSection">-- Choose Section --</option>
+            <option value="patients" data-i18n="allPatients">All Patients</option>
+            <option value="doctors" data-i18n="allDoctors">All Doctors</option>
+            <option value="appointments" data-i18n="allAppointments">All Appointments</option>
+            <option value="treatments" data-i18n="allTreatments">All Treatments</option>
+            <option value="transactions" data-i18n="allTransactions">All Transactions</option>
+            <option value="all" data-i18n="everythingAllData">Everything (All Data)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="fromDate">From Date (Optional):</label>
+          <input type="date" id="clearFromDate" class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" data-i18n="toDate">To Date (Optional):</label>
+          <input type="date" id="clearToDate" class="form-input">
+        </div>
+
+        <div class="modal-footer" style="gap: 0.5rem; margin-top: 1.5rem;">
+          <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').classList.remove('active')" data-i18n="cancel">Cancel</button>
+          <button type="button" class="btn btn-danger" onclick="confirmClearData()" style="background-color: #dc3545;" data-i18n="clearSelectedData">
+            <i class="fas fa-warning"></i> Clear Selected Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal" id="aboutModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+          <span data-i18n="aboutText">32 Dent - Professional Clinic Management System</span>
+          <button type="button" class="btn btn-secondary" onclick="closeModal('aboutModal')" style="padding: 0.4rem 0.8rem; font-size: 0.9rem;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <p style="direction: ltr;">32 DENT - Premium Clinic Management System</p>
+      <p><span data-i18n="version">Version</span> 1.0.0</p>
+      <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 1rem;" data-i18n="aboutDescription">
+        Manage your clinic's patients, appointments, doctors, and financial records efficiently.
+      </p>
+      <hr style="margin: 1rem 0;">
+      <p style="margin-bottom: 0.5rem;">
+        <strong data-i18n="developedBy">Developed by</strong>: Didar Baxtear
+      </p>
+      <button type="button" class="btn btn-primary" onclick="window.open('https://didar122.github.io/Didar-Library/', '_blank')" style="margin-top: 1rem;">
+        <i class="fas fa-external-link-alt"></i> <span data-i18n="moreApps">More Apps</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/users.js"></script>
+  <script src="js/translations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
