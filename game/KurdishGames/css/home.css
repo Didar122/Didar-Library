@@ -1,0 +1,912 @@
+/* =====================================================
+   GLOBAL STYLES & RESET
+   ===================================================== */
+
+:root {
+    --bg-desktop: url('../assets/images/bg-desktop.png');
+    --bg-mobile: url('../assets/images/bg-mobile.png');
+    --bg-dama-desktop: url('../games/dama/assets/images/background.png');
+    --bg-dama-mobile: url('../games/dama/assets/images/background-mobile.png');
+}
+
+.section {
+    display: none;
+    position: relative;
+    min-height: 100vh;
+}
+
+.section:not(.hidden) {
+    display: block;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.nav-label {
+    font-family: var(--font-family);
+}
+
+/* =====================================================
+   BACKGROUND STYLING
+   ===================================================== */
+
+.home-section .game-background,
+.games-section .game-background,
+.store-section .game-background,
+.profile-section .game-background,
+.loading-section .game-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--bg-desktop) !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: 0;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .home-section .game-background,
+    .games-section .game-background,
+    .store-section .game-background,
+    .profile-section .game-background,
+    .loading-section .game-background {
+        background-image: var(--bg-mobile) !important;
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: scroll;
+    }
+}
+
+.home-section .game-background::after,
+.games-section .game-background::after,
+.store-section .game-background::after,
+.profile-section .game-background::after,
+.loading-section .game-background::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20, 106, 138, 0.103);
+    backdrop-filter: blur(1px);
+    pointer-events: none;
+}
+
+/* =====================================================
+   MAIN CONTAINER – MOBILE FIRST (stacked)
+   ===================================================== */
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    min-height: 100vh;
+    padding: 1rem 1rem 6rem 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Make .right-column's children direct children of .container for easier ordering */
+.right-column {
+    display: contents;  /* removes the wrapper div */
+}
+
+/* Order elements on mobile: Logo (1), Buttons (2), Ad (3) */
+.logo-section {
+    order: 1;
+    margin: 1rem 0 0.5rem 0;
+}
+
+.content-panel {
+    order: 2;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.ad-carousel {
+    order: 3;
+    margin: 1rem 0;
+}
+
+/* Logo size – larger on mobile */
+.game-logo {
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    animation: logoFloat 3s ease-in-out infinite;
+    border-radius: 18px;
+}
+
+/* Main menu buttons */
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+    max-width: 360px;
+    padding: 0 1rem;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+/* Menu button styling */
+.menu-button {
+    position: relative;
+    width: 100%;
+    padding: 1.6rem 2.5rem;
+    border: none;
+    background: linear-gradient(135deg, #3778ff, #1a9fff);
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 4rem;
+    font-weight: 700;
+    font-family: var(--font-family);
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: 0 16px 30px rgba(0, 0, 0, 0.22);
+}
+
+.menu-button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    pointer-events: none;
+    background: radial-gradient(circle at top left, rgba(255,255,255,0.4), transparent 50%);
+    filter: blur(20px);
+    opacity: 0.15;
+    z-index: -1;
+}
+
+@keyframes buttonPress {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.98); }
+    100% { transform: scale(1); }
+}
+
+.menu-button .btn-icon {
+    font-size: 2.4rem;
+    display: inline-block;
+    min-width: 24px;
+}
+
+.menu-button .btn-text {
+    font-weight: 700;
+    letter-spacing: 1.8px;
+    font-size: 1.3rem;
+}
+
+.menu-button {
+    text-shadow: 0.5px 0.5px 1px rgba(73, 73, 73, 0.55);
+}
+
+.menu-button:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(149, 166, 185, 0.199),
+                inset 0 1px 0 rgba(123, 162, 209, 0.295),
+                0 0 40px rgba(178, 192, 209, 0.199);
+}
+
+.menu-button:active {
+    transform: translateY(-1px);
+}
+
+/* Button variants */
+.btn-play {
+    background: linear-gradient(135deg, rgba(64, 80, 100, 0.747), rgba(88, 135, 192, 0.747));
+}
+.btn-multiplayer {
+    background: linear-gradient(135deg, rgba(84, 116, 155, 0.747), rgba(67, 116, 175, 0.747));
+}
+.btn-settings {
+    background: linear-gradient(135deg, rgba(30, 67, 112, 0.788), rgba(63, 107, 160, 0.822));
+}
+.btn-about {
+    background: linear-gradient(135deg, rgba(64, 80, 100, 0.747), rgba(71, 111, 160, 0.747));
+}
+.btn-events {
+    background: linear-gradient(135deg, rgba(74, 96, 125, 0.747), rgba(85, 140, 180, 0.747));
+}
+
+/* =====================================================
+   AD CAROUSEL – MOBILE (full width)
+   ===================================================== */
+
+.ad-carousel {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: 290px;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.582);
+    touch-action: pan-y;
+    cursor: grab;
+}
+
+.ad-carousel:active {
+    cursor: grabbing;
+}
+
+.ad-slide {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(64, 80, 100, 0.747);
+    z-index: 1;
+}
+
+.ad-slide.active {
+    opacity: 1;
+    transform: translateX(0);
+    z-index: 2;
+}
+
+.ad-slide.from-left {
+    transform: translateX(-100%);
+}
+.ad-slide.from-right {
+    transform: translateX(100%);
+}
+.ad-slide.to-left {
+    transform: translateX(-100%);
+    opacity: 0;
+}
+.ad-slide.to-right {
+    transform: translateX(100%);
+    opacity: 0;
+}
+
+.ad-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.ad-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 3;
+}
+
+.dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.dot.active {
+    background: #daa520;
+}
+
+/* =====================================================
+   DESKTOP LAYOUT (≥992px)
+   ===================================================== */
+
+@media (min-width: 992px) {
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 2rem;
+        align-items: center;
+        justify-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1.5rem 2rem 6rem 2rem;
+        min-height: calc(100vh - 3rem);
+    }
+
+    .right-column {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        width: 100%;
+    }
+
+    .logo-section {
+        order: 0;
+        margin: 0;
+    }
+
+    .content-panel {
+        order: 0;
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        width: 100%;
+    }
+
+    .main-menu {
+        max-width: 100%;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* WIDER AD ON DESKTOP */
+    .ad-carousel {
+        width: 100%;
+        max-width: 100%;    /* ← full width of the column */
+        margin: 0;
+        height: 290px;
+    }
+
+    .game-logo {
+        width: 220px;
+        height: 220px;
+    }
+
+    .footer-nav {
+        grid-column: 1 / -1;
+        grid-row: 3;
+        justify-self: stretch;
+        align-self: end;
+    }
+}
+
+/* =====================================================
+   FOOTER NAVIGATION (shared)
+   ===================================================== */
+
+.footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    gap: 0;
+    background: rgba(64, 80, 100, 0.747);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+    overflow: hidden;
+    height: auto;
+}
+
+.footer-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.3) 45%, rgba(255, 255, 255, 0.1) 60%, transparent 100%);
+    transform: skewX(-25deg);
+    opacity: 1;
+    pointer-events: none;
+    animation: footerSweep 10s ease-in-out infinite 2s;
+}
+
+@keyframes footerSweep {
+    0% { left: -120%; }
+    100% { left: 120%; }
+}
+
+.nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0.25rem 0.35rem;
+    flex: 1;
+}
+
+.nav-item:hover {
+    transform: translateY(-2px);
+}
+
+.nav-icon {
+    font-size: 1.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    background: none;
+    border: none;
+    border-radius: 0;
+    filter: none;
+    transition: all 0.2s ease;
+    color: #f5f5dc;
+}
+
+.nav-item:hover .nav-icon {
+    color: #ffd966;
+}
+
+.nav-item.active .nav-icon {
+    color: #ffd966;
+}
+
+.nav-item.active .nav-label {
+    color: #ffd966;
+}
+
+.nav-item[data-action="home"] .nav-icon {
+    color: #ffae00;
+    font-weight: bold;
+}
+
+.nav-item[data-action="home"]:hover .nav-icon {
+    color: #ffcd6f;
+}
+
+.nav-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #daa520;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    font-family: var(--font-family);
+}
+
+/* =====================================================
+   ANIMATIONS & RESPONSIVE TWEAKS
+   ===================================================== */
+
+@keyframes logoFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Very small devices */
+@media (max-width: 480px) {
+    .game-logo {
+        width: 150px;
+        height: 150px;
+    }
+    .ad-carousel {
+        height: 220px;
+    }
+    .menu-button {
+        padding: 1.2rem 1.8rem;
+    }
+    .menu-button .btn-text {
+        font-size: 1.1rem;
+    }
+    .menu-button .btn-icon {
+        font-size: 1.8rem;
+    }
+}
+
+/* RTL Support */
+html[dir="rtl"] .main-menu {
+    direction: rtl;
+}
+html[dir="rtl"] .footer-nav {
+    direction: rtl;
+}
+html[dir="rtl"] .menu-button {
+    flex-direction: row-reverse;
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .menu-button, .nav-item, .game-logo, .logo-glow {
+        animation: none;
+        transition: none;
+    }
+}
+.menu-button:focus, .nav-item:focus {
+    outline: none;
+}
+
+/* =====================================================
+   PREMIUM GLASSMORPHIC SWITCH & RANGE SLIDER
+   ===================================================== */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider-switch {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 34px;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider-switch:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+input:checked + .slider-switch {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+input:checked + .slider-switch:before {
+    transform: translateX(24px);
+}
+
+/* Premium Range Slider for Volume */
+.volume-slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    outline: none;
+    transition: background 0.3s;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #ffd700;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.volume-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    background: #ffea70;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border: none;
+    border-radius: 50%;
+    background: #ffd700;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transition: transform 0.1s, background-color 0.2s;
+}
+
+.volume-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    background: #ffea70;
+}
+
+/* Settings Group & Accordion Styles */
+.settings-group {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.settings-group-header {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    color: white;
+    font-size: 1.15rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s;
+}
+
+.settings-group-header:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.settings-group-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: max-height 0.4s cubic-bezier(0, 1, 0, 1), opacity 0.3s ease, padding 0.3s ease;
+    max-height: 1000px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+.settings-group-content.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    pointer-events: none;
+}
+
+.settings-group-header .toggle-arrow {
+    transition: transform 0.3s ease;
+}
+
+.settings-group-header.collapsed .toggle-arrow {
+    transform: rotate(-90deg);
+}
+
+/* =====================================================
+   PREMIUM LANGUAGE TOGGLE (SEGMENTED CONTROL)
+   ===================================================== */
+
+.segmented-control {
+    position: relative;
+    display: inline-flex;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    padding: 3px;
+    width: 180px;
+    height: 38px;
+    user-select: none;
+    box-sizing: border-box;
+}
+
+.segment-btn {
+    flex: 1;
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 2;
+    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none !important;
+    font-family: var(--font-family);
+    padding: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.segment-btn.active {
+    color: #0d2a2a; /* high contrast dark color on golden background */
+}
+
+.segment-slider {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: calc(50% - 3px);
+    background: linear-gradient(135deg, #ffd700, #ffae00);
+    border-radius: 8px;
+    z-index: 1;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 10px rgba(255, 215, 0, 0.4);
+}
+
+.segmented-control.ku-active .segment-slider {
+    transform: translateX(100%);
+}
+
+/* =====================================================
+   NOTIFICATIONS BELL BUTTON & MODAL
+   ===================================================== */
+
+.notification-btn {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #ffd700; /* gold */
+    font-size: 1.45rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 100;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+
+.notification-btn:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(55, 120, 255, 0.6); /* blue border */
+    box-shadow: 0 0 15px rgba(26, 159, 255, 0.5); /* blue glow */
+}
+
+.notification-btn:focus,
+.notification-btn:active {
+    transform: scale(0.95);
+    outline: none;
+    border-color: rgba(55, 120, 255, 0.6);
+    box-shadow: 0 0 15px rgba(26, 159, 255, 0.5);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background-color: #ef4444; /* red dot */
+    border-radius: 50%;
+    border: 2px solid #1f5050; /* boundary contrast using theme color */
+}
+
+/* Bell ringing animation with delay */
+@keyframes bellRing {
+    0%, 30%, 100% { transform: rotate(0); }
+    5% { transform: rotate(15deg); }
+    10% { transform: rotate(-15deg); }
+    15% { transform: rotate(12deg); }
+    20% { transform: rotate(-12deg); }
+    25% { transform: rotate(0); }
+}
+
+.notification-btn.ringing i {
+    animation: bellRing 5s ease-in-out infinite;
+    transform-origin: top center;
+}
+
+.notifications-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.notifications-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.notification-item {
+    display: flex;
+    gap: 12px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.25s ease;
+    cursor: pointer;
+    text-align: left;
+}
+
+.notification-item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.notification-item.unread {
+    background: rgba(255, 215, 0, 0.03);
+    border-color: rgba(255, 215, 0, 0.15);
+}
+
+.notification-status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: transparent;
+    border-radius: 50%;
+    margin-top: 6px;
+    flex-shrink: 0;
+}
+
+.notification-item.unread .notification-status-dot {
+    background-color: #ef4444; /* red dot for unread */
+    box-shadow: 0 0 8px #ef4444;
+}
+
+.notification-text h4 {
+    margin: 0 0 5px 0;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.notification-item.unread .notification-text h4 {
+    color: #ffd700; /* gold title for unread */
+}
+
+.notification-text p {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+.notification-time {
+    display: block;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.no-notifications-text {
+    padding: 30px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.95rem;
+}
+

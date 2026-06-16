@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kurdish Games</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/loading.css">
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/games.css">
+    <link rel="stylesheet" href="css/store.css">
+    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href="css/social.css">
+    <link rel="stylesheet" href="games/dama/css/dama.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div id="loadingSection" class="section loading-section">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="loading-background">
+            <div class="loading-container">
+                <div class="logo-wrapper">
+                    <img src="assets/images/icon.png" alt="Kurdish Games Logo" class="loading-logo">
+                    <div class="loading-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <div class="loading-text">
+                    <h1 class="title">Kurdish Games</h1>
+                    <p class="subtitle">Loading...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="credits">
+                    <p>By : Didar Baxtear</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="homeSection" class="section home-section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <button id="notificationBtn" class="notification-btn" onclick="openNotificationsModal()" style="display: none;">
+            <i class="fas fa-bell"></i>
+            <span id="notificationBadge" class="notification-badge hidden"></span>
+        </button>
+        <div class="container">
+            <div class="content-panel">
+                <nav class="main-menu">
+                    <button class="menu-button btn-play" data-label="PLAY GAMES">
+                        <span class="btn-icon"><i class="fas fa-gamepad"></i></span>
+                        <span class="btn-text">PLAY GAMES</span>
+                    </button>
+
+                    <button class="menu-button btn-multiplayer" data-label="MULTIPLAYER">
+                        <span class="btn-icon"><i class="fas fa-users"></i></span>
+                        <span class="btn-text">MULTIPLAYER</span>
+                    </button>
+
+                    <button class="menu-button btn-events" data-label="EVENTS">
+                        <span class="btn-icon"><i class="fas fa-calendar-alt"></i></span>
+                        <span class="btn-text">EVENTS</span>
+                    </button>
+
+                    <button class="menu-button btn-settings" data-label="SETTINGS">
+                        <span class="btn-icon"><i class="fas fa-cog"></i></span>
+                        <span class="btn-text">SETTINGS</span>
+                    </button>
+
+                    <button class="menu-button btn-about" data-label="ABOUT">
+                        <span class="btn-icon"><i class="fas fa-info-circle"></i></span>
+                        <span class="btn-text">ABOUT</span>
+                    </button>
+                </nav>
+            </div>
+
+            <div class="right-column">
+                <div class="logo-section">
+                    <img src="assets/images/icon.png" alt="Kurdish Games Logo" class="game-logo">
+                </div>
+                <div class="ad-carousel">
+                    <div class="ad-slide active" data-ad="1">
+                        <img src="assets/ads/ad1.png" alt="Ad 1" draggable="false">
+                    </div>
+                    <div class="ad-slide" data-ad="2">
+                        <img src="assets/ads/ad2.png" alt="Ad 2" draggable="false">
+                    </div>
+                    <div class="ad-slide" data-ad="3">
+                        <img src="assets/ads/ad3.png" alt="Ad 3" draggable="false">
+                    </div>
+                    <div class="ad-dots">
+                        <span class="dot active" data-slide="1"></span>
+                        <span class="dot" data-slide="2"></span>
+                        <span class="dot" data-slide="3"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-nav">
+                <div class="nav-item" onclick="showSection('profile')">
+                    <div class="nav-icon"><i class="fas fa-user"></i></div>
+                    <span class="nav-label">Profile</span>
+                </div>
+                <div class="nav-item" onclick="handleNavAction('friends')">
+                    <div class="nav-icon"><i class="fas fa-users"></i></div>
+                    <span class="nav-label">Friends</span>
+                </div>
+                <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                    <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                    <span class="nav-label">Leaderboards</span>
+                </div>
+                <div class="nav-item" onclick="showSection('store')">
+                    <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                    <span class="nav-label">Store</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="gamesSection" class="section games-section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="games-shell">
+            <header class="games-header">
+                <button class="back-button" onclick="showSection('home')">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+                <div class="header-title">
+                    <h1>Games</h1>
+                    <p>Choose a game from the library below.</p>
+                </div>
+            </header>
+
+            <section class="games-grid">
+                <article class="game-card">
+                    <div class="card-top">
+                        <span class="card-badge">Dama</span>
+                        <span class="card-tag">Featured</span>
+                    </div>
+                    <img src="games/dama/assets/images/Cover.png" alt="Dama Game" class="card-image">
+                    <div class="card-body">
+                        <h2>Dama</h2>
+                        <p>Classic Kurdish board game. Challenge yourself with a mix of strategy and tradition.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-button" onclick="showSection('dama')">Play Dama</button>
+                    </div>
+                </article>
+
+                <article class="game-card coming-soon">
+                    <div class="card-top">
+                        <span class="card-badge card-badge-secondary">Coming Soon</span>
+                    </div>
+                    <img src="assets/images/Cover.png" alt="Coming Soon" class="card-image">
+                    <div class="card-body">
+                        <h2>New Game</h2>
+                        <p>A brand new game is on its way. Stay tuned for more Kurdish gaming action.</p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="card-button card-button-disabled" disabled>Coming Soon</button>
+                    </div>
+                </article>
+            </section>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label">Store</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multiplayer Hub Section -->
+    <div id="multiplayerSection" class="section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="games-shell">
+            <header class="games-header">
+                <button class="back-button" onclick="showSection('home')">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+                <div class="header-title">
+                    <h1 data-translate="hub_title">Multiplayer Hub</h1>
+                    <p data-translate="hub_subtitle">Live games and active rooms.</p>
+                </div>
+            </header>
+            <section class="hub-container" style="padding: 20px; overflow-y: auto; flex: 1;">
+                <div id="liveRoomsList" style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="text-align:center; color:#ccc; padding: 20px;" data-translate="hub_loading">Loading live
+                        rooms...</div>
+                </div>
+            </section>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label">Store</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Section -->
+    <div id="settingsSection" class="section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="games-shell">
+            <header class="games-header">
+                <button class="back-button" onclick="showSection('home')" data-translate="games_back">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+                <div class="header-title">
+                    <h1 data-translate="settings_title">Settings</h1>
+                    <p data-translate="settings_subtitle">Manage your preferences.</p>
+                </div>
+            </header>
+            <section class="settings-container" style="padding: 20px; overflow-y: auto; flex: 1;">
+                <!-- Modern Segmented Language Switcher Toggle -->
+                <div class="setting-item"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <span data-translate="setting_language" style="color: white; font-size: 1.1rem;"><i
+                            class="fas fa-globe" style="margin-right: 10px;"></i>Language</span>
+                    <div class="segmented-control" id="languageControl">
+                        <button class="segment-btn active" id="btnLangEN"
+                            onclick="changeLanguage('en')">English</button>
+                        <button class="segment-btn" id="btnLangKU" onclick="changeLanguage('ku')">کوردی</button>
+                        <div class="segment-slider"></div>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="settings-group-header collapsed"
+                        onclick="toggleSettingsGroup('audioSettingsGroup', this)">
+                        <span><i class="fas fa-volume-up" style="margin-right: 10px;"></i><span
+                                data-translate="settings_group_sound">Sound Settings</span></span>
+                        <i class="fas fa-chevron-down toggle-arrow"></i>
+                    </div>
+                    <div id="audioSettingsGroup" class="settings-group-content collapsed">
+                        <!-- Master Audio Toggle -->
+                        <div class="setting-item"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                            <span style="color: white; font-size: 1.1rem;"><i class="fas fa-volume-up"
+                                    style="margin-right: 10px;"></i><span data-translate="setting_master_audio">Master
+                                    Audio</span></span>
+                            <label class="switch">
+                                <input type="checkbox" id="settingMasterAudio" checked>
+                                <span class="slider-switch"></span>
+                            </label>
+                        </div>
+                        <!-- Sound Effects Toggle -->
+                        <div class="setting-item"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                            <span style="color: white; font-size: 1.1rem;"><i class="fas fa-gamepad"
+                                    style="margin-right: 10px;"></i><span data-translate="setting_sound_effects">Sound
+                                    Effects</span></span>
+                            <label class="switch">
+                                <input type="checkbox" id="settingSoundEffects" checked>
+                                <span class="slider-switch"></span>
+                            </label>
+                        </div>
+                        <!-- Music Toggle -->
+                        <div class="setting-item"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                            <span style="color: white; font-size: 1.1rem;"><i class="fas fa-music"
+                                    style="margin-right: 10px;"></i><span
+                                    data-translate="setting_music">Music</span></span>
+                            <label class="switch">
+                                <input type="checkbox" id="settingMusic" checked>
+                                <span class="slider-switch"></span>
+                            </label>
+                        </div>
+                        <!-- Music Volume Slider -->
+                        <div class="setting-item"
+                            style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; align-items: flex-start; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); width: 100%; box-sizing: border-box;">
+                            <span style="color: white; font-size: 1.1rem;"><i class="fas fa-sliders-h"
+                                    style="margin-right: 10px;"></i><span data-translate="setting_music_volume">Music
+                                    Volume</span></span>
+                            <div class="volume-slider-container">
+                                <i class="fas fa-volume-down" style="color: rgba(255,255,255,0.6);"></i>
+                                <input type="range" id="settingVolume" min="0" max="1" step="0.05" value="0.5"
+                                    class="volume-slider">
+                                <i class="fas fa-volume-up" style="color: rgba(255,255,255,0.6);"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Notifications Toggle -->
+                <div class="setting-item"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <span style="color: white; font-size: 1.1rem;"><i class="fas fa-bell"
+                            style="margin-right: 10px;"></i><span
+                            data-translate="setting_notifications">Notifications</span></span>
+                    <label class="switch">
+                        <input type="checkbox" id="settingNotifications" checked>
+                        <span class="slider-switch"></span>
+                    </label>
+                </div>
+            </section>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label" data-translate="nav_profile">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label" data-translate="nav_friends">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label" data-translate="nav_leaderboards">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label" data-translate="nav_store">Store</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- About Section -->
+    <div id="aboutSection" class="section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="games-shell">
+            <header class="games-header">
+                <button class="back-button" onclick="showSection('home')">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+                <div class="header-title">
+                    <h1>About</h1>
+                    <p>Information & Credits</p>
+                </div>
+            </header>
+            <section class="about-container" style="padding: 20px; overflow-y: auto; flex: 1; color: white;">
+                <div
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <img src="assets/images/icon.png" style="width: 80px; margin-bottom: 15px;" alt="Logo">
+                    <h2>Kurdish Games Hub</h2>
+                    <p style="color: #ccc; margin-top: 10px;">A unified platform to play traditional and modern games.
+                    </p>
+                </div>
+
+                <div class="about-accordion"
+                    style="margin-bottom: 20px; display: flex; flex-direction: column; gap: 15px;">
+                    <!-- About Dama Accordion -->
+                    <div class="settings-group" style="margin-bottom: 0;">
+                        <div class="settings-group-header collapsed"
+                            onclick="toggleSettingsGroup('aboutDamaGroup', this)">
+                            <span><i class="fas fa-chess-board" style="margin-right: 10px;"></i><span
+                                    data-translate="about_dama_title">About Dama</span></span>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div id="aboutDamaGroup" class="settings-group-content collapsed"
+                            style="color: #ccc; font-size: 0.95rem; line-height: 1.6; padding: 20px;">
+                            <span data-translate="about_dama_desc">Dama is a traditional board game widely played in
+                                Kurdistan and the Middle East. It relies heavily on strategy, forward planning, and
+                                positioning. Our implementation features local multiplayer, an AI opponent, and online
+                                rooms to challenge your friends!</span>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Games Accordion -->
+                    <div class="settings-group" style="margin-bottom: 0;">
+                        <div class="settings-group-header collapsed"
+                            onclick="toggleSettingsGroup('aboutUpcomingGroup', this)">
+                            <span><i class="fas fa-hourglass-start" style="margin-right: 10px;"></i><span
+                                    data-translate="about_upcoming_title">Other Games Coming Soon</span></span>
+                            <i class="fas fa-chevron-down toggle-arrow"></i>
+                        </div>
+                        <div id="aboutUpcomingGroup" class="settings-group-content collapsed"
+                            style="color: #ccc; font-size: 0.95rem; line-height: 1.6; padding: 20px;">
+                            <span data-translate="about_upcoming_desc">More games are currently in development. Stay
+                                tuned for traditional Kurdish games coming to this hub!</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
+                    <h3><i class="fas fa-code" style="margin-right: 10px;"></i>Developer</h3>
+                    <p id="aboutDevName" style="margin-top: 10px; color: #ccc;">Developed by Didar Baxtear</p>
+                </div>
+
+                <a href="#" target="_blank"
+                    style="display: block; width: 100%; padding: 15px; background: #3b82f6; color: white; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
+                    <i class="fas fa-gamepad" style="margin-right: 10px;"></i>More Games By Developer
+                </a>
+            </section>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label">Store</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaderboards Section -->
+    <div id="leaderboardsSection" class="section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="games-shell">
+            <header class="games-header">
+                <button class="back-button" onclick="showSection('home')">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+                <div class="header-title">
+                    <h1>Leaderboards</h1>
+                    <p>Top players globally.</p>
+                </div>
+                <div class="leaderboard-controls" style="margin-top:10px; display:flex; gap:10px;">
+                    <button id="btnSortLevel" class="social-btn active" onclick="sortLeaderboard('level')">Sort by
+                        Level</button>
+                    <button id="btnSortScore" class="social-btn" onclick="sortLeaderboard('score')">Sort by
+                        Score</button>
+                </div>
+            </header>
+            <section class="social-container" id="leaderboardContainer">
+                <div class="loading-spinner"><i class="fas fa-circle-notch fa-spin"></i> Loading...</div>
+            </section>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item active" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label">Store</span>
+            </div>
+            <div class="nav-item" data-action="home" onclick="showSection('home')">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label">Home</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Friends Section -->
+    <div id="friendsSection" class="section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="games-shell">
+            <header class="games-header">
+                <button class="back-button" onclick="showSection('home')">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+                <div class="header-title">
+                    <h1>Friends</h1>
+                    <p>Manage your friend list and requests.</p>
+                </div>
+            </header>
+
+            <section class="social-container">
+                <h2 class="social-section-title">Friend Requests</h2>
+                <div id="friendRequestsContainer" class="social-list">
+                    <div style="color:#aaa; padding:10px;">No pending requests.</div>
+                </div>
+
+                <h2 class="social-section-title" style="margin-top: 20px;">My Friends</h2>
+                <div id="friendsListContainer" class="social-list">
+                    <div style="color:#aaa; padding:10px;">You haven't added any friends yet.</div>
+                </div>
+            </section>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item active" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label">Store</span>
+            </div>
+            <div class="nav-item" data-action="home" onclick="showSection('home')">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label">Home</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global Profile Modal -->
+    <div id="globalProfileModal" class="global-modal hidden">
+        <div class="global-modal-overlay" onclick="closeGlobalProfile()"></div>
+        <div class="global-modal-content">
+            <button class="modal-close-btn" onclick="closeGlobalProfile()"><i class="fas fa-times"></i></button>
+            <div class="modal-profile-header">
+                <img id="modalProfileAvatar" src="assets/images/avatar-default.png" alt="Avatar">
+                <h2 id="modalProfileUsername">Username</h2>
+                <p id="modalProfileLevel" style="color: #ffd700; margin-top:5px; font-weight:bold;">Level 1</p>
+            </div>
+            <div class="modal-profile-stats">
+                <div class="modal-stat">
+                    <span data-translate="modal_profile_score">Score</span>
+                    <strong id="modalProfileScore">0</strong>
+                </div>
+                <div class="modal-stat">
+                    <span data-translate="modal_profile_fav">Favorite Game</span>
+                    <strong id="modalProfileFavGame">Not Set</strong>
+                </div>
+                <div class="modal-stat">
+                    <span data-translate="modal_profile_coins">Coins</span>
+                    <strong id="modalProfileCoins">0</strong>
+                </div>
+                <div class="modal-stat">
+                    <span data-translate="modal_profile_diamonds">Diamonds</span>
+                    <strong id="modalProfileDiamonds">0</strong>
+                </div>
+                <div class="modal-stat">
+                    <span data-translate="modal_profile_playtime">Playtime</span>
+                    <strong id="modalProfilePlaytime">0h</strong>
+                </div>
+                <div class="modal-stat">
+                    <span data-translate="modal_profile_rank">Global Rank</span>
+                    <strong id="modalProfileRank">No Rank</strong>
+                </div>
+            </div>
+            <div class="modal-profile-actions">
+                <button id="modalAddFriendBtn" class="social-action-btn primary" onclick="sendFriendRequestFromModal()">
+                    <i class="fas fa-user-plus"></i> Add Friend
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dama Section (migrated from games/dama/dama.html) -->
+    <div id="dama" class="section hidden">
+
+        <!-- Mode Selection Screen -->
+        <div id="modeScreen" class="game-screen active">
+            <div class="game-background" id="modeBackground"></div>
+            <div class="mode-container">
+                <div class="game-header">
+                    <img src="games/dama/assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1>Dama Game</h1>
+                    <p>Turkish Draughts - Slemani Style</p>
+                </div>
+
+                <div class="mode-selection">
+                    <button class="mode-button" data-mode="single-player">
+                        <i class="fas fa-user"></i>
+                        <span>Single Player</span>
+                    </button>
+                    <button class="mode-button" data-mode="two-player">
+                        <i class="fas fa-users"></i>
+                        <span>Two Players</span>
+                    </button>
+                    <button class="mode-button" data-mode="online-multiplayer" onclick="showMultiplayerModeScreen()">
+                        <i class="fas fa-globe"></i>
+                        <span>Online Multiplayer</span>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-to-games" onclick="showSection('games')">
+                        <i class="fas fa-arrow-left"></i> Back to Games
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Type Selection, Difficulty, Game Screen and Multiplayer Screens -->
+        <div id="typeScreen" class="game-screen">
+            <div class="game-background" id="typeBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1>Select Game Type</h1>
+                </div>
+
+                <div class="type-selection">
+                    <button class="type-button" data-type="standard">
+                        <i class="fas fa-chess"></i>
+                        <h3>Standard Gameplay</h3>
+                        <p>Classic Dama rules with standard capture mechanics</p>
+                    </button>
+                    <button class="type-button" data-type="compulsory">
+                        <i class="fas fa-gavel"></i>
+                        <h3>Dama-y Hukum</h3>
+                        <p>Compulsory Draughts - Must capture when possible</p>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="difficultyScreen" class="game-screen">
+            <div class="game-background" id="difficultyBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1>Select Difficulty</h1>
+                    <p>Choose your opponent's skill level</p>
+                </div>
+
+                <div class="difficulty-selection">
+                    <button class="difficulty-button" data-difficulty="easy">
+                        <i class="fas fa-smile"></i>
+                        <h3>Easy</h3>
+                        <p>AI makes random moves</p>
+                    </button>
+                    <button class="difficulty-button" data-difficulty="medium">
+                        <i class="fas fa-meh"></i>
+                        <h3>Medium</h3>
+                        <p>AI prioritizes captures</p>
+                    </button>
+                    <button class="difficulty-button" data-difficulty="hard">
+                        <i class="fas fa-frown"></i>
+                        <h3>Hard</h3>
+                        <p>AI uses advanced strategy</p>
+                    </button>
+                    <button class="difficulty-button" data-difficulty="extreme">
+                        <i class="fas fa-skull"></i>
+                        <h3>Extreme</h3>
+                        <p>Unbeatable AI (Minimax)</p>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToTypeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameScreen" class="game-screen">
+            <div class="game-background" id="gameBackground"></div>
+            <div class="game-container">
+                <div class="game-top-bar">
+                    <div id="multiplayerVsInfo"
+                        style="display: none; justify-content: center; align-items: center; gap: 20px; width: 100%; margin-bottom: 15px;">
+                    </div>
+                    <div class="game-info">
+                        <div class="game-type-display">
+                            <span id="gameTypeLabel">Standard</span> - <span id="difficultyLabel">Medium</span>
+                        </div>
+                        <p id="turnInfo" class="turn-info-modern">White's Turn</p>
+                        <div id="feedbackMessage" class="feedback-message" style="display: none;"></div>
+                        <div class="timer-display" id="timerDisplay" style="display: none;">
+                            <div class="timer-info">
+                                <i class="fas fa-clock"></i>
+                                <span id="turnTimer" class="timer-value">20</span>
+                                <span>s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="game-board-wrapper">
+                    <div class="captured-pieces captured-black">
+                        <div id="capturedBlack" class="captured-list"></div>
+                    </div>
+
+                    <div class="board-container">
+                        <div id="gameBoard" class="game-board"></div>
+                    </div>
+
+                    <div class="captured-pieces captured-white">
+                        <div id="capturedWhite" class="captured-list"></div>
+                    </div>
+                </div>
+
+                <div class="bottom-action-container" id="bottomActionContainer">
+                    <button class="action-button back-button" id="gameBackButton" onclick="backToTypeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="action-button new-game-button" id="newGameButton" onclick="resetGame()">
+                        <i class="fas fa-redo"></i> New Game
+                    </button>
+                    <button class="action-button leave-game-button" id="leaveGameButton" style="display: none;"
+                        onclick="leaveMultiplayerGame()">
+                        <i class="fas fa-sign-out-alt"></i> Leave Game
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modals and multiplayer screens -->
+        <div id="gameOverModal" class="modal">
+            <div class="modal-content">
+                <h2 id="gameOverTitle">Game Over</h2>
+                <p id="gameOverMessage"></p>
+                <div class="modal-buttons">
+                    <button class="modal-button" onclick="newGame()">Play Again</button>
+                    <button class="modal-button secondary" onclick="exitToDamaHome()">Exit</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="multiplayerModeScreen" class="game-screen">
+            <div class="game-background" id="multiplayerModeBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1 data-translate="dama_online_multiplayer">Online Multiplayer</h1>
+                    <p data-translate="dama_online_desc">Play against other players online</p>
+                </div>
+
+                <div class="mode-selection">
+                    <button class="mode-button" onclick="showRoomActionScreen('create')">
+                        <i class="fas fa-door-open"></i>
+                        <span data-translate="dama_create_room">Create Room</span>
+                    </button>
+                    <button class="mode-button" onclick="showRoomActionScreen('join')">
+                        <i class="fas fa-users"></i>
+                        <span data-translate="dama_join_room">Join Room</span>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="roomActionScreen" class="game-screen">
+            <div class="game-background" id="roomActionBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1 id="roomActionTitle">Room Action</h1>
+                    <p id="roomActionSubtitle">Select game type</p>
+                </div>
+
+                <div class="type-selection" id="roomActionTypeSelection">
+                    <button class="type-button" data-type="standard" onclick="handleRoomAction('standard')">
+                        <i class="fas fa-chess"></i>
+                        <h3 data-translate="dama_type_standard_title">Standard Gameplay</h3>
+                        <p data-translate="dama_type_standard_desc">Classic Dama rules</p>
+                    </button>
+                    <button class="type-button" data-type="compulsory" onclick="handleRoomAction('compulsory')">
+                        <i class="fas fa-gavel"></i>
+                        <h3 data-translate="dama_type_hukum_title">Dama-y Hukum</h3>
+                        <p data-translate="dama_type_hukum_desc">Compulsory Draughts</p>
+                    </button>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToMultiplayerModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="roomListScreen" class="game-screen">
+            <div class="game-background" id="roomListBackground"></div>
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1 data-translate="dama_available_rooms">Available Rooms</h1>
+                    <p data-translate="dama_select_room">Select a room to join</p>
+                </div>
+
+                <div class="rooms-container">
+                    <div id="roomsList" class="rooms-list">
+                        <p class="loading-text" data-translate="dama_loading_rooms">Loading rooms...</p>
+                    </div>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToMultiplayerModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="waitingScreen" class="game-screen">
+            <div class="game-background" id="waitingBackground"></div>
+            <div class="type-container waiting-container">
+                <div class="game-header">
+                    <img src="assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1 data-translate="dama_waiting_opponent">Waiting for Opponent</h1>
+                    <p><span data-translate="dama_room_id">Room ID: </span><span id="roomIdDisplay"
+                            class="room-id-text">-</span></p>
+                </div>
+
+                <div class="waiting-info">
+                    <div class="spinner"></div>
+                    <p id="waitingStatus" data-translate="dama_waiting_desc">Waiting for opponent to join...</p>
+                    <p class="player-color" id="playerColorDisplay"><span data-translate="dama_you_are">You are
+                        </span><span id="playerColorSpan"></span></p>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="cancelWaiting()" data-translate="dama_cancel_room">
+                        <i class="fas fa-times-circle"></i> Cancel Room
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="customizationScreen" class="game-screen">
+            <div class="type-container">
+                <div class="game-header">
+                    <img src="assets/images/icon.png" alt="Dama Game Icon" class="game-icon">
+                    <h1>Customization</h1>
+                    <p>Customize your game experience</p>
+                </div>
+
+                <div class="customization-content" style="padding: 40px; text-align: center;">
+                    <p style="font-size: 18px; color: #666;">Customization options coming soon...</p>
+                    <div style="margin-top:20px;">
+                        <label for="opponentUsernameInput" style="display:block; margin-bottom:8px;">Opponent username
+                            (optional):</label>
+                        <input id="opponentUsernameInput" type="text" placeholder="e.g. friend123"
+                            style="padding:8px; width:220px; border-radius:4px; border:1px solid #ccc;">
+                        <p style="font-size:12px; color:#999; margin-top:8px;">Set this if you want results saved to a
+                            specific player's profile.</p>
+                    </div>
+                </div>
+
+                <div class="back-section">
+                    <button class="back-button" onclick="backToModeScreen()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Match & splash screens -->
+        <div id="onlineMatchStartSplashScreen" class="game-screen">
+            <div class="splash-container">
+                <div class="splash-content"
+                    style="text-align: center; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); max-width: 600px;">
+                    <h2 style="font-size: 32px; margin-bottom: 30px; color: #4CAF50;">⚔️ Match Ready! ⚔️</h2>
+                    <div id="onlineMatchPlayersInfo"
+                        style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
+                    </div>
+                    <div style="font-size: 24px; font-weight: bold; color: #FFD700; margin-bottom: 20px;">
+                        <span data-translate="dama_starts_in">Game starts in: </span><span
+                            id="onlineMatchCountdown">5</span>s
+                    </div>
+                    <p style="font-size: 14px; color: #ccc;" data-translate="dama_good_luck">Good luck! 🍀</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameStartSplashScreen" class="game-screen">
+            <div class="splash-container">
+                <div class="splash-content"
+                    style="text-align: center; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                    <h2 style="font-size: 32px; margin-bottom: 20px; color: #4CAF50;">Game Starting!</h2>
+                    <div class="player-info-splash"
+                        style="background: rgba(255,255,255,0.1); padding: 30px; border-radius: 10px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.15);">
+                        <p style="font-size: 18px; margin: 10px 0;"><strong data-translate="dama_role">Your
+                                Role:</strong> <span id="splashPlayerRole" style="color: #4CAF50;">-</span></p>
+                        <p style="font-size: 18px; margin: 10px 0;"><strong data-translate="dama_color">Your
+                                Color:</strong> <span id="splashPlayerColor" style="color: #2196F3;">-</span></p>
+                        <p style="font-size: 18px; margin: 10px 0;"><strong data-translate="dama_first_player">First
+                                Player:</strong> <span id="splashFirstPlayer" style="color: #FF9800;">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="opponentLeftSplashScreen" class="game-screen">
+            <div class="splash-container">
+                <div class="splash-content"
+                    style="text-align: center; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);">
+                    <h2 style="font-size: 32px; margin-bottom: 20px; color: #FF5252;">Opponent Left</h2>
+                    <p style="font-size: 18px; margin-bottom: 30px;">Your opponent has left the game.</p>
+                    <p style="font-size: 18px; margin-bottom: 30px; font-weight: bold; color: #4CAF50;"
+                        data-translate="dama_you_win">You Win! 🎉</p>
+                    <button onclick="leaveMultiplayerGame()" class="menu-button"
+                        style="padding:12px 30px; font-size:16px;">
+                        <i class="fas fa-arrow-left"></i> Leave Game
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="winnerSplashScreen" class="game-screen">
+            <div class="splash-container">
+                <div class="splash-content"
+                    style="text-align: center; background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(10px); padding: 40px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.2); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); max-width: 600px; max-height: 80vh; overflow-y: auto;">
+                    <h2 id="winnerSplashTitle" style="font-size: 32px; margin-bottom: 20px; color: #4CAF50;">You Won! 🎉
+                    </h2>
+                    <p id="winnerSplashMessage" style="font-size: 18px; margin-bottom: 30px;">Congratulations!</p>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/template" id="timerTemplate">
+            <div class="timer-display" id="timerDisplay" style="display: none;">
+                <div class="timer-info">
+                    <span id="timerLabel" data-translate="dama_time_label">Time:</span>
+                    <span id="turnTimer" class="timer-value">20</span>
+                    <span>s</span>
+                </div>
+            </div>
+        </script>
+        <!-- Footer Navigation (Dock) for Dama -->
+        <div class="footer-nav">
+            <div class="nav-item" onclick="showSection('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label" data-translate="nav_profile">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label" data-translate="nav_friends">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label" data-translate="nav_leaderboards">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label" data-translate="nav_store">Store</span>
+            </div>
+            <div class="nav-item" data-action="home" onclick="showSection('home')">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label" data-translate="nav_home">Home</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="storeSection" class="section store-section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="store-shell">
+            <!-- Store Header -->
+            <header class="store-header">
+                <div class="header-top">
+                    <button class="back-button" onclick="handleSectionBack()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="store-title">
+                        <h1>Store</h1>
+                    </div>
+                    <div class="currency-display">
+                        <div class="currency-item coins">
+                            <i class="fas fa-coins"></i>
+                            <span class="currency-amount" id="coinAmount">99999</span>
+                        </div>
+                        <div class="currency-item diamonds">
+                            <i class="fas fa-gem"></i>
+                            <span class="currency-amount" id="diamondAmount">99999</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Section Navigation -->
+            <nav class="store-sections">
+                <button class="section-btn active" onclick="switchSection('global', this)">
+                    <i class="fas fa-globe"></i>
+                    <span>Global</span>
+                </button>
+                <button class="section-btn" onclick="switchSection('dama', this)">
+                    <i class="fas fa-chess"></i>
+                    <span>Dama</span>
+                </button>
+                <button class="section-btn" onclick="switchSection('coming', this)">
+                    <i class="fas fa-star"></i>
+                    <span>Coming Soon</span>
+                </button>
+            </nav>
+
+            <!-- Category/Subsection Navigation -->
+            <nav class="store-categories" id="storeCategoriesNav">
+                <!-- Categories will be dynamically populated here -->
+            </nav>
+
+            <!-- Section Divider -->
+            <div class="section-divider"></div>
+
+            <!-- Items Display -->
+            <div class="store-items-container">
+                <div class="items-grid" id="storeItemsGrid">
+                    <!-- Items will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" data-action="home" onclick="showSection('home')">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label">Home</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Section -->
+    <div id="profileSection" class="section profile-section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="profile-container">
+            <!-- Auth Screen -->
+            <div id="authScreen" class="auth-screen active">
+                <div class="auth-wrapper">
+                    <div class="auth-tabs">
+                        <button class="auth-tab active" data-tab="login"><i class="fas fa-sign-in-alt"></i>
+                            Login</button>
+                        <button class="auth-tab" data-tab="register"><i class="fas fa-user-plus"></i> Register</button>
+                    </div>
+                    <form id="loginForm" class="auth-form active">
+                        <h2>Welcome Back</h2>
+                        <p class="auth-subtitle">Sign in to your account</p>
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Username</label>
+                            <input type="text" id="loginUsername" placeholder="Enter your username" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+                        </div>
+                        <button type="submit" class="auth-button"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+                        <div id="loginError" class="error-message"></div>
+                    </form>
+                    <form id="registerForm" class="auth-form">
+                        <h2>Create Account</h2>
+                        <p class="auth-subtitle">Join our gaming community</p>
+                        <div class="form-group">
+                            <label><i class="fas fa-user"></i> Username</label>
+                            <input type="text" id="registerUsername" placeholder="Choose a username" required>
+                            <span id="usernameAvailability" class="availability-check"></span>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Password</label>
+                            <input type="password" id="registerPassword" placeholder="Create a password" required>
+                        </div>
+                        <div class="form-group">
+                            <label><i class="fas fa-lock"></i> Confirm Password</label>
+                            <input type="password" id="registerConfirm" placeholder="Confirm your password" required>
+                        </div>
+                        <button type="submit" class="auth-button"><i class="fas fa-user-plus"></i> Create
+                            Account</button>
+                        <div id="registerError" class="error-message"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Profile Screen (Logged In) -->
+            <div id="profileScreen" class="profile-screen">
+                <div class="profile-header">
+                    <button id="backButton" class="back-button" onclick="handleSectionBack()"><i
+                            class="fas fa-arrow-left"></i> Back</button>
+                    <button id="logoutButton" class="back-button"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                </div>
+                <div class="profile-main">
+                    <div class="profile-left">
+                        <div class="avatar-card">
+                            <div class="avatar-container">
+                                <img id="profileAvatar" src="assets/images/avatar-default.png" alt="Avatar"
+                                    class="avatar">
+                                <div class="avatar-badge" id="levelBadge"><span id="profileLevel">1</span></div>
+                            </div>
+                            <h2 id="profileUsername" class="profile-username">Loading...</h2>
+                            <p class="profile-join-date" id="joinDate">Member since --</p>
+                        </div>
+                        <div class="xp-card">
+                            <div class="level-row">
+                                <span class="level-label" data-translate="profile_current_lvl">Current Level</span>
+                                <span class="level-value" id="profileLevelText">1</span>
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="levelProgress" style="width: 0%;"></div>
+                                </div>
+                                <div class="level-progress-text" id="levelProgressText">0 / 0 XP</div>
+                            </div>
+                        </div>
+                        <div class="currencies-card">
+                            <div class="currency-item coins">
+                                <i class="fas fa-coins"></i>
+                                <span class="currency-amount" id="profileCoins">0</span>
+                                <span data-translate="profile_coins">Coins</span>
+                            </div>
+                            <div class="currency-item diamonds">
+                                <i class="fas fa-gem"></i>
+                                <span class="currency-amount" id="profileDiamonds">0</span>
+                                <span data-translate="profile_diamonds">Diamonds</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-right">
+                        <div class="stats-card">
+                            <div class="stats-header">
+                                <h2 data-translate="profile_game_stats">Game Statistics</h2>
+                                <div class="game-tabs" id="gameTabs">
+                                    <button class="game-tab active" data-game="dama"
+                                        data-translate="games_dama_title">Dama</button>
+                                </div>
+                            </div>
+                            <div class="stats-grid" id="statsGrid"></div>
+                        </div>
+                        <div class="stats-card">
+                            <h2 data-translate="profile_global_stats">Global Statistics</h2>
+                            <div class="extra-stats">
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-shopping-bag"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_purchased">Items
+                                            Purchased</span>
+                                        <span class="stat-value" id="itemsPurchased">0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_playtime">Total
+                                            Playtime</span>
+                                        <span class="stat-value" id="playtimeHours">0h</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_score">Total Score</span>
+                                        <span class="stat-value" id="totalScore">0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_rank">Global Rank</span>
+                                        <span class="stat-value" id="scoreRank">No Rank</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-gamepad"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_games">Total Games</span>
+                                        <span class="stat-value" id="profileGamesPlayed">0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-globe"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_online_games">Online
+                                            Games</span>
+                                        <span class="stat-value" id="profileOnlineGames">0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-trophy" style="color: #10b981;"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_online_wins">Online
+                                            Wins</span>
+                                        <span class="stat-value" id="profileOnlineWins">0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-skull" style="color: #f87171;"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_online_losses">Online
+                                            Losses</span>
+                                        <span class="stat-value" id="profileOnlineLosses">0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-user"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_single">Single
+                                            Player</span>
+                                        <span class="stat-value" id="profileSinglePlayerGames">0</span>
+                                    </div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                                    <div class="stat-info">
+                                        <span class="stat-label" data-translate="profile_stat_two">Two Player</span>
+                                        <span class="stat-value" id="profileTwoPlayerGames">0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="showSection('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label">Store</span>
+            </div>
+            <div class="nav-item" onclick="showSection('home')">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label">Home</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Section -->
+    <div id="eventsSection" class="section hidden">
+        <div class="game-background" style="background-image: var(--bg-desktop);"></div>
+        <div class="games-shell">
+            <header class="games-header">
+                <button class="back-button" onclick="showSection('home')">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </button>
+                <div class="header-title">
+                    <h1>Events</h1>
+                    <p>Exciting events and tournaments coming soon!</p>
+                </div>
+            </header>
+            <section class="events-container"
+                style="padding: 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; color: white;">
+                <div
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 40px 20px; text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); max-width: 500px; width: 100%;">
+                    <i class="fas fa-calendar-alt" style="font-size: 4rem; color: #ffd700; margin-bottom: 20px;"></i>
+                    <h2>Tournaments & Events</h2>
+                    <p style="color: #ccc; margin-top: 15px; font-size: 1.1rem; line-height: 1.6;">Stay tuned! We are
+                        preparing special events, live tournaments, and exclusive challenges where you can compete and
+                        win rewards.</p>
+                </div>
+            </section>
+        </div>
+        <div class="footer-nav">
+            <div class="nav-item" onclick="handleNavAction('profile')">
+                <div class="nav-icon"><i class="fas fa-user"></i></div>
+                <span class="nav-label">Profile</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('friends')">
+                <div class="nav-icon"><i class="fas fa-users"></i></div>
+                <span class="nav-label">Friends</span>
+            </div>
+            <div class="nav-item" onclick="handleNavAction('leaderboards')">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <span class="nav-label">Leaderboards</span>
+            </div>
+            <div class="nav-item" onclick="showSection('store')">
+                <div class="nav-icon"><i class="fas fa-shopping-bag"></i></div>
+                <span class="nav-label">Store</span>
+            </div>
+            <div class="nav-item" data-action="home" onclick="showSection('home')">
+                <div class="nav-icon"><i class="fas fa-home"></i></div>
+                <span class="nav-label">Home</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/translations.js"></script>
+    <script src="js/notifications.js"></script>
+    <script src="js/home.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+    <script src="firebaseSDK.js"></script>
+    <script src="js/playerData.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/profile.js"></script>
+    <script src="js/social.js"></script>
+    <script src="js/hub_multiplayer.js"></script>
+    <script src="games/dama/js/multiplayer.js"></script>
+    <script src="games/dama/js/dama.js"></script>
+
+    <!-- Notifications Modal -->
+    <div id="notificationsModal" class="global-modal hidden">
+        <div class="global-modal-overlay" onclick="closeNotificationsModal()"></div>
+        <div class="global-modal-content"
+            style="max-width: 480px; width: 90%; background: rgba(30, 41, 59, 0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15); border-radius: 20px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); padding: 25px;">
+            <button class="modal-close-btn" onclick="closeNotificationsModal()"><i class="fas fa-times"></i></button>
+            <div class="modal-header"
+                style="margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; display: flex; align-items: center; justify-content: space-between;">
+                <h2 style="color: #ffd700; margin: 0; font-size: 1.5rem;"><i class="fas fa-bell"
+                        style="margin-right: 10px;"></i><span data-translate="notifications_title">Notifications</span>
+                </h2>
+            </div>
+            <div id="notificationsList" class="notifications-list"
+                style="max-height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding-right: 5px;">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Viewer Modal -->
+
+    <div id="imageViewerModal" class="image-viewer">
+        <button class="close-btn" onclick="closeImageViewer()">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="viewerImage" src="" alt="Preview">
+        <div id="viewerTitle" style="color: white; margin-top: 1rem; font-size: 0.9rem;"></div>
+    </div>
+</body>
+
+</html>

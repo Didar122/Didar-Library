@@ -1,0 +1,225 @@
+/* =====================================================
+   GAMES PAGE STYLES
+   ===================================================== */
+
+:root {
+    --bg-desktop: url('../assets/images/bg-desktop.png');
+    --bg-mobile: url('../assets/images/bg-mobile.png');
+    --bg-dama-desktop: url('../games/dama/assets/images/background.png');
+    --bg-dama-mobile: url('../games/dama/assets/images/background-mobile.png');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    font-family: var(--font-family);
+    background-color: #131f2c;
+    color: #ffffff;
+}
+
+body {
+    overflow-y: auto;
+}
+
+.game-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: var(--bg-desktop) !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: 0;
+}
+
+@media (max-width: 768px) {
+    .game-background {
+        background-image: var(--bg-mobile) !important;
+        background-attachment: scroll;
+    }
+}
+
+.game-background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    backdrop-filter: blur(1px);
+    background: rgba(50, 103, 129, 0.11);
+}
+
+.games-shell {
+    position: relative;
+    z-index: 1;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem 7rem;
+}
+
+.games-header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+}
+
+
+
+.header-title h1 {
+    font-size: clamp(2.4rem, 4vw, 3.6rem);
+    letter-spacing: 1px;
+}
+
+.header-title p {
+    margin-top: 0.6rem;
+    color: rgba(255, 255, 255, 0.78);
+    max-width: 700px;
+    line-height: 1.7;
+}
+
+.games-grid {
+    display: grid;
+    gap: 1.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    align-items: stretch;
+    padding-bottom: 5.5rem;
+}
+
+@media (min-width: 1200px) {
+    .games-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+    .games-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.game-card {
+    background: rgba(64, 80, 100, 0.747);
+    border: 1px solid rgba(255, 255, 255, 0.288);
+    border-radius: 28px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.616);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255, 255, 255, 0.16);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.card-badge,
+.card-badge-secondary {
+    padding: 0.55rem 0.9rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.9px;
+    text-transform: uppercase;
+}
+
+.card-badge {
+    background: linear-gradient(135deg, #ffb347, #ffcc33);
+    color: #1a1a1a;
+}
+
+.card-badge-secondary {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f5f5f5;
+}
+
+.card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 22px;
+    margin-bottom: 1.3rem;
+    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+.card-body h2 {
+    font-size: 1.7rem;
+    margin-bottom: 0.8rem;
+}
+
+.card-body p {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.75;
+}
+
+.card-footer {
+    margin-top: 1.75rem;
+}
+
+.card-button,
+.card-button-disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border: none;
+    border-radius: 18px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.25s ease, background 0.25s ease;
+}
+
+.card-button {
+    background: linear-gradient(135deg, #3c6fdb5e, #1aa0ffa2);
+    color: #ffffff;
+    box-shadow: 0 16px 30px rgba(42, 134, 255, 0.24);
+}
+
+.card-button:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, #4a8cffd8, #1db0ffbe);
+}
+
+.card-button-disabled {
+    background: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+}
+
+.coming-soon {
+    opacity: 0.95;
+}
+
+@media (max-width: 640px) {
+    .games-shell {
+        padding: 1.5rem 1rem 6.5rem;
+    }
+
+    .card-image {
+        height: 180px;
+    }
+}

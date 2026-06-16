@@ -1,0 +1,336 @@
+/* theme.css - Global unified theme based on home page design */
+:root {
+  --font-family: 'Poppins', 'Noto Sans Arabic', sans-serif;
+  --bg-color: #1f5050;
+  /* from home.css */
+  --text-color: #f5f5dc;
+  /* from home.css */
+  --primary-1: #3778ff;
+  --primary-2: #1a9fff;
+  --accent: #7dd3fc;
+  --glass-border: rgb(253, 8, 8);
+  --radius: 12px;
+  --btn-radius: 15px;
+  --max-content-width: 1200px;
+}
+
+/* reset + base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  -webkit-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+input, textarea, [contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+/* Global background used by many pages */
+.game-background {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+  pointer-events: none;
+}
+
+@media (max-width:768px) {
+  .game-background {
+    background-attachment: scroll
+  }
+}
+
+/* Global container with logical padding */
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-block: 1rem;
+  padding-inline: 1rem;
+  position: relative;
+  z-index: 1
+}
+
+/* Logical formatting utilities (for LTR/RTL friendly layouts) */
+.text-center {
+  text-align: center
+}
+
+.margin-inline-auto {
+  margin-inline: auto
+}
+
+.padding-inline-sm {
+  padding-inline: 0.5rem
+}
+
+.padding-inline-md {
+  padding-inline: 1rem
+}
+
+.padding-inline-lg {
+  padding-inline: 1.5rem
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0
+}
+
+/* Standard button / call-to-action reset using logical properties */
+.btn,
+.menu-button,
+.card-button,
+.auth-button,
+.back-button,
+.section-btn,
+.card-button-disabled {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-block: 0.8rem;
+  padding-inline: 1rem;
+  border-radius: var(--btn-radius);
+  border: 0;
+  cursor: pointer;
+  transition: all .25s ease;
+  text-align: center;
+  font-weight: 700;
+  font-family: var(--font-family);
+}
+
+/* make primary CTAs scale with viewport while staying consistent */
+.btn-primary,
+.menu-button {
+  background: linear-gradient(135deg, var(--primary-1), var(--primary-2));
+  color: #fff
+}
+
+.btn:disabled,
+.card-button-disabled {
+  opacity: .6;
+  cursor: not-allowed
+}
+
+/* Ensure icons + text inside buttons stay centered in RTL/LTR */
+.btn .btn-icon,
+.menu-button .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center
+}
+
+.btn .btn-text,
+.menu-button .btn-text {
+  display: inline-block;
+  text-align: center
+}
+
+/* Header and title scaling (keeps same flow coordinates but adapts font-size) */
+.header-title h1,
+.store-title h1,
+.games-header h1,
+.game-header h1 {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.05
+}
+
+.header-title p,
+.game-header p,
+.header-title p {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: clamp(.9rem, 2.5vw, 1.1rem);
+  max-width: 70ch
+}
+
+/* Footer navigation / dock responsive rules */
+.footer-nav {
+  position: relative;
+  width: 100%;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-around;
+  padding-block: 0.6rem;
+  padding-inline: 0.5rem;
+  z-index: 2
+}
+
+.footer-nav .nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: .25rem;
+  font-size: 0.9rem
+}
+
+.footer-nav .nav-icon {
+  font-size: 1.25rem
+}
+
+/* Store header and sections scale cleanly without moving coordinates */
+.store-header {
+  padding-block: clamp(.6rem, 2.2vw, .9rem);
+  padding-inline: 0.8rem;
+  backdrop-filter: blur(5px);
+}
+
+.store-title h1 {
+  font-size: clamp(1.4rem, 3.2vw, 2rem);
+  margin: 0;
+  white-space: nowrap;
+  text-align: center
+}
+
+.store-sections {
+  display: flex;
+  gap: .6rem;
+  justify-content: center;
+  padding-block: .4rem;
+  padding-inline: .6rem;
+  overflow-x: auto
+}
+
+.store-sections .section-btn {
+  padding-block: .55rem;
+  padding-inline: .9rem
+}
+
+/* Cards and shells */
+.games-shell,
+.store-shell {
+  max-width: var(--max-content-width);
+  margin-inline: auto;
+  padding-inline: clamp(.5rem, 2vw, 1.5rem)
+}
+
+.game-card,
+.auth-wrapper,
+.mode-container,
+.stat-card {
+  border-radius: var(--radius);
+  padding: 1rem
+}
+
+/* Accessibility: ensure focus outlines remain visible */
+:focus {
+  outline: 3px solid rgba(55, 120, 255, 0.18);
+  outline-offset: 2px
+}
+
+/* Small viewport adjustments to avoid layout jumps */
+@media (max-width:480px) {
+  .menu-button {
+    font-size: 1.15rem;
+    padding-block: .9rem;
+    padding-inline: 1rem
+  }
+
+  .footer-nav {
+    gap: .6rem
+  }
+
+  .store-sections {
+    top: auto
+  }
+}
+
+/* Lightweight helpers for aligning blocks logically */
+.block-center {
+  margin-inline: auto;
+  max-width: 100%
+}
+
+/* End of theme.css */
+
+/* Overlay sections (used for SPA overlays like profile/store while a game is active) */
+.overlay-section {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 2.5rem;
+  overflow: auto;
+}
+
+.overlay-section>.container,
+.overlay-section>.store-shell,
+.overlay-section>.auth-wrapper {
+  max-width: 960px;
+  width: 100%;
+  margin-inline: 1rem
+}
+
+.overlay-close {
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  z-index: 10000;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  border: 0;
+  padding: .6rem .8rem;
+  border-radius: 999px;
+  cursor: pointer
+}
+
+/* Unified Global Back/Action Buttons */
+.back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 12px;
+  background: rgba(219, 7, 7, 0.6);
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  flex-shrink: 0;
+}
+
+.back-button:hover {
+  background: rgba(255, 50, 50, 0.8);
+  transform: translateY(-2px);
+}

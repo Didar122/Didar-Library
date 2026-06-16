@@ -1,0 +1,1843 @@
+/* =====================================================
+   DAMA GAME - MAIN STYLES
+   ===================================================== */
+
+#dama {
+    font-family: var(--font-family, 'Poppins', 'Noto Sans Arabic', sans-serif);
+    color: var(--text-color, #fff);
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+/* =====================================================
+   BACKGROUND
+   ===================================================== */
+
+#dama .game-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    z-index: -2;
+    pointer-events: none;
+}
+
+#dama .game-background::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0);
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* =====================================================
+   GAME SCREENS
+   ===================================================== */
+
+#dama .game-screen {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1rem 0 5.5rem 0;
+    opacity: 0;
+    pointer-events: none;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+#dama .game-screen.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* =====================================================
+   MODE SELECTION SCREEN
+   ===================================================== */
+
+#dama .mode-container,
+#dama .type-container,
+#dama .game-container {
+    position: relative;
+    z-index: 5;
+    max-width: min(95vw, 980px);
+    margin: 1rem auto;
+    background: rgba(0, 0, 0, 0.18);
+    backdrop-filter: blur(8px);
+    border-radius: 30px;
+    padding: 1.25rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.25);
+}
+
+/* Splash Screen Container - Blurry Glass Effect */
+#dama .splash-container {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    z-index: 999;
+}
+
+#dama .game-header {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+#dama .game-icon {
+    width: 150px;
+    height: 150px;
+    margin-bottom: 0.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+}
+
+#dama .game-header h1 {
+    font-size: clamp(2rem, 4vw, 2.5rem);
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.65);
+}
+
+#dama .game-header p {
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.55);
+}
+
+/* =====================================================
+   MODE SELECTION BUTTONS
+   ===================================================== */
+
+#dama .mode-selection,
+#dama .type-selection {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+#dama .mode-button,
+#dama .type-button {
+    position: relative;
+    padding: 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.11);
+    background: rgba(56, 104, 161, 0.527);
+    backdrop-filter: blur(30px);
+    color: #fff;
+    border-radius: var(--btn-radius, 15px);
+    cursor: pointer;
+    font-family: var(--font-family, 'Poppins', 'Noto Sans Arabic', sans-serif);
+    font-weight: 700;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 0.75rem;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0);
+    max-height: 160px;
+    min-width: 120px;
+}
+
+#dama .mode-button i,
+#dama .type-button i {
+    font-size: 2.4rem;
+}
+
+#dama .mode-button:hover:not(.coming-soon),
+#dama .type-button:hover {
+    transform: translateY(-4px);
+    background: rgba(80, 114, 199, 0.65);
+    backdrop-filter: blur(15px);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 24px rgba(26, 159, 255, 0.2), inset 0 0 10px rgba(26, 159, 255, 0.18);
+}
+
+#dama .mode-button.coming-soon,
+#dama .type-button:disabled {
+    opacity: 0.75;
+    cursor: not-allowed;
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(20px);
+}
+
+#dama .type-button {
+    flex-direction: column;
+}
+
+#dama .type-button h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+#dama .type-button p {
+    font-size: 0.9rem;
+    color: #dcdcdc;
+    text-align: center;
+    font-weight: 400;
+    text-transform: none;
+}
+
+/* =====================================================
+   DIFFICULTY SELECTION
+   ===================================================== */
+
+#dama .difficulty-selection {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+#dama .difficulty-button {
+    position: relative;
+    padding: 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.11);
+    background: rgba(56, 104, 161, 0.527);
+    backdrop-filter: blur(30px);
+    color: #fff;
+    border-radius: var(--btn-radius, 15px);
+    cursor: pointer;
+    font-family: var(--font-family, 'Poppins', 'Noto Sans Arabic', sans-serif);
+    font-weight: 700;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    text-transform: uppercase;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.15);
+    max-height: 160px;
+    min-width: 100px;
+}
+
+#dama .difficulty-button i {
+    font-size: 2.4rem;
+}
+
+#dama .difficulty-button:hover {
+    transform: translateY(-4px);
+    background: rgba(69, 112, 223, 0.6);
+    backdrop-filter: blur(15px);
+    border-color: rgba(255, 255, 255, 0.075);
+    box-shadow: 0 10px 24px rgba(26, 159, 255, 0.2), inset 0 0 10px rgba(26, 159, 255, 0.15);
+}
+
+#dama .difficulty-button h3 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+#dama .difficulty-button p {
+    font-size: 0.9rem;
+    color: #dcdcdc;
+    text-align: center;
+    font-weight: 400;
+    text-transform: none;
+}
+
+/* Difficulty-specific colors */
+#dama .difficulty-button[data-difficulty="easy"] {
+    background: rgba(34, 139, 34, 0.527);
+    border-color: rgba(144, 238, 144, 0.3);
+}
+
+#dama .difficulty-button[data-difficulty="easy"]:hover {
+    background: rgba(50, 205, 50, 0.7);
+    border-color: rgba(144, 238, 144, 0.6);
+    box-shadow: 0 10px 24px rgba(144, 238, 144, 0.3), inset 0 0 10px rgba(144, 238, 144, 0.25);
+}
+
+#dama .difficulty-button[data-difficulty="medium"] {
+    background: rgba(184, 134, 11, 0.527);
+    border-color: rgba(218, 165, 32, 0.3);
+}
+
+#dama .difficulty-button[data-difficulty="medium"]:hover {
+    background: rgba(218, 165, 32, 0.7);
+    border-color: rgba(255, 215, 0, 0.6);
+    box-shadow: 0 10px 24px rgba(255, 215, 0, 0.3), inset 0 0 10px rgba(255, 215, 0, 0.25);
+}
+
+#dama .difficulty-button[data-difficulty="hard"] {
+    background: rgba(255, 69, 0, 0.527);
+    border-color: rgba(255, 140, 0, 0.3);
+}
+
+#dama .difficulty-button[data-difficulty="hard"]:hover {
+    background: rgba(255, 99, 71, 0.7);
+    border-color: rgba(255, 160, 0, 0.6);
+    box-shadow: 0 10px 24px rgba(255, 140, 0, 0.3), inset 0 0 10px rgba(255, 140, 0, 0.25);
+}
+
+#dama .difficulty-button[data-difficulty="extreme"] {
+    background: rgba(139, 0, 0, 0.527);
+    border-color: rgba(220, 20, 60, 0.3);
+}
+
+#dama .difficulty-button[data-difficulty="extreme"]:hover {
+    background: rgba(178, 34, 52, 0.7);
+    border-color: rgba(220, 20, 60, 0.6);
+    box-shadow: 0 10px 24px rgba(220, 20, 60, 0.3), inset 0 0 10px rgba(220, 20, 60, 0.25);
+}
+
+/* =====================================================
+   BACK SECTION
+   ===================================================== */
+
+#dama .back-section {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+#dama .back-button,
+#dama .back-to-games {
+    padding: 0.85rem 1.5rem;
+    border: none;
+    background: linear-gradient(135deg, rgba(40, 86, 169, 0.85), rgba(30, 71, 150, 0.85));
+    color: #fff;
+    border-radius: var(--btn-radius, 15px);
+    cursor: pointer;
+    font-family: var(--font-family, 'Poppins', 'Noto Sans Arabic', sans-serif);
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-transform: uppercase;
+}
+
+#dama .back-button:hover,
+#dama .back-to-games:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+}
+
+/* =====================================================
+   GAME BOARD SCREEN
+   ===================================================== */
+
+#dama .game-container {
+    width: min(95vw, 980px);
+    max-width: 980px;
+    min-width: 320px;
+    margin: 1rem auto;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: rgba(0, 0, 0, 0.14);
+    border-radius: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+#dama .game-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+    min-height: auto;
+}
+
+#dama .game-info {
+    flex: 1;
+    min-width: 220px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#dama .back-button,
+#dama .menu-button,
+#dama .leave-game-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-align: center;
+    border-radius: var(--btn-radius, 15px);
+    font-family: var(--font-family, 'Poppins', 'Noto Sans Arabic', sans-serif);
+    font-weight: 700;
+    transition: all 0.25s ease;
+    height: auto;
+    white-space: nowrap;
+}
+
+#dama .game-top-bar>.back-button,
+#dama .game-top-bar>.menu-button {
+    flex: 0 0 auto;
+    max-width: 200px;
+    min-width: 120px;
+    width: auto;
+    padding: 0.75rem 1.2rem;
+}
+
+#dama .game-type-display {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+    font-weight: 500;
+}
+
+#dama .bottom-action-container {
+    display: none;
+    justify-content: center;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+#dama .bottom-action-container .leave-game-button {
+    padding: 0.9rem 1.8rem;
+    font-size: 1rem;
+    width: min(100%, 260px);
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(244, 67, 54, 0.85), rgba(229, 57, 53, 0.9));
+    border: none;
+    color: #fff;
+}
+
+#dama .turn-info-modern {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    color: #fff;
+    display: inline-block;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.12), 0 0 15px rgba(255, 255, 255, 0.16);
+}
+
+#dama .turn-info-modern.white-turn {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.65), rgba(230, 230, 230, 0.45));
+    color: #ffffff;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.25), 0 0 15px rgba(255, 255, 255, 0.3);
+    text-shadow: 0 2px 4px rgb(0, 0, 0, 0.25);
+}
+
+#dama .turn-info-modern.black-turn {
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.62));
+    color: #f0f0f0;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.15), 0 0 15px rgba(255, 255, 255, 0.12);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+#dama .feedback-message {
+    font-size: 0.9rem;
+    color: #ffc107;
+    margin-top: 0.5rem;
+    padding: 0.65rem 0.9rem;
+    background: rgba(255, 193, 7, 0.12);
+    border-radius: 10px;
+    border-left: 3px solid #ffc107;
+    animation: slideIn 0.3s ease-out;
+}
+
+#dama .menu-button {
+    padding: 0.75rem 1.2rem;
+    max-width: 220px;
+    width: auto;
+    background: linear-gradient(135deg, var(--primary-1, #3778ff), var(--primary-2, #1a9fff));
+    border: none;
+    color: #fff;
+    border-radius: var(--btn-radius, 15px);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+#dama .menu-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(55, 120, 255, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* =====================================================
+   GAME BOARD
+   ===================================================== */
+
+#dama .game-board-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+    margin-bottom: 1rem;
+}
+
+#dama .board-container {
+    flex-shrink: 0;
+}
+
+#dama .game-board {
+    width: 500px;
+    height: 500px;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    grid-template-rows: repeat(8, 1fr);
+    background: linear-gradient(135deg, #8b6f47 0%, #a0826d 100%);
+    border: 8px solid #5a4a3a;
+    border-radius: 20px;
+    gap: 0;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+#dama .square {
+    aspect-ratio: 1;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    position: relative;
+    cursor: grab;
+    transition: background-color 0.2s ease;
+}
+
+#dama .square.dark {
+    background: linear-gradient(135deg, #5a4a3a 0%, #4a3a2a 100%);
+}
+
+#dama .square.light {
+    background: linear-gradient(135deg, #d4a574 0%, #c29462 100%);
+}
+
+#dama .square.highlight {
+    background: rgba(76, 175, 80, 0.35);
+    box-shadow: inset 0 0 10px rgba(76, 175, 80, 0.6);
+}
+
+#dama .square.invalid {
+    animation: shake 0.3s ease;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+/* =====================================================
+   GAME PIECES
+   ===================================================== */
+
+#dama .piece {
+    position: absolute;
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    cursor: grab;
+    user-select: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), top 0.3s ease, left 0.3s ease;
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.2), 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+#dama .piece.white {
+    background: linear-gradient(135deg, #e8dcc8 0%, #d4c4b0 100%);
+    color: #3a3a3a;
+}
+
+#dama .piece.black {
+    background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+    color: #e8dcc8;
+    box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.1), inset 2px 2px 4px rgba(0, 0, 0, 0.3), 0 4px 8px rgba(0, 0, 0, 0.7);
+}
+
+#dama .piece.king::before {
+    content: '♛';
+    font-size: 1rem;
+    margin-left: 0.2rem;
+}
+
+#dama .piece:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.2), 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+#dama .piece.dragging {
+    opacity: 0.95;
+    cursor: grabbing;
+    z-index: 1000;
+    width: 52px;
+    height: 52px;
+    min-width: 42px;
+    min-height: 42px;
+    max-width: 72px;
+    max-height: 72px;
+    transform: translate(-50%, -50%) scale(1);
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.2), 0 8px 16px rgba(0, 0, 0, 0.8), 0 0 18px rgba(76, 175, 80, 0.25);
+}
+
+#dama .piece.selected {
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.2), 0 0 20px rgba(76, 175, 80, 0.6), 0 6px 12px rgba(0, 0, 0, 0.6);
+    animation: glow 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow:
+            inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+            inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+            0 0 15px rgba(76, 175, 80, 0.4),
+            0 6px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    to {
+        box-shadow:
+            inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+            inset 2px 2px 4px rgba(255, 255, 255, 0.2),
+            0 0 25px rgba(76, 175, 80, 0.8),
+            0 6px 12px rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* =====================================================
+   BOARD VARIANTS
+   ===================================================== */
+
+#dama .game-board.board-marble {
+    background: linear-gradient(135deg, #a0a0a0 0%, #c0c0c0 50%, #b0b0b0 100%);
+    border: 8px solid #707070;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.3), inset 0 0 30px rgba(0, 0, 0, 0.3);
+}
+
+#dama .game-board.board-marble .square.dark {
+    background: linear-gradient(135deg, #505050 0%, #707070 50%, #606060 100%);
+}
+
+#dama .game-board.board-marble .square.light {
+    background: linear-gradient(135deg, #d8d8d8 0%, #e8e8e8 50%, #d0d0d0 100%);
+}
+
+/* Board Variants - Neon */
+#dama .game-board.board-neon {
+    background-image: url('../../../assets/images/board-neon.svg');
+    background-size: cover;
+    background-position: center;
+    border: 8px solid #0f0c1b;
+    box-shadow: 0 0 40px rgba(0, 243, 255, 0.4), inset 0 0 20px rgba(255, 0, 127, 0.3);
+}
+
+#dama .game-board.board-neon .square.dark {
+    background: rgba(15, 12, 27, 0.65);
+    border: 1px solid rgba(0, 243, 255, 0.25);
+}
+
+#dama .game-board.board-neon .square.light {
+    background: rgba(30, 25, 60, 0.4);
+    border: 1px solid rgba(255, 0, 127, 0.2);
+}
+
+/* Board Variants - Royal */
+#dama .game-board.board-royal {
+    background-image: url('../../../assets/images/board-royal.svg');
+    background-size: cover;
+    background-position: center;
+    border: 8px solid #b8860b;
+    box-shadow: 0 0 40px rgba(218, 165, 32, 0.5), inset 0 0 20px rgba(10, 17, 40, 0.6);
+}
+
+#dama .game-board.board-royal .square.dark {
+    background: rgba(10, 17, 40, 0.8);
+    border: 1px solid rgba(218, 165, 32, 0.35);
+}
+
+#dama .game-board.board-royal .square.light {
+    background: rgba(255, 226, 89, 0.25);
+    border: 1px solid rgba(218, 165, 32, 0.2);
+}
+
+/* Board Variants - Cosmic (Legendary animated vortex) */
+#dama .game-board.board-cosmic {
+    background-image: url('../../../assets/images/board-cosmic.svg');
+    background-size: cover;
+    background-position: center;
+    border: 8px solid #2c1654;
+    box-shadow: 0 0 50px rgba(218, 68, 217, 0.6), inset 0 0 25px rgba(138, 43, 226, 0.4);
+    animation: cosmic-vortex-board 20s linear infinite;
+}
+
+@keyframes cosmic-vortex-board {
+    0% {
+        box-shadow: 0 0 40px rgba(218, 68, 217, 0.5), inset 0 0 20px rgba(138, 43, 226, 0.3);
+    }
+
+    50% {
+        box-shadow: 0 0 60px rgba(0, 255, 255, 0.7), inset 0 0 30px rgba(138, 43, 226, 0.5);
+    }
+
+    100% {
+        box-shadow: 0 0 40px rgba(218, 68, 217, 0.5), inset 0 0 20px rgba(138, 43, 226, 0.3);
+    }
+}
+
+#dama .game-board.board-cosmic .square.dark {
+    background: rgba(18, 7, 43, 0.75);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+}
+
+#dama .game-board.board-cosmic .square.light {
+    background: rgba(218, 68, 217, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.15);
+}
+
+/* =====================================================
+   PIECE VARIANTS
+   ===================================================== */
+
+#dama .piece.piece-metallic.white {
+    background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 50%, #d0d0d0 100%);
+    color: #3a3a3a;
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.2), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(200, 200, 200, 0.6);
+}
+
+#dama .piece.piece-metallic.black {
+    background: linear-gradient(135deg, #606060 0%, #808080 50%, #505050 100%);
+    color: #e8e8e8;
+    box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.15), inset 2px 2px 4px rgba(0, 0, 0, 0.4), 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 12px rgba(128, 128, 128, 0.6);
+}
+
+#dama .piece.piece-metallic:hover {
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.2), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 6px 12px rgba(0, 0, 0, 0.6), 0 0 16px rgba(192, 192, 192, 0.8);
+}
+
+#dama .piece.piece-metallic.selected {
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.2), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 0 20px rgba(76, 175, 80, 0.6), 0 0 15px rgba(192, 192, 192, 1), 0 6px 12px rgba(0, 0, 0, 0.6);
+    animation: glow-metallic 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes glow-metallic {
+    from {
+        box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.2), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 0 15px rgba(76, 175, 80, 0.4), 0 0 10px rgba(192, 192, 192, 0.7), 0 6px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    to {
+        box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.2), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 0 25px rgba(76, 175, 80, 0.8), 0 0 20px rgba(192, 192, 192, 1), 0 6px 12px rgba(0, 0, 0, 0.6);
+    }
+}
+
+/* Piece Variants - Neon */
+#dama .piece.piece-neon.white {
+    background: radial-gradient(circle, #2a1b4e 0%, #0d081f 100%);
+    border: 3px solid #00f3ff;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.7), inset 0 0 8px rgba(0, 243, 255, 0.5);
+    color: #00f3ff;
+}
+
+#dama .piece.piece-neon.black {
+    background: radial-gradient(circle, #3a0b2d 0%, #150210 100%);
+    border: 3px solid #ff007f;
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.7), inset 0 0 8px rgba(255, 0, 127, 0.5);
+    color: #ff007f;
+}
+
+#dama .piece.piece-neon:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: 0 0 22px rgba(0, 243, 255, 0.9), inset 0 0 12px rgba(0, 243, 255, 0.7);
+}
+
+#dama .piece.piece-neon.selected {
+    box-shadow: 0 0 25px rgba(0, 243, 255, 1), inset 0 0 15px rgba(0, 243, 255, 0.8), 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Piece Variants - Royal */
+#dama .piece.piece-royal.white {
+    background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+    border: 3px solid #ffffff;
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 4px 8px rgba(0, 0, 0, 0.5), 0 0 12px rgba(255, 215, 0, 0.5);
+    color: #4a3300;
+}
+
+#dama .piece.piece-royal.black {
+    background: linear-gradient(135deg, #1f2d5a 0%, #0a1128 100%);
+    border: 3px solid #e5b823;
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.5), inset 2px 2px 4px rgba(255, 255, 255, 0.2), 0 4px 8px rgba(0, 0, 0, 0.7), 0 0 12px rgba(218, 165, 32, 0.4);
+    color: #e5b823;
+}
+
+#dama .piece.piece-royal:hover {
+    transform: translate(-50%, -50%) scale(1.1);
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 6px 12px rgba(0, 0, 0, 0.6), 0 0 16px rgba(255, 215, 0, 0.8);
+}
+
+#dama .piece.piece-royal.selected {
+    box-shadow: inset -2px -2px 4px rgba(0, 0, 0, 0.3), inset 2px 2px 4px rgba(255, 255, 255, 0.6), 0 0 25px rgba(255, 215, 0, 1), 0 6px 12px rgba(0, 0, 0, 0.6);
+}
+
+/* Piece Variants - Cosmic (Legendary animated vortex) */
+#dama .piece.piece-cosmic.white {
+    background: radial-gradient(circle, #da44d9 0%, #1c0530 100%);
+    border: 3px solid #00ffff;
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.7), inset 0 0 10px rgba(218, 68, 217, 0.5);
+    color: #ffffff;
+    animation: cosmic-vortex-piece-glow 2.5s infinite alternate;
+}
+
+#dama .piece.piece-cosmic.black {
+    background: radial-gradient(circle, #8a2be2 0%, #060212 100%);
+    border: 3px solid #da44d9;
+    box-shadow: 0 0 15px rgba(218, 68, 217, 0.7), inset 0 0 10px rgba(138, 43, 226, 0.5);
+    color: #00ffff;
+    animation: cosmic-vortex-piece-glow-alt 2.5s infinite alternate;
+}
+
+@keyframes cosmic-vortex-piece-glow {
+    0% {
+        box-shadow: 0 0 12px rgba(0, 255, 255, 0.6), inset 0 0 8px rgba(218, 68, 217, 0.4);
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        box-shadow: 0 0 25px rgba(0, 255, 255, 0.95), 0 0 15px rgba(218, 68, 217, 0.7), inset 0 0 14px rgba(0, 255, 255, 0.6);
+        transform: translate(-50%, -50%) scale(1.06);
+    }
+}
+
+@keyframes cosmic-vortex-piece-glow-alt {
+    0% {
+        box-shadow: 0 0 12px rgba(218, 68, 217, 0.6), inset 0 0 8px rgba(138, 43, 226, 0.4);
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        box-shadow: 0 0 25px rgba(218, 68, 217, 0.95), 0 0 15px rgba(138, 43, 226, 0.7), inset 0 0 14px rgba(218, 68, 217, 0.6);
+        transform: translate(-50%, -50%) scale(1.06);
+    }
+}
+
+/* =====================================================
+   CAPTURED PIECES
+   ===================================================== */
+
+#dama .captured-pieces {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.18);
+    border-radius: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.16);
+    display: flex;
+    gap: 0;
+    overflow: visible;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+/* PC: vertical stack (one column) */
+@media (min-width: 769px) {
+    #dama .captured-pieces {
+        flex-direction: column;
+        width: 55px;
+        min-height: 400px;
+        overflow: visible;
+    }
+}
+
+/* Mobile: horizontal scroll (one row) */
+@media (max-width: 768px) {
+    #dama .captured-pieces {
+        flex-direction: row;
+        width: 100%;
+        height: 70px;
+        min-height: 70px;
+        overflow: visible;
+    }
+}
+
+#dama .captured-list {
+    display: contents;
+}
+
+#dama .captured-piece {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.5rem;
+    font-weight: 700;
+    box-shadow: inset -1px -1px 2px rgba(0, 0, 0, 0.3), inset 1px 1px 2px rgba(255, 255, 255, 0.1), 0 2px 4px rgba(0, 0, 0, 0.45);
+    flex-shrink: 0;
+    position: absolute;
+    margin: 10px;
+    top: 100%;
+    left: 100%;
+    transform: translate(-1%, -1%);
+}
+
+/* PC: vertical stacking - offset by y coordinate */
+@media (min-width: 769px) {
+    #dama .captured-piece {
+        left: 50%;
+    }
+}
+
+/* Mobile: horizontal stacking - offset by x coordinate */
+@media (max-width: 768px) {
+    #dama .captured-piece {
+        top: 50%;
+    }
+}
+
+#dama .captured-piece.white {
+    background: linear-gradient(135deg, #e8dcc8 0%, #d4c4b0 100%);
+    color: #3a3a3a;
+}
+
+#dama .captured-piece.black {
+    background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+    color: #e8dcc8;
+}
+
+/* Captured pieces - Metallic */
+#dama .captured-piece.piece-metallic.white {
+    background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 50%, #d0d0d0 100%);
+}
+
+#dama .captured-piece.piece-metallic.black {
+    background: linear-gradient(135deg, #606060 0%, #808080 50%, #505050 100%);
+}
+
+/* Captured pieces - Neon */
+#dama .captured-piece.piece-neon.white {
+    background: radial-gradient(circle, #2a1b4e 0%, #0d081f 100%);
+    border: 1.5px solid #00f3ff;
+}
+
+#dama .captured-piece.piece-neon.black {
+    background: radial-gradient(circle, #3a0b2d 0%, #150210 100%);
+    border: 1.5px solid #ff007f;
+}
+
+/* Captured pieces - Royal */
+#dama .captured-piece.piece-royal.white {
+    background: linear-gradient(135deg, #ffe259 0%, #ffa751 100%);
+    border: 1.5px solid #ffffff;
+}
+
+#dama .captured-piece.piece-royal.black {
+    background: linear-gradient(135deg, #1f2d5a 0%, #0a1128 100%);
+    border: 1.5px solid #e5b823;
+}
+
+/* Captured pieces - Cosmic */
+#dama .captured-piece.piece-cosmic.white {
+    background: radial-gradient(circle, #da44d9 0%, #1c0530 100%);
+    border: 1.5px solid #00ffff;
+}
+
+#dama .captured-piece.piece-cosmic.black {
+    background: radial-gradient(circle, #8a2be2 0%, #060212 100%);
+    border: 1.5px solid #da44d9;
+}
+
+/* =====================================================
+   GAME STATS
+   ===================================================== */
+
+#dama .game-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2.5rem;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.24);
+    border-radius: 15px;
+}
+
+#dama .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.05rem;
+}
+
+#dama .stat-label {
+    color: #d2d2d2;
+    font-weight: 500;
+}
+
+#dama .stat-value {
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #4caf50;
+}
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+#dama .modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#dama .modal.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#dama .modal-content {
+    background: linear-gradient(135deg, #23262f 0%, #15161b 100%);
+    padding: 2rem;
+    border-radius: 20px;
+    text-align: center;
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.65);
+    max-width: 520px;
+    width: 90%;
+}
+
+#dama .modal-content h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+#dama #gameOverMessage {
+    font-size: 1.1rem;
+    color: #dcdcdc;
+    margin-bottom: 1.5rem;
+}
+
+#dama .modal-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#dama .modal-button {
+    padding: 1rem 2rem;
+    border: none;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.85), rgba(56, 155, 60, 0.85));
+    color: #fff;
+    border-radius: var(--btn-radius, 15px);
+    cursor: pointer;
+    font-family: var(--font-family, 'Poppins', 'Noto Sans Arabic', sans-serif);
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.25s ease;
+    text-transform: uppercase;
+}
+
+#dama .modal-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.35);
+}
+
+#dama .modal-button.secondary {
+    background: linear-gradient(135deg, rgba(90, 90, 90, 0.85), rgba(70, 70, 70, 0.85));
+}
+
+#dama .modal-button.secondary:hover {
+    box-shadow: 0 8px 20px rgba(100, 100, 100, 0.35);
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 1200px) {
+    #dama .game-board {
+        width: 400px;
+        height: 400px;
+    }
+
+    #dama .captured-pieces {
+        width: 100px;
+        min-height: 350px;
+    }
+
+    #dama .mode-container,
+    #dama .type-container {
+        width: 90vw;
+        max-width: 600px;
+        padding: 1.5rem;
+    }
+
+    #dama .mode-selection,
+    #dama .type-selection {
+        grid-template-columns: 1fr;
+    }
+
+    #dama .difficulty-selection {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    #dama {
+        font-size: 14px;
+    }
+
+    #dama .mode-container,
+    #dama .type-container,
+    #dama .game-container {
+        width: min(95vw, 540px);
+        height: auto;
+        max-height: none;
+        padding: 1rem;
+        margin: 0 auto;
+        background: rgba(0, 0, 0, 0.151);
+    }
+
+    #dama .game-icon {
+        width: 60px;
+        height: 60px;
+    }
+
+    #dama .game-header h1 {
+        font-size: 1.8rem;
+    }
+
+    #dama .mode-selection,
+    #dama .type-selection,
+    #dama .difficulty-selection {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    #dama .mode-button,
+    #dama .type-button,
+    #dama .difficulty-button {
+        padding: 1.2rem;
+        font-size: 0.95rem;
+    }
+
+    #dama .mode-button i,
+    #dama .type-button i,
+    #dama .difficulty-button i {
+        font-size: 2rem;
+    }
+
+    /* Game Board Mobile */
+    #dama .game-board-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    #dama .game-board {
+        width: min(90vw, 520px);
+        max-width: 520px;
+        height: auto;
+        aspect-ratio: 1;
+        border: 6px solid #5a4a3a;
+    }
+
+    #dama .captured-pieces {
+        flex-direction: row;
+        width: 100%;
+        max-width: 500px;
+        min-height: auto;
+        height: 70px;
+        justify-content: flex-start;
+        padding: 0.75rem;
+    }
+
+    #dama .captured-pieces h4 {
+        position: absolute;
+        font-size: 0.75rem;
+        top: -20px;
+    }
+
+    #dama .captured-list {
+        flex: 1;
+        flex-wrap: wrap;
+    }
+}
+
+/* =====================================================
+   MULTIPLAYER STYLES
+   ===================================================== */
+
+/* Timer Display */
+#dama .timer-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 140, 0, 0.3);
+    border-radius: 10px;
+    border: 2px solid rgba(255, 140, 0, 0.5);
+    margin-top: 0.5rem;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: center;
+}
+
+#dama .timer-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    justify-content: center;
+}
+
+#dama .timer-value {
+    font-size: 1.5rem;
+    color: #ffc107;
+    min-width: 30px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    #dama .timer-display {
+        width: 100%;
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}
+
+#dama .timer-warning {
+    color: #ff6b6b !important;
+    animation: pulse-warning 0.5s infinite alternate;
+}
+
+@keyframes pulse-warning {
+    from {
+        text-shadow: 0 0 5px rgba(255, 107, 107, 0.5);
+    }
+
+    to {
+        text-shadow: 0 0 15px rgba(255, 107, 107, 0.8);
+    }
+}
+
+/* Leave Game Button */
+#dama .leave-game-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+#dama .leave-game-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(244, 67, 54, 0.8);
+    color: white;
+    border: 2px solid rgba(244, 67, 54, 0.5);
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+#dama .leave-game-button:hover {
+    background: rgba(244, 67, 54, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(244, 67, 54, 0.4);
+}
+
+#dama .leave-game-button i {
+    font-size: 1.1rem;
+}
+
+/* Room List */
+#dama .rooms-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 2rem;
+}
+
+#dama .rooms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+#dama .room-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    background: rgba(56, 104, 161, 0.527);
+    backdrop-filter: blur(30px);
+    border: 2px solid rgba(255, 255, 255, 0.11);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#dama .room-item:hover {
+    transform: translateX(5px);
+    background: rgba(80, 114, 199, 0.6);
+    border-color: rgba(255, 255, 255, 0.068);
+    box-shadow: 0 8px 20px rgba(26, 159, 255, 0.2);
+}
+
+#dama .room-info {
+    flex: 1;
+}
+
+#dama .room-info h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.2rem;
+}
+
+#dama .room-info p {
+    font-size: 0.9rem;
+    color: #aaa;
+    margin: 0.25rem 0;
+}
+
+#dama .room-info span {
+    color: #fff;
+    font-weight: 600;
+}
+
+#dama .join-room-btn {
+    padding: 0.75rem 1.5rem;
+    background: rgba(76, 175, 80, 0.8);
+    border: 2px solid rgba(76, 175, 80, 0.5);
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#dama .join-room-btn:hover {
+    background: rgba(102, 187, 106, 0.9);
+    border-color: rgba(102, 187, 106, 0.8);
+    transform: scale(1.05);
+}
+
+#dama .loading-text,
+#dama .no-rooms-text {
+    text-align: center;
+    color: #aaa;
+    padding: 2rem;
+    font-size: 1.1rem;
+}
+
+/* Waiting Screen */
+#dama .waiting-container {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#dama .waiting-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+#dama .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top: 4px solid #ffc107;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+#dama #waitingStatus {
+    font-size: 1.1rem;
+    color: #ccc;
+}
+
+#dama .room-id-text {
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.25rem 0.75rem;
+    border-radius: 5px;
+    color: #ffc107;
+    font-weight: 600;
+}
+
+#dama .player-info-display {
+    background: rgba(76, 175, 80, 0.3);
+    padding: 1.5rem;
+    border-radius: 15px;
+    border: 2px solid rgba(76, 175, 80, 0.5);
+    text-align: center;
+    margin: 1rem 0;
+}
+
+#dama .player-color {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+#dama #playerColorSpan {
+    color: #ffc107;
+    text-transform: uppercase;
+}
+
+#dama .start-button {
+    padding: 1rem 2rem;
+    background: rgba(76, 175, 80, 0.8);
+    border: 2px solid rgba(76, 175, 80, 0.5);
+    color: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 auto;
+}
+
+#dama .start-button:hover {
+    background: rgba(102, 187, 106, 0.9);
+    border-color: rgba(102, 187, 106, 0.8);
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3);
+}
+
+@media (max-width: 768px) {
+    #dama .game-top-bar {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        width: 100%;
+    }
+
+    #dama .back-button {
+        order: 1;
+        flex: 1;
+        min-width: 100px;
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    #dama .menu-button {
+        order: 2;
+        flex: 1;
+        min-width: 100px;
+        padding: 0.8rem 1rem;
+        font-size: 0.95rem;
+        white-space: nowrap;
+    }
+
+    #dama .game-info {
+        order: 3;
+        flex-basis: 100%;
+        width: 100%;
+    }
+
+    #dama .timer-display {
+        order: 4;
+        flex-basis: 100%;
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    #dama .game-stats {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.75rem;
+    }
+
+    #dama .stat-item {
+        gap: 0.75rem;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #dama {
+        font-size: 13px;
+    }
+
+    #dama .mode-container,
+    #dama .type-container,
+    #dama .game-container {
+        width: 98vw;
+        padding: 2rem;
+        border-radius: 22px;
+    }
+
+    #dama .game-icon {
+        width: 150px;
+        height: 150px;
+    }
+
+    #dama .game-header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.25rem;
+    }
+
+    #dama .game-header p {
+        font-size: 1.2rem;
+    }
+
+    #dama .mode-button,
+    #dama .type-button,
+    #dama .difficulty-button {
+        padding: 1rem;
+        font-size: 0.9rem;
+        gap: 0.5rem;
+    }
+
+    #dama .mode-button i,
+    #dama .type-button i,
+    #dama .difficulty-button i {
+        font-size: 1.5rem;
+    }
+
+    #dama .type-button h3,
+    #dama .difficulty-button h3 {
+        font-size: 1rem;
+    }
+
+    #dama .type-button p,
+    #dama .difficulty-button p {
+        font-size: 0.75rem;
+    }
+
+    #dama .game-board {
+        width: min(95vw, 520px);
+        max-width: 100%;
+        aspect-ratio: 1;
+        height: auto;
+        border: 4px solid #5a4a3a;
+    }
+
+    #dama .piece {
+        width: 80%;
+        height: 80%;
+    }
+
+    #dama .captured-pieces {
+        height: 60px;
+        padding: 0.5rem;
+    }
+
+    #dama .captured-piece {
+        width: 30px;
+        height: 30px;
+        font-size: 0.5rem;
+    }
+
+    #dama .game-top-bar {
+        gap: 0.5rem;
+    }
+
+    #dama .back-button,
+    #dama .back-to-games,
+    #dama .menu-button {
+        padding: 0.8rem 1.2rem;
+        font-size: 1.1rem;
+    }
+
+    #dama .modal-content {
+        width: 95%;
+        padding: 1.5rem;
+    }
+
+    #dama .modal-content h2 {
+        font-size: 1.5rem;
+    }
+
+    #dama #gameOverMessage {
+        font-size: 1rem;
+    }
+
+    #dama .modal-button {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+/* =====================================================
+   FOOTER NAVIGATION (DOCK BAR)
+   ===================================================== */
+
+#dama .footer-nav {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    gap: 0;
+    background: rgba(64, 80, 100, 0.747);
+    /* same as home */
+    backdrop-filter: blur(6px);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999999 !important;
+    overflow: hidden;
+    height: auto;
+}
+
+#dama .footer-nav::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 80%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent 0%, rgba(255, 255, 255, 0.3) 45%, rgba(255, 255, 255, 0.1) 60%, transparent 100%);
+    transform: skewX(-25deg);
+    opacity: 1;
+    pointer-events: none;
+    animation: footerSweep 10s ease-in-out infinite 2s;
+}
+
+@keyframes footerSweep {
+    0% {
+        left: -120%;
+    }
+
+    100% {
+        left: 120%;
+    }
+}
+
+#dama .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0.25rem 0.35rem;
+    flex: 1;
+}
+
+#dama .nav-item:hover {
+    transform: translateY(-2px);
+}
+
+#dama .nav-icon {
+    font-size: 1.7rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    background: none;
+    border: none;
+    border-radius: 0;
+    filter: none;
+    transition: all 0.2s ease;
+    color: #f5f5dc;
+    /* matches home */
+}
+
+#dama .nav-item:hover .nav-icon {
+    color: #ffd966;
+}
+
+#dama .nav-item.active .nav-icon {
+    color: #ffd966;
+}
+
+#dama .nav-item.active .nav-label {
+    color: #ffd966;
+}
+
+#dama .nav-item[data-action="home"] .nav-icon {
+    color: #ffae00;
+    font-weight: bold;
+}
+
+#dama .nav-item[data-action="home"]:hover .nav-icon {
+    color: #ffcd6f;
+}
+
+#dama .nav-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #daa520;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+    font-family: var(--font-family);
+}
+
+#dama .footer-nav.hidden {
+    display: none !important;
+}
+
+#dama .nav-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.18);
+    margin: 0 0.5rem;
+}
+
+/* Adjust Dama padding for footer-nav */
+#dama {
+    padding-bottom: 80px;
+}
+
+#dama .game-screen {
+    padding-bottom: 80px;
+    min-height: 100vh;
+}
+
+#dama .mode-container,
+#dama .type-container,
+#dama .game-container {
+    padding-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+    #dama .footer-nav {
+        padding: 0.75rem 0.5rem 0.75rem 0.5rem;
+    }
+
+    #dama .nav-icon {
+        font-size: 1.5rem;
+    }
+
+    #dama .nav-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.03em;
+    }
+
+    #dama .nav-item {
+        padding: 0.2rem 0.25rem;
+    }
+}
+
+/* =====================================================
+   SPLASH SCREENS GLASSMORPHISM - BLURRED BACKGROUNDS
+   ===================================================== */
+
+#winnerSplashScreen,
+#onlineMatchStartSplashScreen,
+#gameStartSplashScreen,
+#opponentLeftSplashScreen {
+    background: rgba(15, 23, 42, 0.25) !important;
+    backdrop-filter: blur(15px) !important;
+    -webkit-backdrop-filter: blur(15px) !important;
+}
+
+/* Avatar containers styling */
+.player-avatar-card img,
+#dama .splash-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #daa520;
+    object-fit: cover;
+    margin-bottom: 12px;
+}
+
+.avatar-fallback-icon,
+#dama .avatar-icon {
+    font-size: 3rem;
+    color: #f5f5dc;
+}
+
+#dama .splash-content {
+    background: rgba(30, 41, 59, 0.65) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.4) !important;
+    padding: 30px !important;
+    border-radius: 20px !important;
+}
+
+@media (max-width: 768px) {
+    #dama .splash-content {
+        padding: 20px !important;
+        width: 92% !important;
+        max-width: 360px !important;
+        border-radius: 16px !important;
+    }
+}
+
+@media (min-width: 1201px) {
+    #dama .mode-selection {
+        justify-content: center;
+    }
+
+    #dama .mode-button {
+        width: 380px;
+        justify-self: center;
+    }
+
+    #dama .mode-button[data-mode="online-multiplayer"] {
+        grid-column: 1 / -1;
+    }
+}

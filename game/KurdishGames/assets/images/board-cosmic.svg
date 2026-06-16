@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="spaceGrad" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#2c1654"/>
+      <stop offset="40%" stop-color="#12072b"/>
+      <stop offset="100%" stop-color="#02000a"/>
+    </radialGradient>
+    <linearGradient id="cosmicLine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#da44d9"/>
+      <stop offset="50%" stop-color="#8a2be2"/>
+      <stop offset="100%" stop-color="#4169e1"/>
+    </linearGradient>
+
+    <style>
+      /* Smooth pulsing and slow rotation for the cosmic background */
+      @keyframes nebulaPulse {
+        0% {
+          transform: rotate(0deg) scale(1);
+          opacity: 0.15;
+        }
+        50% {
+          transform: rotate(180deg) scale(1.08);
+          opacity: 0.25;
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+          opacity: 0.15;
+        }
+      }
+
+      /* Breathing neon effect for the game grid */
+      @keyframes gridBreathe {
+        0% {
+          opacity: 0.3;
+          filter: drop-shadow(0px 0px 0px rgba(218, 68, 217, 0));
+        }
+        50% {
+          opacity: 0.65;
+          filter: drop-shadow(0px 0px 3px rgba(218, 68, 217, 0.8));
+        }
+        100% {
+          opacity: 0.3;
+          filter: drop-shadow(0px 0px 0px rgba(218, 68, 217, 0));
+        }
+      }
+
+      .animated-nebula {
+        transform-origin: 256px 256px;
+        animation: nebulaPulse 25s infinite linear;
+      }
+
+      .animated-grid {
+        animation: gridBreathe 4s infinite ease-in-out;
+      }
+    </style>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#spaceGrad)"/>
+  
+  <path class="animated-nebula" d="M256,256 C300,100 450,150 480,256 C500,350 350,450 256,256 Z" fill="url(#cosmicLine)" filter="blur(15px)"/>
+  
+  <g class="animated-grid" stroke="url(#cosmicLine)" stroke-width="1">
+    <path d="M 0,64 L 512,64 M 0,128 L 512,128 M 0,192 L 512,192 M 0,256 L 512,256 M 0,320 L 512,320 M 0,384 L 512,384 M 0,448 L 512,448"/>
+    <path d="M 64,0 L 64,512 M 128,0 L 128,512 M 192,0 L 192,512 M 256,0 L 256,512 M 320,0 L 320,512 M 384,0 L 384,512 M 448,0 L 448,512"/>
+  </g>
+</svg>
