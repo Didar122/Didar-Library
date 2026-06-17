@@ -1,9 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ku">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Kurdish Games">
+    <meta name="theme-color" content="#1e293b">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="apple-touch-icon" href="assets/images/icon.png">
+    <link rel="manifest" href="manifest.json">
     <title>Kurdish Games</title>
     <link rel="stylesheet" href="css/theme.css">
     <link rel="stylesheet" href="css/loading.css">
@@ -53,6 +60,10 @@
         <button id="notificationBtn" class="notification-btn" onclick="openNotificationsModal()" style="display: none;">
             <i class="fas fa-bell"></i>
             <span id="notificationBadge" class="notification-badge hidden"></span>
+        </button>
+        <button id="installAppBtn" class="install-btn hidden" onclick="promptInstallApp()">
+            <i class="fas fa-download"></i>
+            <span data-translate="install_button">Install App</span>
         </button>
         <div class="container">
             <div class="content-panel">
@@ -367,7 +378,8 @@
             <section class="about-container" style="padding: 20px; overflow-y: auto; flex: 1; color: white;">
                 <div
                     style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); box-shadow: 0 8px 32px rgba(0,0,0,0.2);">
-                    <img src="assets/images/icon.png" style="width: 80px; margin-bottom: 15px;" alt="Logo">
+                    <img id="aboutAppIcon" src="assets/images/icon.png" style="width: 140px; height:140px; object-fit:contain; margin-bottom: 12px; border-radius: 12px;" alt="Logo">
+                    <div id="aboutVersion" style="color:#ccc; font-weight:700; margin-bottom:8px;">v1.0.3</div>
                     <h2>Kurdish Games Hub</h2>
                     <p style="color: #ccc; margin-top: 10px;">A unified platform to play traditional and modern games.
                     </p>
@@ -414,9 +426,9 @@
                     <p id="aboutDevName" style="margin-top: 10px; color: #ccc;">Developed by Didar Baxtear</p>
                 </div>
 
-                <a href="#" target="_blank"
+                <a id="moreGamesLink" href="https://didar122.github.io/Didar-Library/index.html" target="_blank"
                     style="display: block; width: 100%; padding: 15px; background: #3b82f6; color: white; text-align: center; border-radius: 8px; text-decoration: none; font-weight: bold; font-size: 1.1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
-                    <i class="fas fa-gamepad" style="margin-right: 10px;"></i>More Games By Developer
+                    <i class="fas fa-gamepad" style="margin-right: 10px;"></i><span data-translate="about_more_games">More Games By Developer</span>
                 </a>
             </section>
         </div>
@@ -999,11 +1011,11 @@
                     <div class="currency-display">
                         <div class="currency-item coins">
                             <i class="fas fa-coins"></i>
-                            <span class="currency-amount" id="coinAmount">99999</span>
+                            <span class="currency-amount" id="coinAmount">0</span>
                         </div>
                         <div class="currency-item diamonds">
                             <i class="fas fa-gem"></i>
-                            <span class="currency-amount" id="diamondAmount">99999</span>
+                            <span class="currency-amount" id="diamondAmount">0</span>
                         </div>
                     </div>
                 </div>
@@ -1067,43 +1079,75 @@
             <!-- Auth Screen -->
             <div id="authScreen" class="auth-screen active">
                 <div class="auth-wrapper">
+
+                    <!-- Welcome Reward Banner -->
+                    <div class="welcome-reward-banner" id="welcomeRewardBanner">
+                        <div class="reward-banner-glow"></div>
+                        <div class="reward-banner-content">
+                            <div class="reward-banner-header">
+                                <i class="fas fa-gift reward-banner-icon"></i>
+                                <span class="reward-banner-title" data-translate="auth_reward_title">Register &amp; Get Rewards!</span>
+                            </div>
+                            <div class="reward-banner-items">
+                                <div class="reward-item">
+                                    <div class="reward-icon-wrap coins-wrap">
+                                        <i class="fas fa-coins"></i>
+                                    </div>
+                                    <div class="reward-details">
+                                        <span class="reward-amount">100</span>
+                                        <span class="reward-label" data-translate="auth_reward_coins">Coins</span>
+                                    </div>
+                                </div>
+                                <div class="reward-divider"></div>
+                                <div class="reward-item">
+                                    <div class="reward-icon-wrap diamonds-wrap">
+                                        <i class="fas fa-gem"></i>
+                                    </div>
+                                    <div class="reward-details">
+                                        <span class="reward-amount">5</span>
+                                        <span class="reward-label" data-translate="auth_reward_diamonds">Diamonds</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="auth-tabs">
                         <button class="auth-tab active" data-tab="login"><i class="fas fa-sign-in-alt"></i>
                             Login</button>
                         <button class="auth-tab" data-tab="register"><i class="fas fa-user-plus"></i> Register</button>
                     </div>
-                    <form id="loginForm" class="auth-form active">
-                        <h2>Welcome Back</h2>
-                        <p class="auth-subtitle">Sign in to your account</p>
+                    <form id="loginForm" class="auth-form active" onsubmit="handleLogin(event)">
+                        <h2 data-translate="auth_welcome_back">Welcome Back</h2>
+                        <p class="auth-subtitle" data-translate="auth_sign_in_desc">Sign in to your account</p>
                         <div class="form-group">
-                            <label><i class="fas fa-user"></i> Username</label>
+                            <label for="loginUsername" data-translate="auth_label_username"><i class="fas fa-user"></i> Username</label>
                             <input type="text" id="loginUsername" placeholder="Enter your username" required>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Password</label>
+                            <label for="loginPassword" data-translate="auth_label_password"><i class="fas fa-lock"></i> Password</label>
                             <input type="password" id="loginPassword" placeholder="Enter your password" required>
                         </div>
-                        <button type="submit" class="auth-button"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+                        <button id="loginSubmit" type="submit" class="auth-button" onclick="handleLogin(event); return false;" data-translate="auth_btn_sign_in"><i class="fas fa-sign-in-alt"></i> Sign In</button>
                         <div id="loginError" class="error-message"></div>
                     </form>
-                    <form id="registerForm" class="auth-form">
-                        <h2>Create Account</h2>
-                        <p class="auth-subtitle">Join our gaming community</p>
+                    <form id="registerForm" class="auth-form" onsubmit="handleRegister(event)">
+                        <h2 data-translate="auth_title_create_acc">Create Account</h2>
+                        <p class="auth-subtitle" data-translate="auth_register_desc">Join our gaming community</p>
                         <div class="form-group">
-                            <label><i class="fas fa-user"></i> Username</label>
+                            <label for="registerUsername" data-translate="auth_label_username"><i class="fas fa-user"></i> Username</label>
                             <input type="text" id="registerUsername" placeholder="Choose a username" required>
                             <span id="usernameAvailability" class="availability-check"></span>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Password</label>
+                            <label for="registerPassword" data-translate="auth_label_password"><i class="fas fa-lock"></i> Password</label>
                             <input type="password" id="registerPassword" placeholder="Create a password" required>
                         </div>
                         <div class="form-group">
-                            <label><i class="fas fa-lock"></i> Confirm Password</label>
+                            <label for="registerConfirm" data-translate="auth_label_confirm"><i class="fas fa-lock"></i> Confirm Password</label>
                             <input type="password" id="registerConfirm" placeholder="Confirm your password" required>
                         </div>
-                        <button type="submit" class="auth-button"><i class="fas fa-user-plus"></i> Create
-                            Account</button>
+                        <button type="submit" class="auth-button" data-translate="auth_btn_create_acc"><i class="fas fa-user-plus"></i> Create Account</button>
                         <div id="registerError" class="error-message"></div>
                     </form>
                 </div>

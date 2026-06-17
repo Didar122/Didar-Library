@@ -106,6 +106,13 @@
     transition: all 0.25s ease;
 }
 
+.auth-subtitle {
+    display: block;
+    margin-bottom: 1rem;
+    color: #cbd5e1;
+    line-height: 1.4;
+}
+
 .auth-tab.active {
     color: #ffffff;
     background: linear-gradient(135deg, rgba(55, 120, 255, 0.21), rgba(82, 132, 255, 0.18));
@@ -124,6 +131,7 @@
 .auth-screen {
     display: none;
 }
+
 .auth-screen.active {
     display: block;
 }
@@ -132,6 +140,7 @@
 .profile-screen {
     display: none;
 }
+
 .profile-screen.active {
     display: block;
 }
@@ -300,9 +309,11 @@
     0% {
         background-position: 200% 0;
     }
+
     50% {
         background-position: 0 0;
     }
+
     100% {
         background-position: -200% 0;
     }
@@ -637,4 +648,264 @@ html {
 
 * {
     scroll-behavior: smooth;
+}
+
+/* ============================================================
+   WELCOME REWARD BANNER  (shown on the login/register screen)
+   ============================================================ */
+
+.welcome-reward-banner {
+    position: relative;
+    margin-bottom: 1.5rem;
+    border-radius: 22px;
+    overflow: hidden;
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    background: linear-gradient(135deg,
+            rgba(17, 24, 39, 0.92) 0%,
+            rgba(31, 14, 60, 0.92) 50%,
+            rgba(17, 24, 39, 0.92) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+        0 0 0 1px rgba(251, 191, 36, 0.12),
+        0 8px 32px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    animation: rewardBannerPulse 3s ease-in-out infinite;
+}
+
+@keyframes rewardBannerPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 1px rgba(251, 191, 36, .12), 0 8px 32px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(255, 255, 255, .08);
+    }
+
+    50% {
+        box-shadow: 0 0 0 2px rgba(251, 191, 36, .28), 0 12px 42px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .12);
+    }
+}
+
+/* Animated glow line at the top */
+.reward-banner-glow {
+    height: 2px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(251, 191, 36, 0.0) 10%,
+            rgba(251, 191, 36, 0.9) 50%,
+            rgba(167, 139, 250, 0.9) 70%,
+            rgba(251, 191, 36, 0.0) 90%,
+            transparent 100%);
+    background-size: 200% 100%;
+    animation: bannerGlowSlide 2.4s linear infinite;
+}
+
+@keyframes bannerGlowSlide {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.reward-banner-content {
+    padding: 1rem 1.25rem 1.2rem;
+}
+
+.reward-banner-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+}
+
+.reward-banner-icon {
+    font-size: 1.2rem;
+    color: #fbbf24;
+    animation: bannerIconBounce 1.8s ease-in-out infinite;
+}
+
+@keyframes bannerIconBounce {
+
+    0%,
+    100% {
+        transform: translateY(0) rotate(-5deg);
+    }
+
+    50% {
+        transform: translateY(-4px) rotate(5deg);
+    }
+}
+
+.reward-banner-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #fbbf24;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.reward-banner-items {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.reward-item {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: transform 0.2s ease;
+}
+
+.reward-item:hover {
+    transform: translateY(-2px);
+}
+
+.reward-icon-wrap {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+}
+
+.reward-icon-wrap.coins-wrap {
+    background: linear-gradient(135deg, rgba(251, 191, 36, .22), rgba(245, 158, 11, .12));
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    color: #fbbf24;
+    box-shadow: 0 0 12px rgba(251, 191, 36, 0.2);
+}
+
+.reward-icon-wrap.diamonds-wrap {
+    background: linear-gradient(135deg, rgba(167, 139, 250, .22), rgba(139, 92, 246, .12));
+    border: 1px solid rgba(167, 139, 250, 0.3);
+    color: #ba45be;
+    box-shadow: 0 0 12px rgba(167, 139, 250, 0.2);
+}
+
+.reward-details {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.reward-amount {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+}
+
+.reward-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.reward-divider {
+    width: 1px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   WELCOME REWARD TOAST  (pops up after register / first login)
+   ============================================================ */
+
+#welcomeRewardToast {
+    position: fixed;
+    top: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(-120px);
+    z-index: 99999;
+    min-width: 280px;
+    max-width: 360px;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    background: linear-gradient(135deg,
+            rgba(17, 24, 39, 0.97) 0%,
+            rgba(31, 14, 60, 0.97) 100%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(251, 191, 36, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.45s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#welcomeRewardToast.wr-toast-visible {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.wr-toast-inner {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+}
+
+.wr-toast-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(251, 191, 36, .25), rgba(245, 158, 11, .15));
+    border: 1px solid rgba(251, 191, 36, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    color: #fbbf24;
+    flex-shrink: 0;
+    animation: toastIconSpin 0.6s ease 0.3s both;
+}
+
+@keyframes toastIconSpin {
+    0% {
+        transform: scale(0) rotate(-180deg);
+    }
+
+    100% {
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+.wr-toast-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.wr-toast-text strong {
+    color: #fbbf24;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.wr-toast-text span {
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
 }

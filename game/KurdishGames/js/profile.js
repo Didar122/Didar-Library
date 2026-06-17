@@ -34,14 +34,28 @@ function showError(element, message) {
     if (!element) return;
     element.textContent = message;
     element.classList.add('show');
+    try { element.style.display = 'block'; } catch(e) {}
+    element.setAttribute('role', 'alert');
+    // automatically hide after 5s
     setTimeout(() => {
         element.classList.remove('show');
+        try { element.style.display = 'none'; } catch(e) {}
     }, 5000);
 }
 
 function clearErrors() {
-    document.getElementById('loginError')?.classList.remove('show');
-    document.getElementById('registerError')?.classList.remove('show');
+    const le = document.getElementById('loginError');
+    const re = document.getElementById('registerError');
+    if (le) {
+        le.classList.remove('show');
+        try { le.style.display = 'none'; } catch(e) {}
+        le.textContent = '';
+    }
+    if (re) {
+        re.classList.remove('show');
+        try { re.style.display = 'none'; } catch(e) {}
+        re.textContent = '';
+    }
 }
 
 document.addEventListener('DOMContentLoaded', initializeProfileListeners);
@@ -60,6 +74,15 @@ function initializeProfileListeners() {
 
     document.getElementById('loginForm')?.addEventListener('submit', handleLogin);
     document.getElementById('registerForm')?.addEventListener('submit', handleRegister);
+    // Fallback: attach click handler to the explicit login button to ensure submit fires
+    const loginBtn = document.getElementById('loginSubmit');
+    if (loginBtn) {
+        loginBtn.addEventListener('click', function (e) {
+            // ensure the form submit handler runs even if default form submit is prevented elsewhere
+            try { e.preventDefault(); } catch (er) {}
+            handleLogin(e);
+        });
+    }
     document.getElementById('registerUsername')?.addEventListener('blur', checkUsernameAvailability);
     document.getElementById('logoutButton')?.addEventListener('click', handleLogout);
     document.querySelectorAll('#loginForm input, #registerForm input').forEach(input => {
@@ -194,15 +217,39 @@ async function handleLogin(event) {
 
     const user = await authenticateUser(username, password);
     if (!user) {
-        showError(document.getElementById('loginError'), window.getTranslation('auth_err_invalid', 'Invalid username or password.'));
+        const loginErrorEl = document.getElementById('loginError');
+        showError(loginErrorEl, window.getTranslation('auth_err_invalid', 'Invalid username or password.'));
+        document.getElementById('loginPassword')?.focus();
         return;
     }
 
     currentUser = user;
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    try { sessionStorage.removeItem('lastSectionBeforeAuth'); } catch(e){}
+
+    if (typeof showSection === 'function') {
+        showSection('profile');
+    }
     showProfileScreen();
+
+    if (window.playerDataManager && typeof window.playerDataManager.loadForCurrentUser === 'function') {
+        await window.playerDataManager.loadForCurrentUser();
+    }
+    if (typeof window.syncSettingsUI === 'function') {
+        window.syncSettingsUI();
+    }
+
     await ensurePlayerDataExists(currentUser.username);
-    await loadUserProfile();
+    const pData = getPlayerDataFromStorage(currentUser.username);
+    if (!pData || !pData.welcomeRewardClaimed) {
+        await grantWelcomeReward(currentUser.username);
+    }
+
+    try {
+        await loadUserProfile();
+    } catch (err) {
+        console.error('Failed to load profile after login:', err);
+    }
 }
 
 async function handleRegister(event) {
@@ -230,9 +277,28 @@ async function handleRegister(event) {
 
     currentUser = await createUser(username, password);
     localStorage.setItem('currentUser', JSON.stringify(currentUser));
+    try { sessionStorage.removeItem('lastSectionBeforeAuth'); } catch(e){}
+
+    if (typeof showSection === 'function') {
+        showSection('profile');
+    }
     showProfileScreen();
+
+    if (window.playerDataManager && typeof window.playerDataManager.loadForCurrentUser === 'function') {
+        await window.playerDataManager.loadForCurrentUser();
+    }
+    if (typeof window.syncSettingsUI === 'function') {
+        window.syncSettingsUI();
+    }
+
     await ensurePlayerDataExists(currentUser.username);
-    await loadUserProfile();
+    await grantWelcomeReward(currentUser.username);
+
+    try {
+        await loadUserProfile();
+    } catch (err) {
+        console.error('Failed to load profile after register:', err);
+    }
 }
 
 async function authenticateUser(username, password) {
@@ -317,9 +383,85 @@ async function createUser(username, password) {
 }
 
 function showAuthScreen() {
+    // remember current visible section so we can return there after auth
+    try {
+        const currentSectionEl = document.querySelector('.section:not(.hidden)');
+        const sectionId = currentSectionEl ? currentSectionEl.id.replace(/Section$/, '') : 'home';
+        sessionStorage.setItem('lastSectionBeforeAuth', sectionId);
+    } catch (e) {}
+
     document.getElementById('authScreen')?.classList.add('active');
     document.getElementById('profileScreen')?.classList.remove('active');
     switchAuthTab('login');
+}
+
+// --- Welcome Reward ---
+async function grantWelcomeReward(username) {
+    const COINS_REWARD = 100;
+    const DIAMONDS_REWARD = 5;
+
+    const playerData = getPlayerDataFromStorage(username);
+    if (playerData && playerData.welcomeRewardClaimed) return; // already claimed
+
+    // Apply to playerDataManager if available
+    if (window.playerDataManager) {
+        window.playerDataManager.update(d => {
+            d.coins = (d.coins || 0) + COINS_REWARD;
+            d.diamonds = (d.diamonds || 0) + DIAMONDS_REWARD;
+            d.welcomeRewardClaimed = true;
+        });
+    } else {
+        // Fallback: patch localStorage directly
+        const pd = getPlayerDataFromStorage(username) || {};
+        pd.coins = (pd.coins || 0) + COINS_REWARD;
+        pd.diamonds = (pd.diamonds || 0) + DIAMONDS_REWARD;
+        pd.welcomeRewardClaimed = true;
+        savePlayerDataToStorage(pd, username);
+
+        if (typeof firestore !== 'undefined') {
+            try {
+                await firestore.collection('players').doc(username).set(
+                    { coins: pd.coins, diamonds: pd.diamonds, welcomeRewardClaimed: true },
+                    { merge: true }
+                );
+            } catch (e) { console.warn('Firestore welcome reward save failed', e); }
+        }
+    }
+
+    showWelcomeRewardToast(COINS_REWARD, DIAMONDS_REWARD);
+}
+
+function showWelcomeRewardToast(coins, diamonds) {
+    // Remove any existing toast
+    const existingToast = document.getElementById('welcomeRewardToast');
+    if (existingToast) existingToast.remove();
+
+    const toast = document.createElement('div');
+    toast.id = 'welcomeRewardToast';
+    const title = window.getTranslation('welcome_reward_title', 'Welcome Reward!');
+    const tpl = window.getTranslation('welcome_reward_message', `+{coins} coins &nbsp;+{diamonds} diamonds`);
+    const message = tpl.replace('{coins}', coins).replace('{diamonds}', diamonds);
+    toast.innerHTML = `
+        <div class="wr-toast-inner">
+            <div class="wr-toast-icon"><i class="fas fa-gift"></i></div>
+            <div class="wr-toast-text">
+                <strong>${title}</strong>
+                <span>${message} <i class="fas fa-coins" style="color:#f59e0b"></i> &nbsp;<i class="fas fa-gem" style="color:#a78bfa"></i></span>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(toast);
+
+    // Animate in
+    requestAnimationFrame(() => {
+        toast.classList.add('wr-toast-visible');
+    });
+
+    // Fade out after 4s
+    setTimeout(() => {
+        toast.classList.remove('wr-toast-visible');
+        setTimeout(() => toast.remove(), 500);
+    }, 4000);
 }
 
 function showProfileScreen() {
@@ -616,10 +758,22 @@ function calculateLevelFromScore(totalScore) {
 
 function handleLogout() {
     if (confirm(window.getTranslation('prompt_logout_confirm', 'Are you sure you want to logout?'))) {
+        // Reset in-memory player data to anonymous defaults (do NOT push this to Firestore)
+        try { window.playerDataManager && typeof window.playerDataManager.clear === 'function' && window.playerDataManager.clear(); } catch(e){}
+
         currentUser = null;
         localStorage.removeItem('currentUser');
         document.getElementById('loginForm')?.reset();
         document.getElementById('registerForm')?.reset();
+
+        // Reset all currency displays to 0 on logout
+        const zero = '0';
+        ['coinAmount', 'diamondAmount', 'profileCoins', 'profileDiamonds',
+         'modalProfileCoins', 'modalProfileDiamonds'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = zero;
+        });
+
         showAuthScreen();
         switchAuthTab('login');
     }
@@ -919,6 +1073,9 @@ window.getPlayerProfileData = function(username) {
     return getPlayerDataFromStorage(username);
 };
 window.setFavoriteGame = setFavoriteGame;
+window.handleLogin = handleLogin;
+window.handleRegister = handleRegister;
+window.handleLogout = handleLogout;
 
 if (window.playerDataManager) {
     window.playerDataManager.subscribe(function(d) {

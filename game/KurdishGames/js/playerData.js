@@ -4,7 +4,8 @@
 */
 (function(){
   const STORAGE_PREFIX = 'playerData_';
-  let data = { coins: 99999, diamonds: 99999, inventory: {}, selectedItems: {}, stats: {} };
+  const DEFAULT_DATA = { coins: 0, diamonds: 0, inventory: {}, selectedItems: {}, stats: {} };
+  let data = Object.assign({}, DEFAULT_DATA);
   let subscribers = [];
 
   function getCurrentUser() {
@@ -20,12 +21,15 @@
     const user = getCurrentUser();
     const key = storageKeyFor(user);
 
+    // reset to defaults to avoid carrying previous user's in-memory state
+    data = Object.assign({}, DEFAULT_DATA);
+
     // try Firestore first
     if (typeof firestore !== 'undefined' && user && user.username) {
       try {
         const doc = await firestore.collection('players').doc(user.username).get();
         if (doc.exists) {
-          data = Object.assign({}, data, doc.data());
+          data = Object.assign({}, DEFAULT_DATA, doc.data());
           saveLocal(key);
           emit();
           return data;
@@ -65,6 +69,13 @@
     emit();
   }
 
+  // Clear in-memory data and reset local anonymous storage (do not write to Firestore)
+  function clear() {
+    data = Object.assign({}, DEFAULT_DATA);
+    try { localStorage.setItem('playerData', JSON.stringify(data)); } catch (e) { console.warn('playerDataManager: clear failed', e) }
+    emit();
+  }
+
   function get() { return data }
 
   function update(fn) {
@@ -85,5 +96,5 @@
 
   function emit() { subscribers.forEach(cb=>{ try{ cb(data) }catch(e){} }) }
 
-  window.playerDataManager = { loadForCurrentUser, get, update, save, subscribe };
+  window.playerDataManager = { loadForCurrentUser, get, update, save, subscribe, clear };
 })();

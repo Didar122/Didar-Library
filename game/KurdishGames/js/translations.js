@@ -115,6 +115,7 @@ window.translations = {
         "auth_label_password": "Password",
         "auth_label_confirm": "Confirm Password",
         "auth_btn_sign_in": "Sign In",
+        "install_button": "Install App",
         "auth_btn_create_acc": "Create Account",
         "auth_title_create_acc": "Create Account",
         "auth_register_desc": "Join our gaming community",
@@ -123,9 +124,14 @@ window.translations = {
         "auth_ph_choose_username": "Choose a username",
         "auth_ph_create_password": "Create a password",
         "auth_ph_confirm_password": "Confirm your password",
+        "auth_reward_title": "Register & Get Rewards!",
+        "auth_reward_coins": "Coins",
+        "auth_reward_diamonds": "Diamonds",
 
         // Profile Screen (Logged In)
         "profile_logout": "Logout",
+        "welcome_reward_title": "Welcome Reward!",
+        "welcome_reward_message": "+{coins} coins &nbsp;+{diamonds} diamonds",
         "profile_join_date": "Member since ",
         "profile_current_lvl": "Current Level",
         "profile_coins": "Coins",
@@ -404,7 +410,7 @@ window.translations = {
         "setting_master_audio": "دەنگی گشتی",
         "setting_sound_effects": "دەنگە لاوەکیەکان",
         "setting_music": "مۆسیقا",
-        "setting_music_volume": "بەرزی دەنگی مۆسیقا",
+        "setting_music_volume": "بەرزی دەنگ لە کۆمپیتەر",
         "setting_notifications": "ئاگادارکردنەوەکان",
         "setting_language": "زمان",
 
@@ -462,17 +468,23 @@ window.translations = {
         "auth_label_password": "وشەی تێپەڕ",
         "auth_label_confirm": "دوپاتکردنەوەی وشەی تێپەڕ",
         "auth_btn_sign_in": "بچۆ ژوورەوە",
+        "install_button": "دامەزراندنی یانە",
         "auth_btn_create_acc": "دروستکردنی هەژمار",
         "auth_title_create_acc": "دروستکردنی هەژمار",
-        "auth_register_desc": "بچۆ ناو کۆمەڵگەی یارییەکانمان",
+        "auth_register_desc": "خۆت تۆماربکە و بچۆرە ناو کۆمەڵگەی یاریکەرانمان",
         "auth_ph_username": "ناوی بەکارهێنەرەکەت بنووسە",
         "auth_ph_password": "وشەی تێپەڕەکەت بنووسە",
         "auth_ph_choose_username": "ناوێک هەڵبژێرە",
         "auth_ph_create_password": "وشەیەکی تێپەڕ دروست بکە",
         "auth_ph_confirm_password": "وشەی تێپەڕەکەت دووپات بکەرەوە",
+        "auth_reward_title": "خۆت تۆماربکە و ئەم خەڵاتانە وەربگرە",
+        "auth_reward_coins": "سکە",
+        "auth_reward_diamonds": "ئەڵماس",
 
         // Profile Screen (Logged In)
         "profile_logout": "چوونەدەرەوە",
+        "welcome_reward_title": "خەڵاتی بەخێربێن",
+        "welcome_reward_message": "+{coins} سکە &nbsp;+{diamonds} ئەڵماس",
         "profile_join_date": "ئەندامە لە بەرواری  ",
         "profile_current_lvl": "ئاستی ئێستا",
         "profile_coins": "سکە",
@@ -704,7 +716,7 @@ window.translations = {
 };
 
 window.getTranslation = function (key, defaultValue) {
-    const lang = localStorage.getItem('preferredLanguage') || 'en';
+    const lang = localStorage.getItem('preferredLanguage') || 'ku';
     const dict = window.translations[lang] || window.translations['en'];
 
     let value = dict[key];
@@ -758,7 +770,7 @@ const selectorMappings = {
     "#aboutSection .accordion-content": "about_dama_desc",
     "#aboutSection .about-container h3": "about_dev_title",
     "#aboutDevName": "about_dev_name",
-    "#aboutSection .about-container a": "about_more_games",
+    "#aboutSection .about-container a span": "about_more_games",
 
     // Leaderboards Section
     "#leaderboardsSection .back-button": "games_back",
@@ -863,6 +875,9 @@ const selectorMappings = {
     "#registerForm .form-group:nth-child(4) label": "auth_label_password",
     "#registerForm .form-group:nth-child(5) label": "auth_label_confirm",
     "#registerForm .auth-button": "auth_btn_create_acc",
+    ".welcome-reward-banner .reward-banner-title": "auth_reward_title",
+    ".welcome-reward-banner .reward-item:nth-of-type(1) .reward-label": "auth_reward_coins",
+    ".welcome-reward-banner .reward-item:nth-of-type(2) .reward-label": "auth_reward_diamonds",
 
     // Profile (Logged in)
     "#profileSection #backButton": "games_back",
@@ -889,7 +904,7 @@ const selectorMappings = {
 
 window.translatePage = function (lang) {
     if (!lang) {
-        lang = localStorage.getItem('preferredLanguage') || 'en';
+        lang = localStorage.getItem('preferredLanguage') || 'ku';
     } else {
         localStorage.setItem('preferredLanguage', lang);
     }
@@ -981,15 +996,25 @@ window.translatePage = function (lang) {
     // Update navigation dock labels globally
     document.querySelectorAll('.nav-label').forEach(el => {
         const text = el.textContent.trim().toLowerCase();
-        let key = '';
-        if (text === 'profile' || text === 'پڕۆفایل') key = 'nav_profile';
-        else if (text === 'friends' || text === 'هاوڕێیان') key = 'nav_friends';
-        else if (text === 'leaderboards' || text === 'ڕیزبەندی' || text === 'ڕیزبەندییەکان') key = 'nav_leaderboards';
-        else if (text === 'store' || text === 'فرۆشگا') key = 'nav_store';
-        else if (text === 'home' || text === 'سەرەکی') key = 'nav_home';
-
-        if (key) {
-            el.textContent = window.getTranslation(key);
+        const navKeys = ['nav_profile','nav_friends','nav_leaderboards','nav_store','nav_home'];
+        let foundKey = '';
+        const normalize = s => s ? s.replace(/\s+/g, '').replace(/[\u2000-\u206F\u2E00-\u2E7F\uFE00-\uFE0F\W]/g, '') : '';
+        for (const k of navKeys) {
+            const en = (window.translations.en && window.translations.en[k]) ? window.translations.en[k].toLowerCase() : '';
+            const ku = (window.translations.ku && window.translations.ku[k]) ? window.translations.ku[k].toLowerCase() : '';
+            if (!en && !ku) continue;
+            if (text === en || text === ku) {
+                foundKey = k;
+                break;
+            }
+            // compare normalized (no spaces/punctuation) forms to catch small variants
+            if (normalize(text) && (normalize(en) === normalize(text) || normalize(ku) === normalize(text))) {
+                foundKey = k;
+                break;
+            }
+        }
+        if (foundKey) {
+            el.textContent = window.getTranslation(foundKey);
         }
     });
 

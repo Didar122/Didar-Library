@@ -1,0 +1,22 @@
+{
+  "name": "Kurdish Games",
+  "short_name": "KU Games",
+  "description": "A Kurdish games platform with traditional and multiplayer games.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#1e293b",
+  "version": "1.0.3",
+  "icons": [
+    {
+      "src": "assets/images/icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/images/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

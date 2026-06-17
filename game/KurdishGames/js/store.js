@@ -3,7 +3,7 @@
    ===================================================== */
 
 // Player currency and inventory data (centralized)
-let playerData = window.playerDataManager ? window.playerDataManager.get() : { coins: 99999, diamonds: 99999, inventory: {}, selectedItems: {} };
+let playerData = window.playerDataManager ? window.playerDataManager.get() : { coins: 0, diamonds: 0, inventory: {}, selectedItems: {} };
 
 // Ensure currentUser is available in store pages
 window.currentUser = window.currentUser || JSON.parse(localStorage.getItem('currentUser') || 'null');
@@ -500,8 +500,8 @@ function loadPlayerData() {
             playerData = window.playerDataManager.get();
             // Ensure defaults and selections inside update to avoid reference staleness
             window.playerDataManager.update(data => {
-                if (!data.coins) data.coins = 99999;
-                if (!data.diamonds) data.diamonds = 99999;
+                if (typeof data.coins === 'undefined' || data.coins === null) data.coins = 0;
+                if (typeof data.diamonds === 'undefined' || data.diamonds === null) data.diamonds = 0;
                 if (!data.inventory) data.inventory = {};
                 if (!data.selectedItems) data.selectedItems = {};
                 if (!data.playtimeMinutes) data.playtimeMinutes = 0;

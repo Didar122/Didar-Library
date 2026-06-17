@@ -9,6 +9,11 @@
     --bg-dama-mobile: url('../games/dama/assets/images/background-mobile.png');
 }
 
+html, body {
+    touch-action: manipulation;
+    -webkit-text-size-adjust: 100%;
+}
+
 .section {
     display: none;
     position: relative;
@@ -811,6 +816,41 @@ input:checked + .slider-switch:before {
     background-color: #ef4444; /* red dot */
     border-radius: 50%;
     border: 2px solid #1f5050; /* boundary contrast using theme color */
+}
+
+.install-btn {
+    position: absolute;
+    top: 25px;
+    right: 90px;
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    font-family: var(--font-family);
+    font-size: 0.95rem;
+    cursor: pointer;
+    z-index: 100;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    transition: transform 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.install-btn:hover {
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.install-btn i {
+    font-size: 1rem;
+}
+
+.install-btn span {
+    display: inline-block;
 }
 
 /* Bell ringing animation with delay */
