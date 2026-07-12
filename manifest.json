@@ -1,11 +1,13 @@
 {
   "name": "Didar Library",
   "short_name": "Didar",
+  "id": "./",
   "description": "کۆکراوەیەک بۆ هەموو یاری و ئەپەکانی دیدار",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
+  "display_override": ["window-controls-overlay", "standalone", "browser"],
+  "orientation": "any",
   "background_color": "#000000",
   "theme_color": "#0a84ff",
   "dir": "rtl",
@@ -13,13 +15,13 @@
   "prefer_related_applications": false,
   "screenshots": [
     {
-      "src": "icon.png",
+      "src": "./icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "icon.png",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "form_factor": "wide"
@@ -27,22 +29,22 @@
   ],
   "icons": [
     {
-      "src": "icon.png",
-      "sizes": "192x192",
+      "src": "./icon.png",
+      "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon.png",
+      "src": "./icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any maskable"
     }
   ],
   "shortcuts": [
@@ -53,7 +55,7 @@
       "url": "./index.html?view=search",
       "icons": [
         {
-          "src": "icon.png",
+          "src": "./icon.png",
           "sizes": "192x192",
           "type": "image/png"
         }
@@ -66,7 +68,7 @@
       "url": "./index.html?view=settings",
       "icons": [
         {
-          "src": "icon.png",
+          "src": "./icon.png",
           "sizes": "192x192",
           "type": "image/png"
         }
