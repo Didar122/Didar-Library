@@ -2548,6 +2548,14 @@ body.th-light .modov {
   draggable: false;
 }
 
+@media (max-width: 1023px) {
+  .ss-track {
+    overflow-x: auto;
+    cursor: grab;
+    touch-action: pan-x;
+  }
+}
+
 .ss-ph {
   height: 160px;
   width: 260px;

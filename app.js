@@ -941,6 +941,7 @@ function initScreenshotTrack(track, onTap) {
 
   track.addEventListener('pointerdown', e => {
     if (e.button !== 0 && e.pointerType === 'mouse') return;
+    if (e.pointerType !== 'mouse') return;
     isDragging = true;
     hasDragged = false;
     pointerWasOnImage = e.target.closest('img') !== null;
@@ -953,7 +954,7 @@ function initScreenshotTrack(track, onTap) {
   });
 
   track.addEventListener('pointermove', e => {
-    if (!isDragging) return;
+    if (!isDragging || e.pointerType !== 'mouse') return;
     const deltaX = e.clientX - startX;
     if (Math.abs(deltaX) > 5) hasDragged = true;
     e.preventDefault();
