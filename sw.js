@@ -1,4 +1,4 @@
-const CACHE_NAME = 'didar-library-v7';
+const CACHE_NAME = 'didar-library-v11';
 const ASSETS = [
   './',
   './index.html',

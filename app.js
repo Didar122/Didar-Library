@@ -351,7 +351,7 @@ const D = {
   sbCnt:   $('sbCnt'), abSn:   $('abSn'),   mBg:    $('mBg'),
   mFlt:    $('mFlt'),  mTtl:   $('mTtl'),   mVer:   $('mVer'),
   mBdg:    $('mBdg'),  favBtn: $('favBtn'), shrBtn: $('shrBtn'), ssTrk:  $('ssTrk'),
-  ssDts:   $('ssDts'), ssSec:  $('ssSec'),  mSpcs:  $('mSpcs'),
+  ssProgress: $('ssProgress'), ssSec: $('ssSec'), mSpcs: $('mSpcs'),
   mDsc:    $('mDsc'),  mTgs:   $('mTgs'),   mLnch:  $('mLnch'),
   relTrk:  $('relTrk'), vidEl:  $('vidEl'),  vidSrc: $('vidSrc'),
   vidPh:   $('vidPh'),  lbov:   $('lbov'),   lbCls:  $('lbCls'),
@@ -1013,10 +1013,16 @@ async function openMod(id) {
     D.ssSec.style.display = 'block';
     const displayScreens = screens.slice().reverse();
     D.ssTrk.innerHTML = displayScreens.map((s, i) => `<div class="ss-slide"><img src="${s}" alt="Screenshot ${screens.length - i}" loading="eager" decoding="async" data-screen="${s}"></div>`).join('');
-    D.ssDts.innerHTML = screens.map((_, i) => `<div class="ss-dot${i === 0 ? ' on' : ''}" data-i="${i}"></div>`).join('');
+    const updateScreenshotProgress = () => {
+      const maxScroll = D.ssTrk.scrollWidth - D.ssTrk.clientWidth;
+      const progress = maxScroll > 0 ? 1 - (D.ssTrk.scrollLeft / maxScroll) : 0;
+      D.ssProgress?.style.setProperty('--ss-progress', `${Math.max(0, Math.min(1, progress))}`);
+    };
+    D.ssTrk.onscroll = updateScreenshotProgress;
     const resetScreenshotPosition = () => {
       requestAnimationFrame(() => {
         D.ssTrk.scrollLeft = D.ssTrk.scrollWidth - D.ssTrk.clientWidth;
+        updateScreenshotProgress();
       });
     };
     const screenshotImages = [...D.ssTrk.querySelectorAll('img')];
@@ -1038,15 +1044,10 @@ async function openMod(id) {
       img.draggable = false;
       img.setAttribute('draggable', 'false');
     });
-    D.ssTrk.onscroll = () => {
-      const w   = D.ssTrk.firstElementChild?.offsetWidth || 1;
-      const act = Math.round(D.ssTrk.scrollLeft / w);
-      D.ssDts.querySelectorAll('.ss-dot').forEach((d, i) => d.classList.toggle('on', i === act));
-    };
   } else {
     D.ssSec.style.display = 'block';
     D.ssTrk.innerHTML = `<div class="ss-empty">ئەم یارییە هیچ وێنەیەکی وەرگرتوو نییە.</div>`;
-    D.ssDts.innerHTML = '';
+    D.ssProgress?.style.setProperty('--ss-progress', '0');
   }
 
   D.mSpcs.innerHTML = [
@@ -1071,7 +1072,7 @@ function closeMod() {
   D.modov.classList.remove('open');
   closeLb();
   D.ssTrk.innerHTML = '';
-  D.ssDts.innerHTML = '';
+  D.ssProgress?.style.setProperty('--ss-progress', '0');
   D.ssTrk.onscroll = null;
   S.sel = null;
 }
@@ -1210,12 +1211,6 @@ function events() {
     if (!card) return;
     closeMod();
     setTimeout(() => openMod(card.dataset.id), 310);
-  });
-  D.ssDts?.addEventListener('click', e => {
-    const dot = e.target.closest('.ss-dot');
-    if (!dot) return;
-    const width = D.ssTrk.firstElementChild?.offsetWidth || 0;
-    D.ssTrk.scrollTo({ left: +dot.dataset.i * (width + 9), behavior: 'smooth' });
   });
 
   // Sidebar

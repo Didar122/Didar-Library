@@ -2510,7 +2510,7 @@ body.th-light .modov {
   gap: 9px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x mandatory;
+  scroll-snap-type: none;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding-bottom: 3px;
@@ -2519,7 +2519,7 @@ body.th-light .modov {
   -webkit-user-select: none;
   touch-action: pan-x;
   overscroll-behavior-x: contain;
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 .ss-track.dragging {
@@ -2578,25 +2578,25 @@ body.th-light .modov {
   opacity: .5
 }
 
-.ss-dots {
-  display: flex;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 7px
+.ss-progress {
+  position: relative;
+  height: 4px;
+  margin: 10px 2px 2px;
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--bd);
+  direction: rtl;
 }
 
-.ss-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 3px;
-  background: var(--txm);
-  cursor: pointer;
-  transition: var(--tr)
-}
-
-.ss-dot.on {
-  width: 15px;
-  background: var(--ac)
+.ss-progress span {
+  position: absolute;
+  inset-block: 0;
+  right: calc(var(--ss-progress, 0) * 76%);
+  width: 24%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--ac2), var(--ac));
+  box-shadow: 0 0 12px var(--acg);
+  transition: width .18s ease;
 }
 
 /* ─── SPECS ──────────────────────────────────────────────────── */
