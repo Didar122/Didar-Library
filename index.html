@@ -4,16 +4,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport"
-    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Didar Library">
   <meta name="theme-color" content="#07070f">
   <meta name="description" content="کۆکراوەی یاری و ئەپی دیدار بختیار — Didar Library PWA">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
-  <link rel="apple-touch-icon" href="./icon.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon.png?v=1">
+  <link rel="apple-touch-icon" sizes="180x180" href="icon.png?v=1">
   <link rel="manifest" href="manifest.json">
   <title>Didar Library</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,6 +26,7 @@
 
   <!-- PARTICLE CANVAS -->
   <canvas id="pc"></canvas>
+  <div id="welcomeBg" class="welcome-bg" aria-hidden="true"></div>
   <div id="oceanBg" class="ocean-bg">
     <canvas id="waterCanvas"></canvas>
   </div>
@@ -45,7 +45,7 @@
     <div class="spl-pts" id="splPts"></div>
     <div class="spl-logo"><img src="icon.png" alt="Didar Library" loading="lazy"></div>
     <h1 class="spl-title">Didar Library</h1>
-    <p class="spl-sub">کۆکراوەی دیدار · Didar's Gallery</p>
+    <p class="spl-sub">کۆکراوەی بەرهەمەکانم</p>
     <div class="spl-bar">
       <div class="spl-fill"></div>
     </div>
@@ -62,28 +62,33 @@
           <div class="sb-bname">Didar Library</div>
         </div>
       </div>
-      <p class="sb-sl">ناڤیگەیشن</p>
-      <div class="sb-nav">
-        <div class="sb-i on" id="sbH">
+      <p class="sb-sl">سەرەکی</p>
+      <div class="sb-nav" role="navigation" aria-label="سایدبار">
+        <div class="sb-i on" id="sbH" role="button" tabindex="0" aria-label="یاری و بەرنامە">
           <svg viewBox="0 0 24 24">
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
-          </svg><span>ماڵەوە</span>
+          </svg><span>یاری و بەرنامە</span>
         </div>
-        <div class="sb-i" id="sbS">
+        <div class="sb-i" id="sbS" role="button" tabindex="0" aria-label="گەڕان">
           <svg viewBox="0 0 24 24">
             <path
               d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
           </svg><span>گەڕان</span>
         </div>
+        <div class="sb-i" id="sbSrv" role="button" tabindex="0" aria-label="خزمەتگوزاری">
+          <svg viewBox="0 0 24 24">
+            <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+          </svg><span>خزمەتگوزاری</span>
+        </div>
         <div class="sb-div"></div>
-        <p class="sb-sl" style="margin-top:3px">تر</p>
-        <div class="sb-i" id="sbA">
+        <p class="sb-sl" style="margin-top:3px">بەشەکانیتر</p>
+        <div class="sb-i" id="sbA" role="button" tabindex="0" aria-label="دەربارە">
           <svg viewBox="0 0 24 24">
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
           </svg><span>دەربارە</span>
         </div>
-        <div class="sb-i" id="sbSt">
+        <div class="sb-i" id="sbSt" role="button" tabindex="0" aria-label="ڕێکخستنەکان">
           <svg viewBox="0 0 24 24">
             <path
               d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
@@ -114,11 +119,15 @@
 
         <div id="view-home" class="app-view active">
           <div class="cbar">
+            <button class="c-toggle f-toggle" id="tFilters" aria-expanded="true" aria-label="Toggle filters">◀</button>
             <div class="ftabs" id="ftabs">
-              <div class="ftab on" data-f="all">هەموو</div>
+              <div class="ftab on" data-f="all">گشتی</div>
+              <div class="ftab" data-f="favs">دڵخوازەکانم ❤️</div>
               <div class="ftab" data-f="یاری">یاریەکان</div>
               <div class="ftab" data-f="بەرنامە">بەرنامەکان</div>
             </div>
+            <div class="c-toggle-label" id="cToggleLabel">فلتەر و شێوازەکان</div>
+            <button class="c-toggle l-toggle" id="tLayout" aria-expanded="true" aria-label="Toggle layout">▶</button>
             <div class="vbtns">
               <button class="vbtn on" id="vG" aria-label="تۆڕ"><svg viewBox="0 0 24 24">
                   <path
@@ -131,6 +140,20 @@
                   <path
                     d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z" />
                 </svg></button>
+              <button class="vbtn" id="vP" aria-label="گرانی"><svg viewBox="0 0 24 24">
+                  <!-- floor -->
+                  <rect x="2" y="20" width="20" height="2" rx="1" />
+                  <!-- left box falling -->
+                  <rect x="3" y="11" width="6" height="6" rx="1.2" />
+                  <!-- left down-arrow -->
+                  <path d="M6 3v7M4 8l2 3 2-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    fill="none" />
+                  <!-- right box falling -->
+                  <rect x="15" y="7" width="6" height="6" rx="1.2" />
+                  <!-- right down-arrow -->
+                  <path d="M18 1v5M16 4l2 3 2-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                    fill="none" />
+                </svg></button>
             </div>
           </div>
 
@@ -142,14 +165,56 @@
             <div class="search-bar">
               <div>
                 <span class="search-label">گەڕان</span>
-                <p class="search-sub">وەرگیراوی ناوێک بنووسە بۆ دۆزینەوەی ئەپ و یاری</p>
+                <p class="search-sub">لەم بەشەدا دەتوانی بۆ یاریەک یاخود بەرنامەیەکی دیاریکراو بگەڕێیت</p>
               </div>
               <div class="search-field">
-                  <input type="text" class="search-input" id="srchInp" placeholder="گەڕان بۆ یاری یان ئەپ..." autocomplete="off">
-                  <button id="srchClr" class="search-clear" type="button" aria-label="پاککردن">×</button>
-                </div>
+                <input type="text" class="search-input" id="srchInp" placeholder="گەڕان بۆ یاری یان ئەپ..."
+                  autocomplete="off">
+                <button id="srchClr" class="search-clear" type="button" aria-label="پاککردن">×</button>
+              </div>
             </div>
             <div class="search-results" id="srchRes"></div>
+          </div>
+        </div>
+
+        <div id="view-services" class="app-view">
+          <div class="services-shell">
+            <div class="services-header">
+              <p class="services-tag">Didar Services</p>
+              <h2 class="services-title">خزمەتگوزارییەکانم</h2>
+              <p class="services-sub">ئەو خزمەتگوزارییە ناوازانەی پێشکەشی دەکەم بۆ ئاسانکاری پڕۆژەکانت</p>
+            </div>
+            <div class="services-grid">
+              <a href="https://didar-cv-builder.vercel.app/" class="service-card">
+                <div class="service-card-cover">
+                  <img src="assets/service1.png" alt="دروستکردنی سی ڤی" loading="lazy">
+                </div>
+                <div class="service-card-body">
+                  <div class="service-card-badge">چالاک و ئامادەیە</div>
+                  <h3 class="service-card-title">دروستکردنی سی ڤی (CV Builder)</h3>
+                  <p class="service-card-desc">سیستمی زیرەکی دروستکردنی سی ڤی بە هاوکاری ژیری دەستکردی Gemini. دەتوانیت بە زمانی کوردی، عەرەبی و ئینگلیزی سی ڤی بەرز بنووسیت و بە شێوازی A4 داونلۆدی بکەیت ، بەدەستهێنانی کاری خەونەکانت بە سیڤییەکی ناوازە دەست پێدەکات. بە ئیلهام وەرگرتن لە پلاتفۆرمە ئاسان و تایبەتەکانی دیزاین وەک Canva، دیدار سیڤی بیڵدەر (Didar CV Builder) سەکۆیەکی مۆدێرن و بێ کێشەت پێشکەش دەکات بۆ دروستکردنی سیڤییەکی ستاندارد و پەسەندکراو لەلایەن خاوەنکارانەوە—بەبێ ئەوەی پێویستت بە هیچ شارەزاییەکی دیزاینکردن هەبێت.</p>
+                  <div class="service-card-action">
+                    <span>دەستپێکردن</span>
+                    <svg viewBox="0 0 24 24" width="16" height="26" fill="currentColor">
+                      <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                    </svg>
+                  </div>
+                </div>
+              </a>
+
+              <div class="service-card" style="cursor: default; opacity: 0.85;">
+                <div class="service-card-cover" style="display: flex; align-items: center; justify-content: center; background: rgba(255,255,255,0.03);">
+                  <svg viewBox="0 0 24 24" width="48" height="48" fill="var(--txm)">
+                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                  </svg>
+                </div>
+                <div class="service-card-body">
+                  <div class="service-card-badge soon">بەزوویی...</div>
+                  <h3 class="service-card-title">خزمەتگوزاری زیاتر بەزوویی</h3>
+                  <p class="service-card-desc">چەندین خزمەتگوزاری و ئامرازی نوێ لە بواری نەرمەواڵا و دیزاین بەم زووانە لێرە بەردەست دەبن.</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -158,8 +223,8 @@
             <div class="about-hero">
               <div>
                 <p class="about-tag">Didar Library</p>
-                <h2>کۆکراوەی یاری و ئەپ</h2>
-                <p>ڕێگە دەدات بە خێرا و خۆشبێژی گەڕان لە نێوان یاری و ئەپەکان.</p>
+                <h2>کۆکراوەی یاری و بەرنامەکانم</h2>
+                <p>کتێبخانەیەک تایبەت بە گشت یاری و بەرنامە و کارەکانم لە بواری نەرمەواڵادا</p>
               </div>
               <div class="about-stat">
                 <span>ئەپ و یاری</span>
@@ -170,7 +235,9 @@
             <div class="about-grid">
               <section class="about-card">
                 <h3>دەربارەی ئەپ</h3>
-                <p>Didar Library پەلتەیەکی گشتییە بۆ کۆکردن و پێشکەشکردنی ئەپ و یاریەکان بە شێوازێکی مۆدێرن.</p>
+                <p>ئەم بەرنامەیە وەک کتێبخانەیەکی تایبەتە بەمەبەستی پێشکەشکردن و خستنەڕوی گشت بەرهەمەکانم و پیشاندانی
+                  تواناکانم لە پڕۆگرامسازیدا ، بەهیوای بەدڵبوون
+                </p>
               </section>
 
               <section class="about-card about-video">
@@ -180,12 +247,12 @@
                     <source id="vidSrc" src="" type="video/mp4">
                     ئەم ڤیدیۆیە پشتیوانی ناکات.
                   </video>
-                  <div class="video-placeholder" id="vidPh">هیچ ڤیدیۆ پۆسێخ نییە</div>
+                  <div class="video-placeholder" id="vidPh">هیچ ڤیدیۆیەک پۆست نەکراوە</div>
                 </div>
               </section>
 
               <section class="about-card">
-                <h3>دەڤێلەپر</h3>
+                <h3>دیڤیلۆپەر</h3>
                 <div class="dev-card">
                   <div class="dev-avatar">D</div>
                   <div>
@@ -196,12 +263,39 @@
               </section>
 
               <section class="about-card">
-                <h3>تایبەتمەندی</h3>
+                <h3>تایبەتمەندی ئەپەکە</h3>
                 <ul class="about-list">
-                  <li>دەست بەکارکردنی خێرا</li>
-                  <li>ڕێکخستنەکانی خێرا</li>
-                  <li>دیاری کردن بە بارودۆخی کاربەر</li>
+                  <li>دەست ڕاگەیشتنی خێرا بە ئەپەکانم</li>
+                  <li>پێشاندانی بڵاوکراوەکانم</li>
+                  <li>خستنەڕووی دیزاینەکانم</li>
                 </ul>
+              </section>
+
+              <section class="about-card contact-card">
+                <h3>پەیوەندیم پێوە بکە</h3>
+                <p>بۆ داواکردنی بەرهەمێکی تایبەت، یان بۆ ناردنی بۆچوون و پێشنیارەکانت، پەیوەندیم پێوە بکە.</p>
+                <div class="contact-list">
+                  <a class="contact-link" href="https://wa.me/9647700071762" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/whatsapp.png" alt="">
+                    <span><strong>پەیوەندیم پێوەبکە لە ڕێگەی واتساپ</strong><small>07700071762</small></span>
+                  </a>
+                  <a class="contact-link" href="viber://chat?number=%2B9647700071762">
+                    <img src="assets/viber.png" alt="">
+                    <span><strong>پەیوەندیم پێوەبکە لەٍ ڕێگەی ڤایبەر</strong><small>07700071762</small></span>
+                  </a>
+                  <a class="contact-link" href="https://t.me/+9647700071762" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/telegram.png" alt="">
+                    <span><strong>پەیوەندیم پێوەبکە لە ڕێگەی تێلەگرام</strong><small>07700071762</small></span>
+                  </a>
+                  <a class="contact-link" href="https://www.tiktok.com/@didarbaxtear" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/tiktok.png" alt="">
+                    <span><strong>کارەکانم ببینە لە تیکتۆک</strong><small>@didarbaxtear</small></span>
+                  </a>
+                  <a class="contact-link" href="https://linktr.ee/didar.dev" target="_blank" rel="noopener noreferrer">
+                    <img src="assets/linktree.png" alt="">
+                    <span><strong>زیاتر بمناسە لە Linktree</strong><small>linktr.ee/didar.dev</small></span>
+                  </a>
+                </div>
               </section>
             </div>
           </div>
@@ -212,27 +306,31 @@
             <div class="settings-grid">
               <article class="settings-card">
                 <div class="settings-card-head">
-                  <h3>موسیقا</h3>
+                  <h3>دەنگ</h3>
                   <button class="settings-toggle" id="mTog" type="button"></button>
                 </div>
-                <p>موسیقی پاشبنەما بۆ پێشکەشکردنی هەستێکی پەرەپێد.</p>
+                <p>بۆ ئیشپێکردن و کوژاندنەوەی دەنگی پاشبنەما</p>
               </article>
 
               <article class="settings-card theme-card">
-                <h3>ڕووکاری ڕەنگ</h3>
+                <h3>ڕەنگی ڕوکار</h3>
+                <p>ئەم بەشە ڕەنگ و شێوازی ڕووکاری ئەپەکە کۆنترۆڵ دەکات</p>
                 <div class="theme-grid">
                   <button class="theme-chip on" data-t="light" type="button">روناک</button>
-                  <button class="theme-chip" data-t="crystal" type="button">کریستاڵ</button>
-                  <button class="theme-chip" data-t="neon" type="button">نیۆن</button>
-                  <button class="theme-chip" data-t="aurora" type="button">ئاورۆرا</button>
+                  <button class="theme-chip" data-t="crystal" type="button">سەوز</button>
+                  <button class="theme-chip" data-t="neon" type="button">سوور</button>
+                  <button class="theme-chip" data-t="aurora" type="button">شینی کاڵ</button>
                 </div>
               </article>
 
               <article class="settings-card theme-card">
                 <h3>پاشبنەما</h3>
+                <p>ئەم بەشە جۆری پاشبنەمای پشتەوەی ئەپەکە دیاری دەکات، بەڵام هەندێ پاشبنەما لەسەر جیهازی بێ هێز کار ناکەن</p>
                 <div class="theme-grid">
-                  <button class="theme-chip on" data-bg="particles" type="button">تەنۆلکەکان</button>
-                  <button class="theme-chip" data-bg="ocean" type="button">شەپۆلەکانی زەریا</button>
+                  <button class="theme-chip on" data-bg="welcome" type="button">تەنۆلکەکان</button>
+                  <button class="theme-chip" data-bg="particles" type="button">ئەستێرەکان</button>
+                  <button class="theme-chip" data-bg="ocean" type="button">شەپۆلەکانی دەریا</button>
+                  <button class="theme-chip" data-bg="none" type="button">کوژاندنەوە</button>
                 </div>
               </article>
             </div>
@@ -240,19 +338,22 @@
         </div>
       </div>
 
-      <nav class="mnav">
-        <div class="bn on" id="bnH"><svg viewBox="0 0 24 24">
+      <nav class="mnav" aria-label="نیوەی خوارەوە">
+        <div class="bn on" id="bnH" role="button" tabindex="0" aria-label="ماڵ"><svg viewBox="0 0 24 24">
             <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
           </svg><span>ماڵ</span></div>
-        <div class="bn" id="bnS"><svg viewBox="0 0 24 24">
+        <div class="bn" id="bnS" role="button" tabindex="0" aria-label="گەڕان"><svg viewBox="0 0 24 24">
             <path
               d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
           </svg><span>گەڕان</span></div>
-        <div class="bn" id="bnA"><svg viewBox="0 0 24 24">
+        <div class="bn" id="bnSrv" role="button" tabindex="0" aria-label="خزمەتگوزاری"><svg viewBox="0 0 24 24">
+            <path d="M20 6h-4V4c0-1.11-.89-2-2-2h-4c-1.11 0-2 .89-2 2v2H4c-1.11 0-1.99.89-1.99 2L2 19c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2zm-6 0h-4V4h4v2z"/>
+          </svg><span>خزمەتگوزاری</span></div>
+        <div class="bn" id="bnA" role="button" tabindex="0" aria-label="دەربارە"><svg viewBox="0 0 24 24">
             <path
               d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" />
           </svg><span>دەربارە</span></div>
-        <div class="bn" id="bnSt"><svg viewBox="0 0 24 24">
+        <div class="bn" id="bnSt" role="button" tabindex="0" aria-label="ڕێکخستن"><svg viewBox="0 0 24 24">
             <path
               d="M19.14 12.94c.04-.31.06-.63.06-.94 0-.31-.02-.63-.06-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.04.31-.06.63-.06.94s.02.63.06.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z" />
           </svg><span>ڕێکخستن</span></div>
@@ -273,25 +374,33 @@
       </div>
       <div class="mod-body" id="mBdy">
         <div class="mod-trow">
-        <div class="mod-tinfo">
-          <h2 id="mTtl"></h2>
-          <p class="mver" id="mVer"></p>
-          <div class="mbadges" id="mBdg"></div>
+          <div class="mod-tinfo">
+            <h2 id="mTtl"></h2>
+            <p class="mver" id="mVer"></p>
+            <div class="mbadges" id="mBdg"></div>
+          </div>
+          <div class="mod-actions">
+            <button class="btn-launch" id="mLnch">
+              <span>کردنەوەی ئەپ</span>
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z" />
+              </svg>
+            </button>
+            <button class="favbtn" id="favBtn" aria-label="دڵخواز">
+              <svg class="hrt" id="hrtSvg" viewBox="0 0 24 24">
+                <path
+                  d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </button>
+            <button class="sharebtn" id="shrBtn" aria-label="بەشکردن">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+                <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z"/>
+              </svg>
+            </button>
+          </div>
         </div>
-        <div class="mod-actions">
-          <button class="btn-launch" id="mLnch">
-            <span>کردنەوەی ئەپ</span>
-            <svg viewBox="0 0 24 24"><path d="M19 19H5V5h7V3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
-          </button>
-          <button class="favbtn" id="favBtn" aria-label="بیری">
-            <svg class="hrt" id="hrtSvg" viewBox="0 0 24 24">
-              <path
-                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
-          </button>
-        </div>
-      </div>
-      <div class="ss-sec" id="ssSec">
+        <div class="ss-sec" id="ssSec">
           <h4>ئەسکرینشۆتەکان</h4>
           <div class="ss-track" id="ssTrk"></div>
           <div class="ss-dots" id="ssDts"></div>
@@ -328,6 +437,7 @@
        4. app.js   (all logic, reads AD at boot)
   -->
   <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.ripples/0.5.3/jquery.ripples.min.js"></script>
   <script src="data.js"></script>
