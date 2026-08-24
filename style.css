@@ -2506,6 +2506,7 @@ body.th-light .modov {
 
 .ss-track {
   display: flex;
+  direction: ltr;
   gap: 9px;
   overflow-x: auto;
   overflow-y: hidden;

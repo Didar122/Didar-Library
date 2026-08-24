@@ -1011,9 +1011,21 @@ async function openMod(id) {
   if (request !== modalRequest) return;
   if (screens.length) {
     D.ssSec.style.display = 'block';
-    D.ssTrk.innerHTML = screens.map((s, i) => `<div class="ss-slide"><img src="${s}" alt="Screenshot ${i + 1}" loading="eager" decoding="async" data-screen="${s}"></div>`).join('');
-    D.ssTrk.scrollTo({ left: 0, top: 0, behavior: 'auto' });
+    const displayScreens = screens.slice().reverse();
+    D.ssTrk.innerHTML = displayScreens.map((s, i) => `<div class="ss-slide"><img src="${s}" alt="Screenshot ${screens.length - i}" loading="eager" decoding="async" data-screen="${s}"></div>`).join('');
     D.ssDts.innerHTML = screens.map((_, i) => `<div class="ss-dot${i === 0 ? ' on' : ''}" data-i="${i}"></div>`).join('');
+    const resetScreenshotPosition = () => {
+      requestAnimationFrame(() => {
+        D.ssTrk.scrollLeft = D.ssTrk.scrollWidth - D.ssTrk.clientWidth;
+      });
+    };
+    const screenshotImages = [...D.ssTrk.querySelectorAll('img')];
+    Promise.all(screenshotImages.map(img => img.complete
+      ? Promise.resolve()
+      : new Promise(resolve => {
+          img.addEventListener('load', resolve, { once: true });
+          img.addEventListener('error', resolve, { once: true });
+        }))).then(resetScreenshotPosition);
     initScreenshotTrack(D.ssTrk, img => {
       if (!img) return;
       const src = img.dataset.screen;
