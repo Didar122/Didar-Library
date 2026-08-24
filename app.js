@@ -626,13 +626,12 @@ function probeScreens(a) {
   const candidates = getScreens(a).length
     ? getScreens(a)
     : Array.from({ length: 4 }, (_, i) => `games/${a.id}screen${i + 1}.png`);
-  const found = [];
   return Promise.all(candidates.map(src => new Promise(resolve => {
     const img = new Image();
-    img.onload = () => { found.push(src); resolve(); };
-    img.onerror = resolve;
+    img.onload = () => resolve(src);
+    img.onerror = () => resolve(null);
     img.src = src;
-  }))).then(() => found);
+  }))).then(found => found.filter(Boolean));
 }
 
 function getApps(q = '') {
@@ -1005,10 +1004,14 @@ async function openMod(id) {
   if (isNew(id)) bdg += `<span class="mb mb-new">نوێ</span>`;
   D.mBdg.innerHTML = bdg;
 
-  const screens = await probeScreens(a);
+  D.modov.classList.add('open');
+  const b = document.getElementById('mBdy'); if (b) b.scrollTop = 0;
+
+  const screens = getScreens(a).length ? getScreens(a) : await probeScreens(a);
   if (request !== modalRequest) return;
   if (screens.length) {
     D.ssSec.style.display = 'block';
+    D.ssTrk.scrollLeft = 0;
     D.ssTrk.innerHTML = screens.map((s, i) => `<div class="ss-slide"><img src="${s}" alt="Screenshot ${i + 1}" loading="eager" decoding="async" data-screen="${s}"></div>`).join('');
     D.ssDts.innerHTML = screens.map((_, i) => `<div class="ss-dot${i === 0 ? ' on' : ''}" data-i="${i}"></div>`).join('');
     initScreenshotTrack(D.ssTrk, img => {
@@ -1049,8 +1052,6 @@ async function openMod(id) {
   if (!rel.length) rel = AD.filter(x => x.id !== id).slice(0, 4);
   D.relTrk.innerHTML = rel.map(x => `<div class="rc" data-id="${x.id}"><img src="${iconPath(x)}" alt="${x.name}" loading="lazy" onerror="this.src='${NI}'"><span>${x.name}</span></div>`).join('');
 
-  D.modov.classList.add('open');
-  const b = document.getElementById('mBdy'); if (b) b.scrollTop = 0;
 }
 
 function closeMod() {
