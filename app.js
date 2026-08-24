@@ -1008,7 +1008,7 @@ async function openMod(id) {
   if (request !== modalRequest) return;
   if (screens.length) {
     D.ssSec.style.display = 'block';
-    D.ssTrk.innerHTML = screens.map((s, i) => `<div class="ss-slide"><img src="${s}" alt="Screenshot ${i + 1}" loading="lazy" data-screen="${s}"></div>`).join('');
+    D.ssTrk.innerHTML = screens.map((s, i) => `<div class="ss-slide"><img src="${s}" alt="Screenshot ${i + 1}" loading="eager" decoding="async" data-screen="${s}"></div>`).join('');
     D.ssDts.innerHTML = screens.map((_, i) => `<div class="ss-dot${i === 0 ? ' on' : ''}" data-i="${i}"></div>`).join('');
     initScreenshotTrack(D.ssTrk, img => {
       if (!img) return;
@@ -1035,7 +1035,7 @@ async function openMod(id) {
 
   D.mSpcs.innerHTML = [
     ['جۆر', a.cat], ['قەبارە', a.sz], ['داونلۆد', a.dl || '—'],
-    ['وەشان', a.ver], ['گەشەپێدەر', a.dev], ['دواین نوێکردن', a.upd]
+    ['وەشان', a.ver], ['گەشەپێدەر', a.dev], ['بەرواری دەرچوون', a.upd]
   ].map(([l, v]) => `<div class="spec"><label>${l}</label><span>${v}</span></div>`).join('');
 
   D.mDsc.textContent = a.desc;
