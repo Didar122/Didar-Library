@@ -1011,8 +1011,8 @@ async function openMod(id) {
   if (request !== modalRequest) return;
   if (screens.length) {
     D.ssSec.style.display = 'block';
-    D.ssTrk.scrollLeft = 0;
     D.ssTrk.innerHTML = screens.map((s, i) => `<div class="ss-slide"><img src="${s}" alt="Screenshot ${i + 1}" loading="eager" decoding="async" data-screen="${s}"></div>`).join('');
+    D.ssTrk.firstElementChild?.scrollIntoView({ block: 'nearest', inline: 'start' });
     D.ssDts.innerHTML = screens.map((_, i) => `<div class="ss-dot${i === 0 ? ' on' : ''}" data-i="${i}"></div>`).join('');
     initScreenshotTrack(D.ssTrk, img => {
       if (!img) return;
